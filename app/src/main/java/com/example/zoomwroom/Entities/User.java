@@ -17,17 +17,12 @@ public class User {
      * @param userName String Unique userName of user.
      * @param userID String unique userID used to reference the user within the system.
      * @param photo Image   User's profile photo.
-     * @param contactDetails Contact information of user.
-     * @param accountBalance QRBucks instance for user.
      */
-    public User(String name, String userName, String userID, Image photo,
-                ContactInformation contactDetails, QRBucks accountBalance) {
+    public User(String name, String userName, String userID, Image photo) {
         this.name = name;
         this.userName = userName;
         this.userID = userID;
         this.photo = photo;
-        this.contactDetails = contactDetails;
-        this.accountBalance = accountBalance;
     }
 
     /**

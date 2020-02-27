@@ -68,6 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mLocation.setDestination(point);
             f = true;
         }
+        updateMarkers();
     }
 
     /* Animate Marker

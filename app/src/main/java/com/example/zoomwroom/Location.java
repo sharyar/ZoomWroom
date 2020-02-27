@@ -6,6 +6,12 @@ public class Location {
     private LatLng depart;
     private LatLng destination;
 
+    public Location() {
+        depart = new LatLng(10,10);
+        destination = new LatLng(10,10);
+    }
+
+
     public LatLng getDepart(){
         return depart;
     }

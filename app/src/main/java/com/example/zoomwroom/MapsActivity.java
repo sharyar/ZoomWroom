@@ -9,8 +9,9 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
-import android.widget.TextView;
 
+
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,13 +26,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     protected Location mLocation;
     private boolean f;
-    private Marker departureMarker = null;
-    private Marker destinationMarker = null;
+    private Marker departureMarker;
+    private Marker destinationMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        mLocation = new Location();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -52,10 +54,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         LatLng edmonton = new LatLng(53.5232, -113.5263);
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(edmonton));
 
         mMap.setOnMapClickListener(this);
         f = true; // Set departure flag as true
+
+        departureMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(10, 10))
+                .title("Departure"));
+        destinationMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(10, 10))
+                .title("Destination"));
+
     }
 
     // TODO : Move to controller class

@@ -116,7 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void updateMarkers() {
         LatLng depart = mLocation.getDepart();
-        LatLng destination = mLocation.getDepart();
+        LatLng destination = mLocation.getDestination();
 
         this.animateMarker(departureMarker, depart, false);
         this.animateMarker(destinationMarker, destination, false);

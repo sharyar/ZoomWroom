@@ -18,6 +18,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -63,10 +64,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         departureMarker = mMap.addMarker(new MarkerOptions()
                 .position(edmonton)
-                .title("Departure"));
+                .title("Departure")
+                .icon(BitmapDescriptorFactory.defaultMarker(244))
+                .alpha(0.71f));
         destinationMarker = mMap.addMarker(new MarkerOptions()
                 .position(edmonton)
-                .title("Destination"));
+                .title("Destination")
+                .icon(BitmapDescriptorFactory.defaultMarker(244))
+                .alpha(0.71f));
 
         departureMarker.setVisible(false);
         destinationMarker.setVisible(false);
@@ -90,19 +95,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void updateMarkers() {
         LatLng depart = mLocation.getDepart();
         LatLng destination = mLocation.getDestination();
-        Log.d("Departure", depart.toString());
-        Log.d("DepartMark", departureMarker.getPosition().toString());
         if(!depart.equals(departureMarker.getPosition())) {
             departureMarker.setPosition(depart);
             departureMarker.setVisible(true);
-            Log.d("Animated", "Moved depart");
         }
-        Log.d("Destination", destination.toString());
-        Log.d("DestinMarker", destinationMarker.getPosition().toString());
         if(!destination.equals(destinationMarker.getPosition())) {
             destinationMarker.setPosition(destination);
             destinationMarker.setVisible(true);
-            Log.d("Animated", "Moved destination");
         }
     }
 }

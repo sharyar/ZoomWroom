@@ -7,8 +7,8 @@ public class Location {
     private LatLng destination;
 
     public Location() {
-        depart = new LatLng(10,10);
-        destination = new LatLng(10,10);
+        depart = new LatLng(53.5232, -113.5263);
+        destination = new LatLng(53.5232, -113.5263);
     }
 
 

@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -61,11 +62,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         f = true; // Set departure flag as true
 
         departureMarker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(10, 10))
+                .position(edmonton)
                 .title("Departure"));
         destinationMarker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(10, 10))
+                .position(edmonton)
                 .title("Destination"));
+
+        departureMarker.setVisible(false);
+        destinationMarker.setVisible(false);
 
     }
 
@@ -82,55 +86,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         updateMarkers();
     }
 
-    /* Animate Marker
-    Moves marker "marker" to lat, long position "toPosition"
-
-    If marker is hidden set hideMarker to true
-
-    Source: https://github.com/googlemaps/android-samples/tree/master/ApiDemos/java/app/src/main/java/com/example/mapdemo
-     */
-    public void animateMarker(final Marker marker, final LatLng toPosition,
-                              final boolean hideMarker) {
-        final Handler handler = new Handler();
-        final long start = SystemClock.uptimeMillis();
-        Projection proj = mMap.getProjection();
-        Point startPoint = proj.toScreenLocation(marker.getPosition());
-        final LatLng startLatLng = proj.fromScreenLocation(startPoint);
-        final long duration = 500;
-
-        final Interpolator interpolator = new LinearInterpolator();
-
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                long elapsed = SystemClock.uptimeMillis() - start;
-                float t = interpolator.getInterpolation((float) elapsed
-                        / duration);
-                double lng = t * toPosition.longitude + (1 - t)
-                        * startLatLng.longitude;
-                double lat = t * toPosition.latitude + (1 - t)
-                        * startLatLng.latitude;
-                marker.setPosition(new LatLng(lat, lng));
-
-                if (t < 1.0) {
-                    // Post again 16ms later.
-                    handler.postDelayed(this, 16);
-                } else {
-                    if (hideMarker) {
-                        marker.setVisible(false);
-                    } else {
-                        marker.setVisible(true);
-                    }
-                }
-            }
-        });
-    }
 
     public void updateMarkers() {
         LatLng depart = mLocation.getDepart();
         LatLng destination = mLocation.getDestination();
-
-        this.animateMarker(departureMarker, depart, false);
-        this.animateMarker(destinationMarker, destination, false);
+        Log.d("Departure", depart.toString());
+        Log.d("DepartMark", departureMarker.getPosition().toString());
+        if(!depart.equals(departureMarker.getPosition())) {
+            departureMarker.setPosition(depart);
+            departureMarker.setVisible(true);
+            Log.d("Animated", "Moved depart");
+        }
+        Log.d("Destination", destination.toString());
+        Log.d("DestinMarker", destinationMarker.getPosition().toString());
+        if(!destination.equals(destinationMarker.getPosition())) {
+            destinationMarker.setPosition(destination);
+            destinationMarker.setVisible(true);
+            Log.d("Animated", "Moved destination");
+        }
     }
 }

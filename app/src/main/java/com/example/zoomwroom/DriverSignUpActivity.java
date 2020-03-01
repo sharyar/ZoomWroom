@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class SignUpActivity extends AppCompatActivity {
+public class DriverSignUpActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_driver_sign_up);
 
         //Click Back button return to the main activity
 
@@ -20,13 +20,12 @@ public class SignUpActivity extends AppCompatActivity {
         BackBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OpenMainActivity();
+                OpenDriverModeActivity();
             }
         });
     }
-
-    public void OpenMainActivity(){
-        Intent intent = new Intent(this,MainActivity.class);
+    public void OpenDriverModeActivity(){
+        Intent intent = new Intent(this,DriverModeActivity.class);
         startActivity(intent);
     }
 }

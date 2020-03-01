@@ -13,36 +13,45 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //SIGNUP BUTTON
-        Button signBT = findViewById(R.id.SignupBT);
-        signBT.setOnClickListener(new View.OnClickListener() {
+
+        //////////////////////
+        // Driver Button
+        Button driverBT = findViewById(R.id.DriverBT);
+        driverBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OpenSignUpActivity();
+                OpenActivityDriverMode();
             }
         });
-
-        //Change mode between rider mode and driver mode
-        Button RiderModeBT = findViewById(R.id.RidermodeBT);
-        RiderModeBT.setOnClickListener(new View.OnClickListener() {
+        //Rider Button
+        Button riderBT = findViewById(R.id.RiderBT);
+        riderBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OpenActivityRiderMode();
             }
         });
+        /////////////////////////////////
+
+
+
+
 
     }
 
-    public void OpenSignUpActivity(){
-        Intent intent = new Intent(this,SignUpActivity.class);
-        startActivity(intent);
-
-
-    }
+    ////////////////////////////////////////////////
 
     public void OpenActivityRiderMode(){
         Intent intent = new Intent(this,RiderModeActivity.class);
         startActivity(intent);
     }
 
+    //OpenActivityDriverMode
+    public void OpenActivityDriverMode() {
+
+        Intent intent = new Intent(this,DriverModeActivity.class);
+        startActivity(intent);
+
+    }
+    ///////////////////////////////////////////////
 }

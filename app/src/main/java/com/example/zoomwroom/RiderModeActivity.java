@@ -15,18 +15,32 @@ public class RiderModeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rider_mode);
 
         // change to driver Mode
-        Button DrivermodeBT = findViewById(R.id.RiderActivityChangemodeBT);
+        Button DrivermodeBT = findViewById(R.id.rider_chagentodrivermodeBT);
         DrivermodeBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChangeModetoDriver();
+                OpenActivityDriverMode();
+            }
+        });
+        //rider mode sign up button
+        Button signUpBT = findViewById(R.id.rider_SignupBT);
+        signUpBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenRiderSignUpActivity();
             }
         });
     }
 
-    public void ChangeModetoDriver() {
-        Intent intent = new Intent(this,MainActivity.class);
+    public void OpenActivityDriverMode() {
+        Intent intent = new Intent(this,DriverModeActivity.class);
         startActivity(intent);
     }
 
+    public void OpenRiderSignUpActivity() {
+        Intent intent = new Intent(this,RiderSignUpActivity.class);
+        startActivity(intent);
+
+
+    }
 }

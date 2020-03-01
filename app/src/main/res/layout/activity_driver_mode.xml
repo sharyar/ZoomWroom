@@ -4,21 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
-    tools:context=".RiderModeActivity">
+    android:theme="@style/Theme.AppCompat"
+    tools:context=".DriverModeActivity">
 
     <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="241dp"
-        android:layout_height="141dp"
-        android:layout_marginTop="48dp"
+        android:id="@+id/driver_image"
+        android:layout_width="201dp"
+        android:layout_height="175dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginBottom="452dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.736"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/riderlogo" />
+        app:srcCompat="@drawable/driverlogo" />
 
     <Button
-        android:id="@+id/rider_LoginBT"
+        android:id="@+id/driver_LoginBT"
         android:layout_width="101dp"
         android:layout_height="64dp"
         android:layout_marginTop="64dp"
@@ -28,30 +31,30 @@
         android:text="Log in"
         android:textAllCaps="false"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/rider_SignupBT"
+        app:layout_constraintBottom_toBottomOf="@+id/driver_SignupBT"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rider_password" />
+        app:layout_constraintTop_toBottomOf="@+id/driver_password" />
 
     <Button
-        android:id="@+id/rider_SignupBT"
+        android:id="@+id/driver_SignupBT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
         android:background="@null"
-        android:text="Sign Up"
         android:textAllCaps="false"
+        android:text="Sign Up"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/rider_LoginBT"
+        app:layout_constraintEnd_toStartOf="@+id/driver_LoginBT"
         app:layout_constraintHorizontal_bias="0.023"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rider_password" />
+        app:layout_constraintTop_toBottomOf="@+id/driver_password" />
 
     <EditText
-        android:id="@+id/rider_password"
-        android:layout_width="403dp"
+        android:id="@+id/driver_password"
+        android:layout_width="401dp"
         android:layout_height="45dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/rounded_text"
         android:ems="10"
         android:hint="Password"
@@ -61,39 +64,38 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rider_username" />
+        app:layout_constraintTop_toBottomOf="@+id/driver_username" />
 
     <EditText
-        android:id="@+id/rider_username"
+        android:id="@+id/driver_username"
         android:layout_width="403dp"
         android:layout_height="45dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/rounded_text"
         android:ems="10"
         android:hint="Username"
         android:textColor="@color/colorPrimary"
         android:textColorHint="@color/colorPrimary"
         android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/driver_image" />
 
     <Button
-        android:id="@+id/rider_chagentodrivermodeBT"
+        android:id="@+id/driver_chagentoRidermodeBT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginBottom="16dp"
         android:background="@null"
-        android:text="Driver Mode"
         android:textAllCaps="false"
+        android:text="Rider Mode"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rider_SignupBT"
+        app:layout_constraintTop_toBottomOf="@+id/driver_SignupBT"
         app:layout_constraintVertical_bias="1.0" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

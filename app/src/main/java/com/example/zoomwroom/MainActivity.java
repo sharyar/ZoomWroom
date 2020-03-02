@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -33,10 +35,19 @@ public class MainActivity extends AppCompatActivity {
         });
         /////////////////////////////////
 
+        // Map button bypass
+        Button mapbtn = findViewById(R.id.bypasstomap);
+        mapbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenActivityMaps();
+            }
+        });
+    }
 
-
-
-
+    public void OpenActivityMaps() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
     }
 
     ////////////////////////////////////////////////

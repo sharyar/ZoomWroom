@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1017288096154",
+    "firebase_url": "https://zoomwroom-ce835.firebaseio.com",
+    "project_id": "zoomwroom-ce835",
+    "storage_bucket": "zoomwroom-ce835.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017288096154:android:d383cabb1ecc0acde3a223",
+        "android_client_info": {
+          "package_name": "com.example.zoomwroom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017288096154-6t2e8qu26pei8g3m5stl7caapqpp0ljg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtkUyqqEitQWDrXSK9yF0lYpdXnaY3iIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017288096154-6t2e8qu26pei8g3m5stl7caapqpp0ljg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

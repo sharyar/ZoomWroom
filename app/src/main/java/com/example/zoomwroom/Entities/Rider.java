@@ -1,5 +1,7 @@
 package com.example.zoomwroom.Entities;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 public class Rider extends User {

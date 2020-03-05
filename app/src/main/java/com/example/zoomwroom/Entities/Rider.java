@@ -9,8 +9,8 @@ public class Rider extends User {
     ArrayList<DriveRequest> ridesRequested;
 
 
-    public Rider(String name, String userName, String userID, Image photo) {
-        super(name, userName, userID, photo);
+    public Rider(String name, String userName, String userID) {
+        super(name, userName, userID);
     }
 
     public ArrayList<DriveRequest> getRidesRequested() {

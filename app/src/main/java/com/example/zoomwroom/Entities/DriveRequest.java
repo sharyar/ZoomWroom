@@ -5,7 +5,6 @@ import com.example.zoomwroom.Location;
 import java.util.Date;
 
 public class DriveRequest {
-
     // status description: https://github.com/CMPUT301W20T29-H03/ZoomWroom/wiki/App-Terminologies#status
     public enum Status {
         PENDING,

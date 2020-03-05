@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.zoomwroom.Entities.Image;
 import com.example.zoomwroom.Entities.Rider;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -39,8 +38,7 @@ public class RiderSignUpActivity extends AppCompatActivity {
         String name = "Bobby Joe";
         String username = "booo";
         String userID = "1";
-        Image image = new Image();
-        test = new Rider(name,username,userID,image);
+        test = new Rider(name,username,userID);
         /////
 
         // Remember that hashmaps take in a key value pair! I'm guessing it will be (userID, Rider/Driver)
@@ -53,15 +51,11 @@ public class RiderSignUpActivity extends AppCompatActivity {
         collectionReference
                 .document(userID) // name
                 .set(data);
-
     }
 
     public void OpenRiderModeActivity() {
-
         Intent intent = new Intent(this,RiderModeActivity.class);
         startActivity(intent);
     }
-
-
 
 }

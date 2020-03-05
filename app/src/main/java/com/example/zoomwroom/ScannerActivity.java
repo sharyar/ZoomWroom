@@ -20,29 +20,48 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+/**
+ * QR Scanning
+ *
+ * Author : Henry Lin
+ *
+ * Opens the camera and searches for a QR code using Google vision api
+ * @see com.google.android.gms.vision.barcode.BarcodeDetector
+ * @see com.google.android.gms.vision.CameraSource
+ *
+ * Modified source from : https://developers.google.com/vision/android/barcodes-overview
+ * Under the Apache 2.0 license
+ */
 public class ScannerActivity extends AppCompatActivity {
     SurfaceView surfaceView;
     CameraSource cameraSource;
     BarcodeDetector barcodeDetector;
 
+    /**
+     * Initializes camera and barcode scanning
+     * @param savedInstanceState
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
 
+        // Initialize
         surfaceView = findViewById(R.id.cameraPreview);
-
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.QR_CODE).build();
 
         cameraSource = new CameraSource.Builder(this, barcodeDetector)
                 .setRequestedPreviewSize(640,480).build();
 
+        // Put camera preview on surfaceview
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                // Check if camera permission has been enabled
                 if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    Log.d("Sucks", "Didn't load camera");
+                    Log.d("Camera Error", "Please enable camera permissions from app settings");
                     return;
                 }
                 try {
@@ -59,10 +78,12 @@ public class ScannerActivity extends AppCompatActivity {
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
+                // Stop camera
                 cameraSource.stop();
             }
         });
 
+        // Detect barcode
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {

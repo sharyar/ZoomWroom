@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Map;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,9 +36,19 @@ public class MainActivity extends AppCompatActivity {
         });
         /////////////////////////////////
 
+        // Map button bypass. To remove later.
+        Button mapbtn = findViewById(R.id.bypasstomap);
+        mapbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenActivityMaps();
+            }
+        });
+    }
 
-
-
+    public void OpenActivityMaps() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
     }
 
     ////////////////////////////////////////////////

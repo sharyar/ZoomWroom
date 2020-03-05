@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.Map;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public void OpenActivityMaps() {
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
+
     }
 
     ////////////////////////////////////////////////

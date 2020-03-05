@@ -1,28 +1,31 @@
+
 package com.example.zoomwroom;
+
+import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
 
-
-import android.graphics.Point;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.util.Log;
-import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
-
-
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Google Maps Activity
+ *
+ * Author : Henry Lin
+ * Creates a google map fragment where markers can be placed
+ *
+ * @see com.example.zoomwroom.Location
+ * @see com.google.android.gms.maps.GoogleMap
+ *
+ * Modified source from: https://developers.google.com/maps/documentation/android-sdk/start
+ * Under the Apache 2.0 license
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private GoogleMap mMap;
@@ -78,7 +81,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    // TODO : Move to controller class
+    /**
+     * Moves the destination and departure markers when user clicks on a point on the map
+     * flag f - true = set departure
+     *          false = set destination
+     * @param point
+     */
     @Override
     public void onMapClick(LatLng point) {
         if(f){
@@ -91,7 +99,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         updateMarkers();
     }
 
-
+    /**
+     * Moves markers to the current latlng position
+     */
     public void updateMarkers() {
         LatLng depart = mLocation.getDepart();
         LatLng destination = mLocation.getDestination();

@@ -34,7 +34,7 @@ public class DriverSignUpActivity extends AppCompatActivity {
                 .document("2") // name
                 .set(data);
 
-        Button BackBT = findViewById(R.id.SignupActivity_BackBT);
+        Button BackBT = findViewById(R.id.driverSignup_BackBtn);
         BackBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

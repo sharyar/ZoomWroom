@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.zoomwroom.Entities.Driver;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -22,6 +23,7 @@ public class DriverSignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_driver_sign_up);
 
         //Click Back button return to the main activity
+        Driver test = new Driver("Bob", "bobbyyyyy", "1", )
 
         // Creating another hashmap value
         HashMap<String, String> data = new HashMap<>();

@@ -6,7 +6,6 @@ public class User {
     private String name;
     private String userName;
     private String userID;
-    private Image photo;
     private ContactInformation contactDetails;
     private QRBucks accountBalance;
 
@@ -18,11 +17,10 @@ public class User {
      * @param userID String unique userID used to reference the user within the system.
      * @param photo Image   User's profile photo.
      */
-    public User(String name, String userName, String userID, Image photo) {
+    public User(String name, String userName, String userID) {
         this.name = name;
         this.userName = userName;
         this.userID = userID;
-        this.photo = photo;
     }
 
     /**
@@ -56,14 +54,6 @@ public class User {
 
     public void setUserID(String userID) {
         this.userID = userID;
-    }
-
-    public Image getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(Image photo) {
-        this.photo = photo;
     }
 
     public ContactInformation getContactDetails() {

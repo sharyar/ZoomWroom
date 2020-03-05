@@ -13,8 +13,8 @@ public class Driver extends User {
      * @param userID
      * @param photo
      */
-    public Driver(String name, String userName, String userID, Image photo) {
-        super(name, userName, userID, photo);
+    public Driver(String name, String userName, String userID) {
+        super(name, userName, userID);
     }
 
 

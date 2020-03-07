@@ -62,45 +62,52 @@ public class DriverSignUpActivity extends AppCompatActivity {
             String userName = userNameEditText.getText().toString().trim();
             String phoneNumber = phoneNumberEditText.getText().toString().trim();
 
-            mAuth.createUserWithEmailAndPassword(email, passWord)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "createUserWithEmail:Success");
-                                //Get the newly created user. We can use this to actually build the contact info page.
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Toast.makeText(DriverSignUpActivity.this, "You are now signed up!",
-                                        Toast.LENGTH_SHORT).show();
+            if (email.isEmpty() || passWord.isEmpty() || firstNameText.isEmpty() ||
+                    lastNameText.isEmpty() || userName.isEmpty() || phoneNumber.isEmpty()) {
+                Toast.makeText(DriverSignUpActivity.this, "Please ensure you have " +
+                        "filled out all the fields.", Toast.LENGTH_SHORT).show();
+            } else {
 
-                                //Add data from other fields if registration was successful:
+                mAuth.createUserWithEmailAndPassword(email, passWord)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "createUserWithEmail:Success");
+                                    //Get the newly created user. We can use this to actually build the contact info page.
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    Toast.makeText(DriverSignUpActivity.this, "You are now signed up!",
+                                            Toast.LENGTH_SHORT).show();
 
-                                //First create a new driver and contact info instance. Then add them to the database.
-                                Driver newDriver = new Driver(firstNameText + " "+lastNameText, userName, email);
-                                ContactInformation cInformation = new ContactInformation(phoneNumber, email);
-                                newDriver.setContactDetails(cInformation);
+                                    //Add data from other fields if registration was successful:
 
-                                database.collection("Drivers").add(newDriver)
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                            @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w(TAG, "Error adding document", e);
-                                            }
-                                        });
+                                    //First create a new driver and contact info instance. Then add them to the database.
+                                    Driver newDriver = new Driver(firstNameText + " " + lastNameText, userName, email);
+                                    ContactInformation cInformation = new ContactInformation(phoneNumber, email);
+                                    newDriver.setContactDetails(cInformation);
 
-                            } else {
-                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(DriverSignUpActivity.this, "Sign up Failed, please check your fields",
-                                        Toast.LENGTH_SHORT).show();
+                                    database.collection("Drivers").add(newDriver)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error adding document", e);
+                                                }
+                                            });
+
+                                } else {
+                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                    Toast.makeText(DriverSignUpActivity.this, "Sign up Failed, please check your fields",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    });
+                        });
+            }
         });
 
 

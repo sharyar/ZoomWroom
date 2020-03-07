@@ -62,46 +62,53 @@ public class RiderSignUpActivity extends AppCompatActivity {
             String phoneNumber = phoneNumberEditText.getText().toString().trim();
 
 
-            mAuth.createUserWithEmailAndPassword(email, passWord)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "createUserWithEmail:Success");
-                                //Get the newly created user. We can use this to actually build the contact info page.
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Toast.makeText(RiderSignUpActivity.this, "You are now signed up!",
-                                        Toast.LENGTH_SHORT).show();
+            // If conditions checks to make sure that the fields have been filled out and are not null. Prevents a crash.
+            if (email.isEmpty() || passWord.isEmpty() || firstNameText.isEmpty() ||
+                    lastNameText.isEmpty() || userName.isEmpty() || phoneNumber.isEmpty()) {
+                Toast.makeText(RiderSignUpActivity.this, "Please ensure you have " +
+                        "filled out all the fields.", Toast.LENGTH_SHORT).show();
+            } else {
+                mAuth.createUserWithEmailAndPassword(email, passWord)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "createUserWithEmail:Success");
+                                    //Get the newly created user. We can use this to actually build the contact info page.
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    Toast.makeText(RiderSignUpActivity.this, "You are now signed up!",
+                                            Toast.LENGTH_SHORT).show();
 
-                                // Add data from other fields only if registration is successful.
+                                    // Add data from other fields only if registration is successful.
 
-                                //First create a new rider instance, new contact info instance and then add them to the database
+                                    //First create a new rider instance, new contact info instance and then add them to the database
 
-                                Rider newRider = new Rider(firstNameText + " "+lastNameText, userName, email);
-                                ContactInformation cInformation = new ContactInformation(phoneNumber, email);
-                                newRider.setContactDetails(cInformation);
+                                    Rider newRider = new Rider(firstNameText + " "+lastNameText, userName, email);
+                                    ContactInformation cInformation = new ContactInformation(phoneNumber, email);
+                                    newRider.setContactDetails(cInformation);
 
-                                database.collection("Riders").add(newRider)
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                            @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w(TAG, "Error adding document", e);
-                                            }
-                                        });
+                                    database.collection("Riders").add(newRider)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error adding document", e);
+                                                }
+                                            });
 
-                            } else {
-                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(RiderSignUpActivity.this, "Signup Failed, please check the fields",
-                                        Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                    Toast.makeText(RiderSignUpActivity.this, "Signup Failed, please check the fields",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    });
+                        });
+            }
         });
 
         // Back button functionality

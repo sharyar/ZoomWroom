@@ -27,20 +27,40 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:contentDescription="Logo"
-            app:srcCompat="@drawable/driverlogo1"
-            tools:layout_editor_absoluteX="16dp" />
+            app:srcCompat="@drawable/driverlogo1" />
 
-        <EditText
-            android:id="@+id/driverSignupFullName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/driversignup_text_shape"
-            android:hint="First and Last Name"
-            android:padding="10dp"
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/driverSignupFName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/driversignup_text_shape"
+                android:hint="First Name"
+                android:padding="10dp"
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/colorPrimary"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"/>
+
+            <EditText
+                android:id="@+id/driverSignupLName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/driversignup_text_shape"
+                android:hint="Last Name"
+                android:padding="10dp"
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/colorPrimary"
+                android:textSize="18sp"
+                android:layout_weight="1"/>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/driverSignupEmailAddress"

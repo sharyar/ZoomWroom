@@ -28,10 +28,6 @@ public class DriverSignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
 
-    //Declare variables required for this activity
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +37,8 @@ public class DriverSignUpActivity extends AppCompatActivity {
         //Get Auth instance from Firebase
         mAuth = FirebaseAuth.getInstance();
 
-        EditText fullName = findViewById(R.id.driverSignupFullName);
+        EditText firstName = findViewById(R.id.driverSignupFName);
+        EditText lastName = findViewById(R.id.driverSignupLName);
         EditText emailAddress = findViewById(R.id.driverSignupEmailAddress);
         EditText passWordEditText = findViewById(R.id.driverSignupPassWord);
         EditText userName = findViewById(R.id.driverSignupUserName);
@@ -63,6 +60,11 @@ public class DriverSignUpActivity extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Toast.makeText(DriverSignUpActivity.this, "You are now signed up!",
                                         Toast.LENGTH_SHORT).show();
+
+                                //Add data from other fields if registration was successful:
+
+
+
 
                             } else {
                                 Log.w(TAG, "createUserWithEmail:failure", task.getException());

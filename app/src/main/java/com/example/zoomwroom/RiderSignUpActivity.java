@@ -12,10 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.zoomwroom.Entities.ContactInformation;
 import com.example.zoomwroom.Entities.Rider;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,16 +44,24 @@ public class RiderSignUpActivity extends AppCompatActivity {
         //Get Auth instance from Firebase
         mAuth = FirebaseAuth.getInstance();
 
-        EditText fullName = findViewById(R.id.riderSignupFName);
-        EditText emailAddress = findViewById(R.id.riderSignupEmailAddress);
+        EditText firstNameEditText = findViewById(R.id.riderSignupFName);
+        EditText lastNameEditText = findViewById(R.id.riderSignupLName);
+        EditText emailAddressEditText = findViewById(R.id.riderSignupEmailAddress);
         EditText passWordEditText = findViewById(R.id.riderSignupPassWord);
-        EditText userName = findViewById(R.id.riderSignupUserName);
-        EditText phoneNumber = findViewById(R.id.riderSignupPhoneNumber);
+        EditText userNameEditText = findViewById(R.id.riderSignupUserName);
+        EditText phoneNumberEditText = findViewById(R.id.riderSignupPhoneNumber);
         Button signUpRider = findViewById(R.id.riderSignupSignupBtn);
 
+
         signUpRider.setOnClickListener((View v) -> {
-            String email = emailAddress.getText().toString().trim();
-            String passWord = passWordEditText.getText().toString().trim();
+            String email = emailAddressEditText.getText().toString().trim();
+            String passWord = passWordEditText.getText().toString();
+            String firstNameText = firstNameEditText.getText().toString().trim();
+            String lastNameText = lastNameEditText.getText().toString().trim();
+            String userName = userNameEditText.getText().toString().trim();
+            String phoneNumber = phoneNumberEditText.getText().toString().trim();
+
+
             mAuth.createUserWithEmailAndPassword(email, passWord)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -61,9 +73,31 @@ public class RiderSignUpActivity extends AppCompatActivity {
                                 Toast.makeText(RiderSignUpActivity.this, "You are now signed up!",
                                         Toast.LENGTH_SHORT).show();
 
+                                // Add data from other fields only if registration is successful.
+
+                                //First create a new rider instance, new contact info instance and then add them to the database
+
+                                Rider newRider = new Rider(firstNameText + " "+lastNameText, userName, email);
+                                ContactInformation cInformation = new ContactInformation(phoneNumber, email);
+                                newRider.setContactDetails(cInformation);
+
+                                database.collection("Riders").add(newRider)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error adding document", e);
+                                            }
+                                        });
+
                             } else {
                                 Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(RiderSignUpActivity.this, "Signup Failed",
+                                Toast.makeText(RiderSignUpActivity.this, "Signup Failed, please check the fields",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -79,26 +113,6 @@ public class RiderSignUpActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-//        // Creating a rider test object
-//        String name = "Bobby Joe";
-//        String username = "booo";
-//        String userID = "1";
-//        test = new Rider(name,username,userID);
-//        /////
-//
-//        // Remember that hashmaps take in a key value pair! I'm guessing it will be (userID, Rider/Driver)
-//        // Note that for now I have <String, String> because I'm getting a separate error with Rider
-//        HashMap<String, String> data = new HashMap<>();
-//        //start putting in values into the data
-//        data.put(userID, name);
-//        //this line gets access to the database, with the page called riders! eventually there will be drivers etc.
-//        final CollectionReference collectionReference = database.collection("Riders");
-//        collectionReference
-//                .document(userID) // name
-//                .set(data);
     }
 
     public void OpenRiderModeActivity() {

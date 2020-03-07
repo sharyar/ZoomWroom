@@ -76,8 +76,7 @@ public class DriverSignUpActivity extends AppCompatActivity {
                                     Log.d(TAG, "createUserWithEmail:Success");
                                     //Get the newly created user. We can use this to actually build the contact info page.
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    Toast.makeText(DriverSignUpActivity.this, "You are now signed up!",
-                                            Toast.LENGTH_SHORT).show();
+
 
                                     //Add data from other fields if registration was successful:
 
@@ -86,17 +85,20 @@ public class DriverSignUpActivity extends AppCompatActivity {
                                     ContactInformation cInformation = new ContactInformation(phoneNumber, email);
                                     newDriver.setContactDetails(cInformation);
 
-                                    database.collection("Drivers").add(newDriver)
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    assert user != null;
+
+                                    database.collection("Drivers").document(user.getUid()).set(newDriver)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
-                                                public void onSuccess(DocumentReference documentReference) {
-                                                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(DriverSignUpActivity.this, "You are now signed up!",
+                                                            Toast.LENGTH_SHORT).show();
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    Log.w(TAG, "Error adding document", e);
+                                                    Log.w(TAG, "Error, something went wrong with storing your info to the database.", e);
                                                 }
                                             });
 

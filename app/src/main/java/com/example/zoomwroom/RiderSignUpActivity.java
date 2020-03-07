@@ -87,11 +87,14 @@ public class RiderSignUpActivity extends AppCompatActivity {
                                     ContactInformation cInformation = new ContactInformation(phoneNumber, email);
                                     newRider.setContactDetails(cInformation);
 
-                                    database.collection("Riders").add(newRider)
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    assert user != null;
+
+                                    database.collection("Riders").document(user.getUid()).set(newRider)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
-                                                public void onSuccess(DocumentReference documentReference) {
-                                                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(RiderSignUpActivity.this, "You are now signed up!",
+                                                            Toast.LENGTH_SHORT).show();
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {

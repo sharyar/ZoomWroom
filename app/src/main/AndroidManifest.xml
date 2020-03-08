@@ -8,12 +8,12 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-
-
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -21,8 +21,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat">
-        <activity android:name=".DriverModeActivity"></activity>
+        android:theme="@style/AppTheme">
+        <activity android:name=".DriverModeActivity" />
         <activity android:name=".RiderSignUpActivity" />
         <activity android:name=".DriverSignUpActivity" />
         <activity android:name=".RiderModeActivity" />
@@ -40,7 +40,7 @@
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="barcode"></meta-data>
+            android:value="barcode" />
 
         <activity
             android:name=".MapsActivity"

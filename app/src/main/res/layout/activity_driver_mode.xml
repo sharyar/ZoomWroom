@@ -7,95 +7,105 @@
     android:theme="@style/Theme.AppCompat"
     tools:context=".DriverModeActivity">
 
-    <ImageView
-        android:id="@+id/driver_image"
-        android:layout_width="201dp"
-        android:layout_height="175dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_marginBottom="452dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.736"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/driverlogo" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/driver_LoginBT"
-        android:layout_width="101dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        android:background="@drawable/rounded_button"
-        android:text="Log in"
-        android:textAllCaps="false"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/driver_SignupBT"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/driver_password" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/driver_SignupBT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:background="@null"
-        android:textAllCaps="false"
-        android:text="Sign Up"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/driver_LoginBT"
-        app:layout_constraintHorizontal_bias="0.023"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/driver_password" />
+            <ImageView
+                android:id="@+id/driver_image"
+                android:layout_width="247dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                app:srcCompat="@drawable/driverlogo" />
 
-    <EditText
-        android:id="@+id/driver_password"
-        android:layout_width="401dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/rounded_text"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:textColor="@color/colorPrimary"
-        android:textColorHint="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/driver_username" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
 
-    <EditText
-        android:id="@+id/driver_username"
-        android:layout_width="403dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/rounded_text"
-        android:ems="10"
-        android:hint="Username"
-        android:textColor="@color/colorPrimary"
-        android:textColorHint="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/driver_image" />
+            <EditText
+                android:id="@+id/driver_email_login"
+                style="@style/EditTextDefaultDriverLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="email"
+                android:hint="Email Address"
+                android:inputType="textEmailAddress" />
 
-    <Button
-        android:id="@+id/driver_chagentoRidermodeBT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginBottom="16dp"
-        android:background="@null"
-        android:textAllCaps="false"
-        android:text="Rider Mode"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/driver_SignupBT"
-        app:layout_constraintVertical_bias="1.0" />
+            <EditText
+                android:id="@+id/driver_password"
+                style="@style/EditTextDefaultDriverLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="password"
+                android:hint="Password"
+                android:inputType="textPassword" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/driver_SignupBT"
+                    style="@style/PrimaryButtonRegisterDriver"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@android:color/transparent"
+                    android:background="@null"
+                    android:stateListAnimator="@null"
+                    android:text="Sign Up"
+                    android:textAllCaps="false"
+                    android:textColor="@color/CyanBlueGreen" />
+
+                <Button
+                    android:id="@+id/driver_LoginBT"
+                    style="@style/PrimaryButtonRegisterDriver"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/CyanBlueGreen"
+                    android:text="Log in"
+                    android:textAllCaps="false"
+                    android:stateListAnimator="@null"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/driver_chagentoRidermodeBT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rider Mode"
+            android:textAllCaps="false"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="24dp"
+            android:background="@null"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@color/CyanBlueGreen"
+            app:icon="@drawable/blue_24dp"
+            app:iconTint="@color/CyanBlueGreen"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            />
+
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

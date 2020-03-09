@@ -92,7 +92,6 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         Bundle b = new Bundle();
         b.putString("RiderName", request.getRider().getName());
         b.putFloat("OfferedFare", request.getOfferedFare());
-        b.putString();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

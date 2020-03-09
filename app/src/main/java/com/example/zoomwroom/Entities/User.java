@@ -3,6 +3,7 @@ package com.example.zoomwroom.Entities;
 public class User {
 
     // Declare variables required for class.
+    private String name;
     private String userName;
     private String userID;
     private ContactInformation contactDetails;
@@ -15,15 +16,25 @@ public class User {
 
     /**
      * Constructor for class. Returns an instance of User based on provided parameters.
-     * @param userName String Full name of user.
+     * @param name String Full name of user.
+     * @param userName String Unique userName of user.
      * @param userID String unique userID used to reference the user within the system.
      */
-    public User(String userName, String userID) {
+    public User(String name, String userName, String userID) {
+        this.name = name;
         this.userName = userName;
         this.userID = userID;
     }
 
     //<editor-fold desc="Getters & setters">
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public String getUserName() {
         return userName;
     }

@@ -29,11 +29,4 @@ public class ContactInformation {
     }
     //</editor-fold>
 
-    public void call(String phoneNumber){
-        //implementation to come later
-    }
-
-    public void email(String email){
-        //implementation to come later
-    }
 }

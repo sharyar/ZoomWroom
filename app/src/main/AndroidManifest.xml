@@ -37,9 +37,9 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".DriverHome"
-            android:exported="true"
-            android:label="@string/title_activity_driver_home" />
+            android:name=".DriverHomeActivity"
+            android:label="@string/title_activity_driver_home"
+            android:exported="true"/>
         <activity android:name=".DriverModeActivity" />
         <activity android:name=".RiderSignUpActivity" />
         <activity android:name=".DriverSignUpActivity" />

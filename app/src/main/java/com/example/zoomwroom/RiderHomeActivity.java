@@ -1,24 +1,36 @@
+
 package com.example.zoomwroom;
 
-        import androidx.appcompat.app.AppCompatActivity;
-        import androidx.fragment.app.FragmentActivity;
+import android.os.Bundle;
+import android.util.Log;
 
-        import android.os.Bundle;
-        import android.util.Log;
+import androidx.fragment.app.FragmentActivity;
 
-        import com.google.android.gms.maps.CameraUpdateFactory;
-        import com.google.android.gms.maps.GoogleMap;
-        import com.google.android.gms.maps.OnMapReadyCallback;
-        import com.google.android.gms.maps.SupportMapFragment;
-        import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-        import com.google.android.gms.maps.model.LatLng;
-        import com.google.android.gms.maps.model.Marker;
-        import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-        import java.math.BigDecimal;
-        import java.math.RoundingMode;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
+/**
+ * Google Maps Activity
+ *
+ * Author : Henry Lin
+ * Creates a google map fragment where markers can be placed
+ *
+ * @see com.example.zoomwroom.Location
+ * @see com.google.android.gms.maps.GoogleMap
+ *
+ * Modified source from: https://developers.google.com/maps/documentation/android-sdk/start
+ * Under the Apache 2.0 license
+ */
+public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private GoogleMap mMap;
     protected Location mLocation;
@@ -30,7 +42,6 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_home);
-
         mLocation = new Location();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

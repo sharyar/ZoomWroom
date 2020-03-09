@@ -41,7 +41,7 @@
                 android:id="@+id/drop_off_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Drop Off location"
+                android:text="Drop Off Location"
                 style="@style/TextViewAcceptRequest"/>
         </LinearLayout>
 
@@ -62,7 +62,6 @@
                 android:id="@+id/offered_fare"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="$20"
                 style="@style/TextViewAcceptRequest2"/>
 
         </LinearLayout>

@@ -178,7 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param value
      * @return radian
      */
-    private static Double toRad(Double value) {
+    static Double toRad(Double value) {
         return value * Math.PI / 180;
     }
 }

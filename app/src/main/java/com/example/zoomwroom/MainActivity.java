@@ -13,6 +13,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+
+import com.example.zoomwroom.database.MyDataBase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.android.volley.Response;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     final private String serverKey = "key=" + "AIzaSyCzF5PRcdDADRymHeRF2piC4TOUDIflvZM";
     final private String contentType = "application/json";
     String token;
+    MyDataBase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

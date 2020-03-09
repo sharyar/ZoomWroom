@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void OpenActivityMaps() {
-        Intent intent = new Intent(this, MapsActivity.class);
+        Intent intent = new Intent(this, RiderHomeActivity.class);
         startActivity(intent);
     }
 

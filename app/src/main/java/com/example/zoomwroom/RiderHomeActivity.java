@@ -1,24 +1,25 @@
 package com.example.zoomwroom;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
+        import androidx.appcompat.app.AppCompatActivity;
+        import androidx.fragment.app.FragmentActivity;
 
-import android.os.Bundle;
-import android.util.Log;
+        import android.os.Bundle;
+        import android.util.Log;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+        import com.google.android.gms.maps.CameraUpdateFactory;
+        import com.google.android.gms.maps.GoogleMap;
+        import com.google.android.gms.maps.OnMapReadyCallback;
+        import com.google.android.gms.maps.SupportMapFragment;
+        import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+        import com.google.android.gms.maps.model.LatLng;
+        import com.google.android.gms.maps.model.Marker;
+        import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+        import java.math.BigDecimal;
+        import java.math.RoundingMode;
 
-public class RiderHome extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
+
     private GoogleMap mMap;
     protected Location mLocation;
     private boolean f;
@@ -29,13 +30,14 @@ public class RiderHome extends FragmentActivity implements OnMapReadyCallback, G
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_home);
-        //mLocation = new Location(); ignore this for now
 
+        mLocation = new Location();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
 
     /**
      * Manipulates the map once available.
@@ -169,4 +171,3 @@ public class RiderHome extends FragmentActivity implements OnMapReadyCallback, G
         return value * Math.PI / 180;
     }
 }
-

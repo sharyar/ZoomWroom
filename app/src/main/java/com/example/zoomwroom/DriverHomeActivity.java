@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class DriverHome extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
 
@@ -92,6 +92,7 @@ public class DriverHome extends FragmentActivity implements OnMapReadyCallback, 
         Bundle b = new Bundle();
         b.putString("RiderName", request.getRider().getName());
         b.putFloat("OfferedFare", request.getOfferedFare());
+        b.putString();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

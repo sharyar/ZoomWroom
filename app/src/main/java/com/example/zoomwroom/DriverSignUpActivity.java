@@ -10,14 +10,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.zoomwroom.Entities.ContactInformation;
+import com.example.zoomwroom.Entities.Driver;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
+import java.util.Map;
 
 public class DriverSignUpActivity extends AppCompatActivity {
     // You declare this in every activity that needs access to the database
@@ -28,10 +35,6 @@ public class DriverSignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
 
-    //Declare variables required for this activity
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,36 +44,72 @@ public class DriverSignUpActivity extends AppCompatActivity {
         //Get Auth instance from Firebase
         mAuth = FirebaseAuth.getInstance();
 
-        EditText fullName = findViewById(R.id.driverSignupFullName);
-        EditText emailAddress = findViewById(R.id.driverSignupEmailAddress);
+        EditText firstNameEditText = findViewById(R.id.driverSignupFName);
+        EditText lastNameEditText = findViewById(R.id.driverSignupLName);
+        EditText emailAddressEditText = findViewById(R.id.driverSignupEmailAddress);
         EditText passWordEditText = findViewById(R.id.driverSignupPassWord);
-        EditText userName = findViewById(R.id.driverSignupUserName);
-        EditText phoneNumber = findViewById(R.id.driverSignupPhoneNumber);
+        EditText userNameEditText = findViewById(R.id.driverSignupUserName);
+        EditText phoneNumberEditText = findViewById(R.id.driverSignupPhoneNumber);
         Button signUpDriver = findViewById(R.id.driverSignupSignupBtn);
 
 
         //Uses the email address and password fields to create a new user within the database.
         signUpDriver.setOnClickListener((View v) -> {
-            String email = emailAddress.getText().toString().trim();
-            String passWord = passWordEditText.getText().toString().trim();
-            mAuth.createUserWithEmailAndPassword(email, passWord)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "createUserWithEmail:Success");
-                                //Get the newly created user. We can use this to actually build the contact info page.
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Toast.makeText(DriverSignUpActivity.this, "You are now signed up!",
-                                        Toast.LENGTH_SHORT).show();
+            String email = emailAddressEditText.getText().toString().trim();
+            String passWord = passWordEditText.getText().toString();
+            String firstNameText = firstNameEditText.getText().toString().trim();
+            String lastNameText = lastNameEditText.getText().toString().trim();
+            String userName = userNameEditText.getText().toString().trim();
+            String phoneNumber = phoneNumberEditText.getText().toString().trim();
 
-                            } else {
-                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(DriverSignUpActivity.this, "Signup Failed",
-                                        Toast.LENGTH_SHORT).show();
+            if (email.isEmpty() || passWord.isEmpty() || firstNameText.isEmpty() ||
+                    lastNameText.isEmpty() || userName.isEmpty() || phoneNumber.isEmpty()) {
+                Toast.makeText(DriverSignUpActivity.this, "Please ensure you have " +
+                        "filled out all the fields.", Toast.LENGTH_SHORT).show();
+            } else {
+
+                mAuth.createUserWithEmailAndPassword(email, passWord)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "createUserWithEmail:Success");
+                                    //Get the newly created user. We can use this to actually build the contact info page.
+                                    FirebaseUser user = mAuth.getCurrentUser();
+
+
+                                    //Add data from other fields if registration was successful:
+
+                                    //First create a new driver and contact info instance. Then add them to the database.
+                                    Driver newDriver = new Driver(firstNameText + " " + lastNameText, userName, email);
+                                    ContactInformation cInformation = new ContactInformation(phoneNumber, email);
+                                    newDriver.setContactDetails(cInformation);
+
+                                    assert user != null;
+
+                                    database.collection("Drivers").document(user.getUid()).set(newDriver)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(DriverSignUpActivity.this, "You are now signed up!",
+                                                            Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w(TAG, "Error, something went wrong with storing your info to the database.", e);
+                                                }
+                                            });
+
+                                } else {
+                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                    Toast.makeText(DriverSignUpActivity.this, "Sign up Failed, please check your fields",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    });
+                        });
+            }
         });
 
 

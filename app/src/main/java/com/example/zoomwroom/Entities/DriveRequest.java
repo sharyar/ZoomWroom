@@ -1,6 +1,7 @@
 package com.example.zoomwroom.Entities;
 
 import com.example.zoomwroom.Location;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 
@@ -19,8 +20,8 @@ public class DriveRequest {
 
     private Rider rider;
     private Driver driver;
-    private Location pickupLocation;
-    private Location destination;
+    private LatLng pickupLocation;
+    private LatLng destination;
     private Date requestDateTime;
     private float suggestedFare;
     private float offeredFare;
@@ -36,7 +37,7 @@ public class DriveRequest {
         rating = null;
     }
 
-    public DriveRequest(Rider rider, Location pickupLocation, Location destination) {
+    public DriveRequest(Rider rider, LatLng pickupLocation, LatLng destination) {
         this();
         this.rider = rider;
         this.pickupLocation = pickupLocation;
@@ -69,19 +70,19 @@ public class DriveRequest {
         this.driver = driver;
     }
 
-    public Location getPickupLocation() {
+    public LatLng getPickupLocation() {
         return pickupLocation;
     }
 
-    public void setPickupLocation(Location pickupLocation) {
+    public void setPickupLocation(LatLng pickupLocation) {
         this.pickupLocation = pickupLocation;
     }
 
-    public Location getDestination() {
+    public LatLng getDestination() {
         return destination;
     }
 
-    public void setDestination(Location destination) {
+    public void setDestination(LatLng destination) {
         this.destination = destination;
     }
 

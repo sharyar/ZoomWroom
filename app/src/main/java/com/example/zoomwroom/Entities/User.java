@@ -6,7 +6,7 @@ public class User {
     private String userName;
     private String userID;
     private ContactInformation contactDetails;
-    private float accountBalance;
+    private float balance;
 
     /**
      * Empty constructor, required by firebase.
@@ -48,17 +48,17 @@ public class User {
         this.contactDetails = contactDetails;
     }
 
-    public float getAccountBalance() {
-        return accountBalance;
+    public float getBalance() {
+        return balance;
     }
 
-    public void setAccountBalance(float accountBalance) {
-        this.accountBalance = accountBalance;
+    public void setBalance(float balance) {
+        this.balance = balance;
     }
     //</editor-fold>
 
     public float addBalance(float amount) {
-        accountBalance += amount;
-        return accountBalance;
+        balance += amount;
+        return balance;
     }
 }

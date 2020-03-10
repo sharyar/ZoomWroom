@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Rider;
+import com.example.zoomwroom.database.MyDatabase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -88,7 +89,9 @@ public class DriverHome extends FragmentActivity implements OnMapReadyCallback, 
     public void showDriveRequestFragment(DriveRequest request) {
 
         Bundle b = new Bundle();
-        b.putString("RiderName", request.getRiderID().getName());
+        String riderID = request.getRiderID();
+        String riderName = MyDatabase.getRider(riderID).getUserName();
+        b.putString("RiderName", riderName);
         b.putFloat("OfferedFare", request.getOfferedFare());
 
         FragmentManager fragmentManager = getSupportFragmentManager();

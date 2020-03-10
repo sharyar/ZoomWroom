@@ -65,6 +65,8 @@ public class DriveRequest {
         return driver;
     }
 
+    public void setRider(Rider rider) {this.rider = rider;}
+
     public void setDriver(Driver driver) {
         this.driver = driver;
     }

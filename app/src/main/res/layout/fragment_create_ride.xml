@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:background="@color/colorWhite">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Where are you going?"
+            android:textColor="@color/colorLightGray" />
+
+        <EditText
+            android:id="@+id/destination_text"
+            android:layout_width="218dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="30dp"
+            android:ems="10"
+            android:textColor="@color/colorLightGray" />
+
+        <View
+            android:layout_width="350dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/colorLightGray" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Where are you going?"
+            android:textColor="@color/colorLightGray" />
+
+        <EditText
+            android:id="@+id/pickup_text"
+            android:layout_width="218dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:textColor="@color/Black1" />
+
+        <View
+            android:layout_width="350dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/colorLightGray" />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CANCEL"
+            android:layout_marginLeft="20dp"
+            style="@style/PrimaryButtonRegisterRider"
+            android:textColorHint="@color/colorWhite"
+            android:backgroundTint="@color/colorAccentPurple">
+
+        </Button>
+
+        <Button
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccentPurple"
+            android:layout_marginLeft="130dp"
+            android:layout_marginRight="20dp"
+            style="@style/PrimaryButtonRegisterRider"
+            android:text="CONFIRM"
+            android:textColorHint="@color/colorWhite">
+
+        </Button>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

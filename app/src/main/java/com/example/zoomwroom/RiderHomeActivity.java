@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.zoomwroom.Entities.DriveRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -43,6 +45,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private Marker departureMarker;
     private Marker destinationMarker;
     private FloatingActionButton profileButton;
+    private Button rideButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,18 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                 //OpenProfileActivity();
             }
         });
+
+        rideButton = findViewById(R.id.create_ride_button);
+        rideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRideCreation();
+            }
+        });
+
+
+
+
 
     }
 
@@ -212,5 +227,18 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     public void OpenProfileActivity(){
         //Intent intent = new Intent(this, BAJINS.class);
         //startActivity(intent);
+    }
+
+    public void openRideCreation() {
+
+        Bundle b = new Bundle();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        final FragmentCreateRide createRideFragment = new FragmentCreateRide();
+
+        createRideFragment.setArguments(b);
+
+        createRideFragment.show(getSupportFragmentManager(), createRideFragment.getTag());
     }
 }

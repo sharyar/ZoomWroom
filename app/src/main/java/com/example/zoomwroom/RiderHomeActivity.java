@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,6 +16,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -37,6 +40,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private boolean f;
     private Marker departureMarker;
     private Marker destinationMarker;
+    private FloatingActionButton testButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,15 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        Bundle b = new Bundle(); // idk what this is
+
+        FragmentManager fragmentManager = getSupportFragmentManager(); // this is creaitng a fragment manager
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction(); // something you just have to do
+        final FragmentDisplayDriveRequestInfo driveRequestFragment = new FragmentDisplayDriveRequestInfo(); // this is your fragment class
+        testButton = (FloatingActionButton) findViewById(R.id.test_button);
+
     }
 
 

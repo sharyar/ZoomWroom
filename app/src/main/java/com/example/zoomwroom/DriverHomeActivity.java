@@ -17,11 +17,14 @@ import android.widget.Toast;
 
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Rider;
+import com.example.zoomwroom.database.MyDataBase;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,7 +42,6 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
 
     Marker pickupLocationMarker;
     Marker destinationLocationMarker;
-
     FloatingActionButton profileBtn;
 
     @Override
@@ -51,6 +53,8 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        // Profile button - Open's user's profile
         profileBtn = findViewById(R.id.floatingActionButton);
 
         profileBtn.setOnClickListener(new View.OnClickListener() {
@@ -78,38 +82,16 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         // The first array list gets and stores the current active requests. The second array list is used to store markers for those requests
         ArrayList<DriveRequest> requests = new ArrayList<>();
 
-        // Mock data
-        Rider rider = new Rider("Sharyar Memon", "sharyarMemon", "sharyar@ualberta.ca");
-        Rider rider1 = new Rider("Khadija Memon", "khadija", "kmemo@ualberta.ca");
-        Rider rider2 = new Rider("Rafsan Jani", "rafsan", "rafsan@hotmail.com");
+        // Get the currently open requests from the database.
+        requests = MyDataBase.getOpenRequests();
 
-        LatLng edmonton = new LatLng(53.523, -113.526);
-        LatLng calgary = new LatLng(51.038, -114.0755);
-        LatLng millcreek = new LatLng(53.512529, -113.471515);
-        LatLng south = new LatLng(53.462267, -113.378985);
-        LatLng west = new LatLng(53.524459, -113.654509);
-        LatLng north = new LatLng(53.627660, -113.470805);
-
-//        DriveRequest newRequest = new DriveRequest(rider, edmonton, calgary);
-//        newRequest.setOfferedFare((float) 20.3);
-//        requests.add(newRequest);
-//
-//        DriveRequest newRequest2 = new DriveRequest(rider1, millcreek, south);
-//        newRequest2.setOfferedFare((float) 30.2);
-//        requests.add(newRequest2);
-//
-//        DriveRequest newRequest3 = new DriveRequest(rider2, west, north);
-//        newRequest3.setOfferedFare((float)40.5);
-//        requests.add(newRequest3);
-//
-//
-//        for (DriveRequest request: requests) {
-//            LatLng requestLocationStart = request.getPickupLocation();
-//            String riderName = request.getRider().getName();
-//            Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
-//            m.setTag(request);
-//            markers.add(m);
-//        }
+        for (DriveRequest request: requests) {
+            LatLng requestLocationStart = request.getPickupLocation();
+            String riderName = MyDataBase.getRider(request.getRiderID()).getName();
+            Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
+            m.setTag(request);
+            markers.add(m);
+        }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
@@ -126,6 +108,9 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         }
         pickupLocationMarker = mMap.addMarker(new MarkerOptions().position(pickedRequest.getPickupLocation()).title("Pickup"));
         destinationLocationMarker = mMap.addMarker(new MarkerOptions().position(pickedRequest.getDestination()).title("Destination"));
+
+        LatLngBounds currentRequestBounds = new LatLngBounds(pickedRequest.getPickupLocation(), pickedRequest.getDestination());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(currentRequestBounds,0));
         return false;
     }
 
@@ -168,7 +153,7 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
             pickupLocationMarker.remove();
             destinationLocationMarker.remove();
         }
-
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
     }
 
 

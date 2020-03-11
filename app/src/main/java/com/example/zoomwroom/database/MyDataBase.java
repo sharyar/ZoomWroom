@@ -13,9 +13,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MyDataBase {
@@ -124,7 +126,7 @@ public class MyDataBase {
      */
     public static ArrayList<DriveRequest> getRiderRequest(Rider rider){
         final CollectionReference collectionReference = db.collection("DriverRequest");
-        ArrayList<DriveRequest> driveRequests = new ArrayList<DriveRequest>();
+        ArrayList<DriveRequest> driveRequests = new ArrayList<>();
 
         Task<QuerySnapshot> task = collectionReference
                 .whereEqualTo("rider", rider)
@@ -138,10 +140,32 @@ public class MyDataBase {
     }
 
     /**
+     * Returns open request that have their status as PENDING
+     * Created by Sharyar for DriverHomePageActivity
+     * @return
+     *      Arraylist of drive requests that have status pending and have not been picked by a driver
+     */
+    public static ArrayList<DriveRequest> getOpenRequests() {
+        final CollectionReference collectionReference = db.collection("DriverRequest");
+        ArrayList<DriveRequest> driveRequests = new ArrayList<>();
+
+        Task<QuerySnapshot> task = collectionReference
+                .whereEqualTo("status", 0)
+                .get();
+        while (!task.isSuccessful()) {}
+        for (QueryDocumentSnapshot doc: task.getResult()) {
+            DriveRequest request = doc.toObject(DriveRequest.class);
+            driveRequests.add(request);
+
+        }
+        return driveRequests;
+    }
+
+    /**
      * get target object rider
      * @param userID
      */
-    public Rider getRider(String userID) {
+    public static Rider getRider(String userID) {
         final CollectionReference collectionReference = db.collection("Riders");
         Task<QuerySnapshot> task = collectionReference
                 .whereEqualTo("userID", userID)
@@ -213,7 +237,7 @@ public class MyDataBase {
      * get the target object driver
      * @param userID
      */
-    public Driver getDriver(String userID) {
+    public static Driver getDriver(String userID) {
         final CollectionReference collectionReference = db.collection("Drivers");
         Task<QuerySnapshot> task = collectionReference
                 .whereEqualTo("userID", userID)

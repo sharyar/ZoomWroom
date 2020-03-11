@@ -33,4 +33,18 @@
         app:srcCompat="@android:drawable/ic_input_add"
         tools:visibility="visible" />
 
+    <Button
+        android:id="@+id/create_ride_button"
+        android:layout_width="281dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="25dp"
+        android:text="create a ride"
+        style="@style/PrimaryButtonRegisterRider"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAllCaps="true"
+        android:textColorHint="@color/colorWhite"
+        android:backgroundTint="@color/colorAccentPurple"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

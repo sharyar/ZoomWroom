@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Rider;
-import com.example.zoomwroom.database.MyDatabase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -57,14 +56,16 @@ public class DriverHome extends FragmentActivity implements OnMapReadyCallback, 
 
         LatLng edmonton = new LatLng(53.5232, -113.5263);
 
-        DriveRequest newRequest = new DriveRequest(rider.getUserID(), edmonton, edmonton);
-        newRequest.setOfferedFare(20.3f);
+        DriveRequest newRequest = new DriveRequest(rider, edmonton, edmonton);
+        newRequest.setOfferedFare((float) 20.3);
         requests.add(newRequest);
+
+
+
 
         for (DriveRequest request: requests) {
             LatLng requestLocationStart = request.getPickupLocation();
-            String riderID = request.getRiderID();
-            String riderName = MyDatabase.getRider(riderID).getUserName();
+            String riderName = request.getRider().getName();
 
             Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
             m.setTag(request);
@@ -73,7 +74,7 @@ public class DriverHome extends FragmentActivity implements OnMapReadyCallback, 
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
 
-        mMap.setOnMarkerClickListener(this);
+        mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
 
     }
 
@@ -89,9 +90,7 @@ public class DriverHome extends FragmentActivity implements OnMapReadyCallback, 
     public void showDriveRequestFragment(DriveRequest request) {
 
         Bundle b = new Bundle();
-        String riderID = request.getRiderID();
-        String riderName = MyDatabase.getRider(riderID).getUserName();
-        b.putString("RiderName", riderName);
+        b.putString("RiderName", request.getRider().getName());
         b.putFloat("OfferedFare", request.getOfferedFare());
 
         FragmentManager fragmentManager = getSupportFragmentManager();

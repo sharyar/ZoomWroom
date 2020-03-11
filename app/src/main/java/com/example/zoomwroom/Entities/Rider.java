@@ -9,7 +9,7 @@ public class Rider extends User {
      */
     public Rider() { }
 
-    public Rider(String name, String userName, String userID) {
-        super(name, userName, userID);
+    public Rider(String userName, String userID) {
+        super(userName, userID);
     }
 }

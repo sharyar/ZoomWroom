@@ -1,5 +1,6 @@
 package com.example.zoomwroom.Entities;
 
+import com.example.zoomwroom.Location;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;

@@ -1,4 +1,5 @@
 package com.example.zoomwroom.Entities;
+import android.app.DownloadManager;
 
 import java.util.ArrayList;
 
@@ -12,8 +13,8 @@ public class Driver extends User {
      * @param userName
      * @param userID
      */
-    public Driver(String name, String userName, String userID) {
-        super(name, userName, userID);
+    public Driver(String userName, String userID) {
+        super(userName, userID);
     }
 
     //<editor-fold desc="Getter & Setter">

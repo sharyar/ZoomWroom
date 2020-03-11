@@ -6,8 +6,9 @@
 <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
 <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
 <!--        <item name="colorAccent">@color/colorAccent</item>-->
-
-
+        <item name="windowNoTitle">false</item>
+        <!--We will be using the toolbar so no need to show ActionBar-->
+        <item name="windowActionBar">true</item>
     </style>
 
     <style name="PrimaryButtonRegisterRider" parent="Widget.MaterialComponents.Button">
@@ -39,9 +40,35 @@
         <item name="android:textColor">@color/CyanBlueGreen</item>
     </style>
 
+    <style name="TextViewAcceptRequest" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+    
+    <style name="TextViewAcceptRequest2" parent="TextViewAcceptRequest">
+        <item name="android:textColor">@color/CyanBlueGreen</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="TextInputUserEditProfile" parent="">
+        <item name="android:textColor">@color/DarkSlate</item>
+
+    </style>
+
+    <style name="TextLayoutStyleUserEditProfile" parent="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="hintEnabled">true</item>
+        <item name="boxBackgroundColor">@color/colorWhite</item>
+        <item name="hintTextColor">@color/CyanBlueGreen</item>
+        <item name="android:textColorHint">@color/CyanBlueGreen</item>
+        <item name="boxStrokeColor">@color/CyanBlueGreen</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
     <style name="DialogFragmentStyle">
         <item name="android:background">@color/colorWhite</item>
     </style>
-
 
 </resources>

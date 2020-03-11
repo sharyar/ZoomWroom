@@ -1,24 +1,23 @@
 package com.example.zoomwroom.Entities;
+import android.app.DownloadManager;
+
 import java.util.ArrayList;
 
 public class Driver extends User {
     // Declare variables required for class
     private ArrayList<Rating> ratings;
-    private ArrayList<DriveRequest> rideRequests;
+    private DriveRequest currentRequest;
 
     /**
      * Constructor
-     * @param name
      * @param userName
      * @param userID
-     * @param photo
      */
-    public Driver(String name, String userName, String userID) {
-        super(name, userName, userID);
+    public Driver(String userName, String userID) {
+        super(userName, userID);
     }
 
-
-    //<editor-fold desc="Getter & Setter Methods">
+    //<editor-fold desc="Getter & Setter">
     public ArrayList<Rating> getRatings() {
         return ratings;
     }
@@ -29,12 +28,12 @@ public class Driver extends User {
         this.ratings = ratings;
     }
 
-    public ArrayList<DriveRequest> getRideRequests() {
-        return rideRequests;
+    public DriveRequest getCurrentRequest() {
+        return currentRequest;
     }
 
-    public void setRideRequests(ArrayList<DriveRequest> rideRequests) {
-        this.rideRequests = rideRequests;
+    public void setCurrentRequest(DriveRequest currentRequest) {
+        this.currentRequest = currentRequest;
     }
     //</editor-fold>
 }

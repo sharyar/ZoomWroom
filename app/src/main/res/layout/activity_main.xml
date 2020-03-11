@@ -9,51 +9,59 @@
     tools:context=".MainActivity">
 
 
-    <Button
-        android:id="@+id/RiderBT"
-        android:layout_width="113dp"
-        android:layout_height="84dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="44dp"
-        android:background="@drawable/mainpagebutton_shape"
-        android:text="Rider"
-        android:textAllCaps="false"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/DriverBT"
-        android:layout_width="113dp"
-        android:layout_height="84dp"
-        android:layout_marginTop="48dp"
-        android:background="@drawable/mainpagebutton_shape"
-        android:text="Driver"
-        android:textAllCaps="false"
-        android:textColor="@android:color/holo_blue_bright"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.117"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="319dp"
+            android:layout_height="405dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/logoblue" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="319dp"
-        android:layout_height="405dp"
-        android:layout_marginEnd="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mainlogo" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-    <Button
-        android:id="@+id/bypasstomap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bypass to map"
-        tools:layout_editor_absoluteX="121dp"
-        tools:layout_editor_absoluteY="600dp" />
+            <Button
+                android:id="@+id/RiderBT"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:layout_marginEnd="44dp"
+                android:layout_weight="1"
+                android:background="@drawable/mainpagebutton_shape"
+                android:text="Rider"
+                android:textAllCaps="false"
+                android:textColor="@android:color/background_light"
+                android:textSize="24sp"
+                style="@style/Widget.MaterialComponents.Button"/>
+
+            <Button
+                android:id="@+id/DriverBT"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/mainpagebutton_shape"
+                android:text="Driver"
+                android:textAllCaps="false"
+                android:textColor="@color/common_google_signin_btn_text_dark"
+                android:textSize="24sp"
+                style="@style/Widget.MaterialComponents.Button"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bypasstomap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bypass to map"
+            style="@style/Widget.MaterialComponents.Button"/>
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

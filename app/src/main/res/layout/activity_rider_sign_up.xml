@@ -8,98 +8,117 @@
     android:theme="@style/Theme.AppCompat"
     tools:context=".RiderSignUpActivity">
 
-    <ImageView
-        android:id="@+id/rider_image"
-        android:layout_width="247dp"
-        android:layout_height="165dp"
-        android:layout_marginTop="52dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/riderlogo" />
-
-    <EditText
-        android:id="@+id/rider_username"
-        android:layout_width="368dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/rider_signup_shape"
-        android:hint="Username"
-        android:textColor="@color/colorPrimary"
-        android:textColorHint="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/rider_password"
-        app:layout_constraintTop_toBottomOf="@+id/rider_image" />
-
-    <EditText
-        android:id="@+id/rider_password"
-        android:layout_width="368dp"
-        android:layout_height="41dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:background="@drawable/rider_signup_shape"
-        android:text="Password"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/rider_phone"
-        app:layout_constraintTop_toBottomOf="@+id/rider_username" />
-
-    <EditText
-        android:id="@+id/rider_phone"
-        android:layout_width="368dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/rider_signup_shape"
-        android:inputType="phone"
-        android:text="Phone Number"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rider_password"></EditText>
-
-    <EditText
-        android:id="@+id/rider_name"
-        android:layout_width="368dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/rider_signup_shape"
-        android:text="First and Last name"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rider_phone" />
-
-    <Button
-        android:id="@+id/rider_SignupBT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="36dp"
-        android:background="@drawable/rounded_button"
-        android:text="Sign Up"
-        android:textAllCaps="false"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rider_name" />
-
-    <Button
-        android:id="@+id/rider_BackBT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@null"
-        android:text="Back"
-        android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rider_name"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/rider_image"
+            android:layout_width="247dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            app:srcCompat="@drawable/riderlogo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/riderSignupFName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rider_signup_shape"
+                android:hint="First Name"
+                android:inputType="textPersonName"
+                android:layout_weight="1"
+                style="@style/EditTextDefaultRiderRegister"
+                android:layout_marginEnd="5dp"/>
+
+            <EditText
+                android:id="@+id/riderSignupLName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rider_signup_shape"
+                android:hint="Last Name"
+                android:inputType="textPersonName"
+                android:layout_weight="1"
+                style="@style/EditTextDefaultRiderRegister"/>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/riderSignupEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email Address"
+            android:inputType="textEmailAddress"
+            style="@style/EditTextDefaultRiderRegister" />
+
+        <EditText
+            android:id="@+id/riderSignupUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Unique username"
+            android:inputType="textNoSuggestions"
+            style="@style/EditTextDefaultRiderRegister"/>
+
+        <EditText
+            android:id="@+id/riderSignupPassWord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            style="@style/EditTextDefaultRiderRegister"/>
+
+        <EditText
+            android:id="@+id/riderSignupPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phone Number"
+            android:inputType="phone"
+            style="@style/EditTextDefaultRiderRegister"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/riderSignupBackBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Back"
+                android:textAllCaps="false"
+                android:layout_marginEnd="2dp"
+                style="@style/PrimaryButtonRegisterRider"
+                />
+
+            <Button
+                android:id="@+id/riderSignupSignupBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sign Up"
+                android:textAllCaps="false"
+                android:layout_marginStart="2dp"
+                style="@style/PrimaryButtonRegisterRider"
+                android:backgroundTint="@color/colorPrimaryGreen"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

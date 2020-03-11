@@ -1,8 +1,10 @@
 
 package com.example.zoomwroom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -24,7 +26,7 @@ import java.math.RoundingMode;
 /**
  * Google Maps Activity
  *
- * Author : Henry Lin
+ * Author : Henry Lin, Amanda Nguyen
  * Creates a google map fragment where markers can be placed
  *
  * @see com.example.zoomwroom.Location
@@ -40,7 +42,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private boolean f;
     private Marker departureMarker;
     private Marker destinationMarker;
-    private FloatingActionButton testButton;
+    private FloatingActionButton profileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,15 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         FragmentManager fragmentManager = getSupportFragmentManager(); // this is creaitng a fragment manager
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction(); // something you just have to do
         final FragmentDisplayDriveRequestInfo driveRequestFragment = new FragmentDisplayDriveRequestInfo(); // this is your fragment class
-        testButton = (FloatingActionButton) findViewById(R.id.test_button);
+        profileButton = (FloatingActionButton) findViewById(R.id.rider_profile_button);
+
+
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //OpenProfileActivity();
+            }
+        });
 
     }
 
@@ -193,5 +203,14 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
      */
     private static Double toRad(Double value) {
         return value * Math.PI / 180;
+    }
+    public void OpenDriverModeActivity(){
+        Intent intent = new Intent(this,DriverModeActivity.class);
+        startActivity(intent);
+    }
+
+    public void OpenProfileActivity(){
+        //Intent intent = new Intent(this, BAJINS.class);
+        //startActivity(intent);
     }
 }

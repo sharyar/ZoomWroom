@@ -2,6 +2,15 @@ package com.example.zoomwroom.Entities;
 
 public class User {
 
+    public static User notFound = new User("", "", "not found");
+
+    public static boolean userNotFound(User user) {
+        if (user.getUserID().equals("not found")) {
+            return true;
+        }
+        return false;
+    }
+
     // Declare variables required for class.
     private String name;
     private String userName;

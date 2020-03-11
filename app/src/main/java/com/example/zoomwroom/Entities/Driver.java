@@ -10,11 +10,12 @@ public class Driver extends User {
 
     /**
      * Constructor
+     * @param name
      * @param userName
      * @param userID
      */
-    public Driver(String userName, String userID) {
-        super(userName, userID);
+    public Driver(String name, String userName, String userID) {
+        super(name, userName, userID);
     }
 
     //<editor-fold desc="Getter & Setter">

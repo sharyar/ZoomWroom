@@ -22,6 +22,8 @@ public class Driver extends User {
         return ratings;
     }
 
+    public Driver(){}
+
     public void setRatings(ArrayList<Rating> ratings) {
         this.ratings = ratings;
     }

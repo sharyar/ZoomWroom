@@ -7,15 +7,18 @@ public class User {
     private String userName;
     private String userID;
     private ContactInformation contactDetails;
-    private QRBucks accountBalance;
+    private float balance;
 
+    /**
+     * Empty constructor, required by firebase.
+     */
+    public User(){ }
 
     /**
      * Constructor for class. Returns an instance of User based on provided parameters.
      * @param name String Full name of user.
      * @param userName String Unique userName of user.
      * @param userID String unique userID used to reference the user within the system.
-     * @param photo Image   User's profile photo.
      */
     public User(String name, String userName, String userID) {
         this.name = name;
@@ -23,23 +26,15 @@ public class User {
         this.userID = userID;
     }
 
-    /**
-     * Empty constructor. I think it is required by firebase(Not certain).
-     */
-    public User(){
-        super();
-    }
-
-
     //<editor-fold desc="Getters & setters">
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
+    
     public String getUserName() {
         return userName;
     }
@@ -64,19 +59,17 @@ public class User {
         this.contactDetails = contactDetails;
     }
 
-    public QRBucks getAccountBalance() {
-        return accountBalance;
+    public float getBalance() {
+        return balance;
     }
 
-    public void setAccountBalance(QRBucks accountBalance) {
-        this.accountBalance = accountBalance;
+    public void setBalance(float balance) {
+        this.balance = balance;
     }
     //</editor-fold>
 
-    public void editProfile(String name, String userName, ContactInformation contactDetails) {
-        setName(name);
-        setUserName(userName);
-        setContactDetails(contactDetails);
+    public float addBalance(float amount) {
+        balance += amount;
+        return balance;
     }
-
 }

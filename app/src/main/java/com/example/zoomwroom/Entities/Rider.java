@@ -1,23 +1,15 @@
 package com.example.zoomwroom.Entities;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
-
+/**
+ * Useless class warning
+ */
 public class Rider extends User {
-    // Declare variables required for class.
-    ArrayList<DriveRequest> ridesRequested;
+    /**
+     * Empty constructor, required by firebase
+     */
+    public Rider() { }
 
-
-    public Rider(String name, String userName, String userID) {
-        super(name, userName, userID);
-    }
-
-    public ArrayList<DriveRequest> getRidesRequested() {
-        return ridesRequested;
-    }
-
-    public void setRidesRequested(ArrayList<DriveRequest> ridesRequested) {
-        this.ridesRequested = ridesRequested;
+    public Rider(String userName, String userID) {
+        super(userName, userID);
     }
 }

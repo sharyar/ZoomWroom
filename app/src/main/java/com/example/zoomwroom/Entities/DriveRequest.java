@@ -6,26 +6,30 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Date;
 
 public class DriveRequest {
-    // status description: https://github.com/CMPUT301W20T29-H03/ZoomWroom/wiki/App-Terminologies#status
-    public enum Status {
-        PENDING,
-        ACCEPTED,
-        CONFIRMED,
-        ONGOING,
-        COMPLETED,
-        CANCELLED,
-        DECLINED,
-        ABORTED
-    }
 
-    private Rider rider;
-    private Driver driver;
+    //<editor-fold desc="Status">
+    // status description: https://github.com/CMPUT301W20T29-H03/ZoomWroom/wiki/App-Terminologies#status
+    public final class Status {
+        public static final int PENDING     = 0;
+        public static final int ACCEPTED    = 1;
+        public static final int CONFIRMED   = 2;
+        public static final int ONGOING     = 3;
+        public static final int COMPLETED   = 4;
+        public static final int CANCELLED   = 5;
+        public static final int DECLINED    = 6;
+        public static final int ABORTED     = 7;
+    }
+    //</editor-fold>
+
+    private String requestID;
+    private String riderID;
+    private String driverID;
     private LatLng pickupLocation;
     private LatLng destination;
     private Date requestDateTime;
     private float suggestedFare;
     private float offeredFare;
-    private Status status;
+    private int status;
     private Rating rating;
 
     /**
@@ -34,40 +38,38 @@ public class DriveRequest {
     public DriveRequest() {
         requestDateTime = new Date();
         status = Status.PENDING;
-        rating = null;
     }
-
-    public DriveRequest(Rider rider, LatLng pickupLocation, LatLng destination) {
+    
+    public DriveRequest(String riderID, LatLng pickupLocation, LatLng destination) {
         this();
-        this.rider = rider;
+        this.riderID = riderID;
         this.pickupLocation = pickupLocation;
         this.destination = destination;
-        computeSuggestedFare();
+    }
+    
+    //<editor-fold desc="getter & setter">
+    public String getRequestID() {
+        return requestID;
+    }
+  
+    public void setRequestID(String requestID) {
+        this.requestID = requestID;
     }
 
-    private void computeSuggestedFare() {
-        /* To be implemented */
-        suggestedFare = 0;
+    public String getRiderID() {
+        return riderID;
     }
 
-    /**
-     * @param thumbsUp  true if rider gives a thumbs up, false otherwise
-     */
-    public void rate(boolean thumbsUp) {
-        rating = new Rating(thumbsUp);
+    public void setRiderID(String riderID) {
+        this.riderID = riderID;
     }
 
-    //<editor-fold desc="Getter & Setter Methods">
-    public Rider getRider() {
-        return rider;
+    public String getDriverID() {
+        return driverID;
     }
 
-    public Driver getDriver() {
-        return driver;
-    }
-
-    public void setDriver(Driver driver) {
-        this.driver = driver;
+    public void setDriverID(String driverID) {
+        this.driverID = driverID;
     }
 
     public LatLng getPickupLocation() {
@@ -90,31 +92,47 @@ public class DriveRequest {
         return requestDateTime;
     }
 
+    public void setRequestDateTime(Date requestDateTime) {
+        this.requestDateTime = requestDateTime;
+    }
+
     public float getSuggestedFare() {
         return suggestedFare;
+    }
+
+    public void setSuggestedFare(float suggestedFare) {
+        this.suggestedFare = suggestedFare;
     }
 
     public float getOfferedFare() {
         return offeredFare;
     }
 
-    public void setOfferedFare(float offeredFare) throws IllegalArgumentException {
-        if (offeredFare < suggestedFare) {
-            throw new IllegalArgumentException("Offered fare should be not less than suggested fare");
-        }
+    public void setOfferedFare(float offeredFare) {
         this.offeredFare = offeredFare;
     }
 
-    public Status getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(int status) throws IllegalArgumentException {
+        if (status < 0 || status > 7) {
+            throw new IllegalArgumentException("status value out of range!");
+        }
         this.status = status;
     }
 
     public Rating getRating() {
         return rating;
     }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
     //</editor-fold>
+
+    public String toQRBucksString() {
+        return String.format("%s, %s, %f", riderID, driverID, offeredFare);
+    }
 }

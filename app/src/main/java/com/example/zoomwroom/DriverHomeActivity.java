@@ -2,13 +2,17 @@
 
 package com.example.zoomwroom;
 
+import androidx.annotation.WorkerThread;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.zoomwroom.Entities.DriveRequest;
@@ -20,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -30,6 +35,12 @@ import java.util.Locale;
 public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
+    private ArrayList<Marker> markers = new ArrayList<>();
+
+    Marker pickupLocationMarker;
+    Marker destinationLocationMarker;
+
+    FloatingActionButton profileBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +50,16 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        profileBtn = findViewById(R.id.floatingActionButton);
+
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(v.getContext(), EditUserProfileActivity.class);
+                startActivityForResult(myIntent, 0);
+            }
+        });
     }
 
     /**
@@ -56,34 +77,42 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
 
         // The first array list gets and stores the current active requests. The second array list is used to store markers for those requests
         ArrayList<DriveRequest> requests = new ArrayList<>();
-        ArrayList<Marker> markers = new ArrayList<>();
 
         // Mock data
         Rider rider = new Rider("Sharyar Memon", "sharyarMemon", "sharyar@ualberta.ca");
+        Rider rider1 = new Rider("Khadija Memon", "khadija", "kmemo@ualberta.ca");
+        Rider rider2 = new Rider("Rafsan Jani", "rafsan", "rafsan@hotmail.com");
 
-        LatLng edmonton = new LatLng(53.5232, -113.5263);
-        LatLng calgary = new LatLng(51.038431, -114.075507);
+        LatLng edmonton = new LatLng(53.523, -113.526);
+        LatLng calgary = new LatLng(51.038, -114.0755);
+        LatLng millcreek = new LatLng(53.512529, -113.471515);
+        LatLng south = new LatLng(53.462267, -113.378985);
+        LatLng west = new LatLng(53.524459, -113.654509);
+        LatLng north = new LatLng(53.627660, -113.470805);
 
         DriveRequest newRequest = new DriveRequest(rider, edmonton, calgary);
         newRequest.setOfferedFare((float) 20.3);
         requests.add(newRequest);
 
+        DriveRequest newRequest2 = new DriveRequest(rider1, millcreek, south);
+        newRequest2.setOfferedFare((float) 30.2);
+        requests.add(newRequest2);
 
+        DriveRequest newRequest3 = new DriveRequest(rider2, west, north);
+        newRequest3.setOfferedFare((float)40.5);
+        requests.add(newRequest3);
 
 
         for (DriveRequest request: requests) {
             LatLng requestLocationStart = request.getPickupLocation();
             String riderName = request.getRider().getName();
-
             Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
             m.setTag(request);
             markers.add(m);
         }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
-
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
-
     }
 
     @Override
@@ -91,6 +120,12 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
 
         DriveRequest pickedRequest = (DriveRequest) marker.getTag();
         showDriveRequestFragment(pickedRequest);
+
+        for (Marker m: markers) {
+            m.setVisible(false);
+        }
+        pickupLocationMarker = mMap.addMarker(new MarkerOptions().position(pickedRequest.getPickupLocation()).title("Pickup"));
+        destinationLocationMarker = mMap.addMarker(new MarkerOptions().position(pickedRequest.getDestination()).title("Destination"));
         return false;
     }
 
@@ -101,45 +136,15 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
 
         b.putString("RiderName", request.getRider().getName());
         b.putFloat("OfferedFare", request.getOfferedFare());
-        b.putString("PickupLocation", getAddressFromLocation(request.getPickupLocation()));
-        b.putString("DropOffLocation", getAddressFromLocation(request.getDestination()));
         b.putDouble("Distance", getDistance(request));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         final FragmentDisplayDriveRequestInfo driveRequestFragment = new FragmentDisplayDriveRequestInfo();
-
         driveRequestFragment.setArguments(b);
-
         driveRequestFragment.show(getSupportFragmentManager(), driveRequestFragment.getTag());
     }
 
-    private String getAddressFromLocation(LatLng location) {
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-
-        try {
-            List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
-
-            if (addresses.size() > 0) {
-                Address fetchedAddress = addresses.get(0);
-                StringBuilder strAddress = new StringBuilder();
-                for (int i = 0; i < fetchedAddress.getMaxAddressLineIndex(); i++) {
-                    strAddress.append(fetchedAddress.getAddressLine(i)).append(" ");
-                }
-
-                return strAddress.toString();
-            } else {
-                return "Searching Current Address";
-            }
-        }
-
-        catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Could not get address", Toast.LENGTH_SHORT).show();
-        }
-
-        return null;
-    }
 
     public double getDistance(DriveRequest request) {
         final int R = 6371; // Radius of the earth in Km
@@ -153,6 +158,17 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
                         Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         return R * c;
+    }
+
+
+    // This method resets the markers so they go back to what they were before the user clicked the map marker.
+    public void resetMarkers() {
+        for (Marker m: markers) {
+            m.setVisible(true);
+            pickupLocationMarker.remove();
+            destinationLocationMarker.remove();
+        }
+
     }
 
 

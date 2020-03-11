@@ -90,26 +90,26 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         LatLng west = new LatLng(53.524459, -113.654509);
         LatLng north = new LatLng(53.627660, -113.470805);
 
-        DriveRequest newRequest = new DriveRequest(rider, edmonton, calgary);
-        newRequest.setOfferedFare((float) 20.3);
-        requests.add(newRequest);
-
-        DriveRequest newRequest2 = new DriveRequest(rider1, millcreek, south);
-        newRequest2.setOfferedFare((float) 30.2);
-        requests.add(newRequest2);
-
-        DriveRequest newRequest3 = new DriveRequest(rider2, west, north);
-        newRequest3.setOfferedFare((float)40.5);
-        requests.add(newRequest3);
-
-
-        for (DriveRequest request: requests) {
-            LatLng requestLocationStart = request.getPickupLocation();
-            String riderName = request.getRider().getName();
-            Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
-            m.setTag(request);
-            markers.add(m);
-        }
+//        DriveRequest newRequest = new DriveRequest(rider, edmonton, calgary);
+//        newRequest.setOfferedFare((float) 20.3);
+//        requests.add(newRequest);
+//
+//        DriveRequest newRequest2 = new DriveRequest(rider1, millcreek, south);
+//        newRequest2.setOfferedFare((float) 30.2);
+//        requests.add(newRequest2);
+//
+//        DriveRequest newRequest3 = new DriveRequest(rider2, west, north);
+//        newRequest3.setOfferedFare((float)40.5);
+//        requests.add(newRequest3);
+//
+//
+//        for (DriveRequest request: requests) {
+//            LatLng requestLocationStart = request.getPickupLocation();
+//            String riderName = request.getRider().getName();
+//            Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
+//            m.setTag(request);
+//            markers.add(m);
+//        }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
@@ -133,8 +133,8 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
     public void showDriveRequestFragment(DriveRequest request) {
 
         Bundle b = new Bundle();
-
-        b.putString("RiderName", request.getRider().getName());
+//
+//        b.putString("RiderName", request.getRider().getName());
         b.putFloat("OfferedFare", request.getOfferedFare());
         b.putDouble("Distance", getDistance(request));
 

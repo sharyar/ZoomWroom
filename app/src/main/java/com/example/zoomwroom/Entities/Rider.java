@@ -1,5 +1,7 @@
 package com.example.zoomwroom.Entities;
 
+import java.util.ArrayList;
+
 /**
  * Useless class warning
  */
@@ -16,7 +18,4 @@ public class Rider extends User {
         return ridesRequested;
     }
 
-    public Rider(String userName, String userID) {
-        super(userName, userID);
-    }
 }

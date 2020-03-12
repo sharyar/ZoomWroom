@@ -1,6 +1,6 @@
 package com.example.zoomwroom.Entities;
 
-/*
+/**
 * ContactInformation
 *
 * Stores user's contact information as a separate object.
@@ -60,8 +60,9 @@ public class ContactInformation {
     }
 
     /**
-     * Sets the
-     * @param email
+     * Sets the email address of the instance
+     *
+     * @param email     value to be set for the email variable
      */
     public void setEmail(String email) {
         this.email = email;

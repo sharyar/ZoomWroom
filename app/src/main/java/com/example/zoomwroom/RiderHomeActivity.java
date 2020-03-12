@@ -57,15 +57,12 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
-        Bundle b = new Bundle(); // idk what this is
-
         FragmentManager fragmentManager = getSupportFragmentManager(); // this is creaitng a fragment manager
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction(); // something you just have to do
         final FragmentDisplayDriveRequestInfo driveRequestFragment = new FragmentDisplayDriveRequestInfo(); // this is your fragment class
+
+        // User profile button
         profileButton = (FloatingActionButton) findViewById(R.id.rider_profile_button);
-
-
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +70,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
+        // Create a ride button
         rideButton = findViewById(R.id.create_ride_button);
         rideButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,9 +78,6 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                 openRideCreation();
             }
         });
-
-
-
 
 
     }
@@ -219,16 +214,19 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private static Double toRad(Double value) {
         return value * Math.PI / 180;
     }
-    public void OpenDriverModeActivity(){
-        Intent intent = new Intent(this,DriverModeActivity.class);
-        startActivity(intent);
-    }
 
+    /**
+     * Called when user has clicked profile button
+     * Leads into the user profile activity
+     * */
     public void OpenProfileActivity(){
         //Intent intent = new Intent(this, BAJINS.class);
         //startActivity(intent);
     }
 
+    /**
+     * Called when user wants to create a ride
+     * */
     public void openRideCreation() {
 
         Bundle b = new Bundle();
@@ -238,7 +236,6 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         final FragmentCreateRide createRideFragment = new FragmentCreateRide();
 
         createRideFragment.setArguments(b);
-
         createRideFragment.show(getSupportFragmentManager(), createRideFragment.getTag());
     }
 }

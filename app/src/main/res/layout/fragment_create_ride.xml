@@ -25,12 +25,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:textColor="@color/colorLightGray"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:inputType="text"/>
 
         <View
             android:layout_width="350dp"
             android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:background="@color/colorLightGray" />
 
         <TextView
@@ -38,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
-            android:text="Where are you going?"
+            android:text="From Where?"
             android:textColor="@color/colorLightGray" />
 
         <EditText
@@ -47,12 +48,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:textColor="@color/colorLightGray"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:inputType="text"/>
 
         <View
             android:layout_width="350dp"
             android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:background="@color/colorLightGray" />
 
         <TextView
@@ -70,12 +72,13 @@
             android:layout_marginStart="10dp"
             android:hint="Offered fare: "
             android:textColorHint="@color/colorVLightGray"
-            android:textSize="20dp" />
+            android:textSize="20sp"
+            android:inputType="number"/>
 
         <View
             android:layout_width="350dp"
             android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:background="@color/colorLightGray" />
 
 

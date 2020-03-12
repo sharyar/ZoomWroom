@@ -85,15 +85,20 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         // Get the currently open requests from the database.
         requests = MyDataBase.getOpenRequests();
 
-        for (DriveRequest request: requests) {
-            LatLng requestLocationStart = request.getPickupLocation();
-            String riderName = MyDataBase.getRider(request.getRiderID()).getName();
-            Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
-            m.setTag(request);
-            markers.add(m);
+        if (!requests.isEmpty()) {
+            for (DriveRequest request : requests) {
+                LatLng requestLocationStart = request.getPickupLocation();
+                String riderName = MyDataBase.getRider(request.getRiderID()).getName();
+                Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
+                m.setTag(request);
+                markers.add(m);
+            }
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
+        } else {
+
+            Toast.makeText(this, "No requests in your area currently.", Toast.LENGTH_SHORT).show();
         }
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
     }
 

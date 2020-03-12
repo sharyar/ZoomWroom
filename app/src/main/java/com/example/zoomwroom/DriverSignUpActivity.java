@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.zoomwroom.Entities.ContactInformation;
@@ -20,11 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DriverSignUpActivity extends AppCompatActivity {
     // You declare this in every activity that needs access to the database
@@ -44,6 +41,9 @@ public class DriverSignUpActivity extends AppCompatActivity {
         //Get Auth instance from Firebase
         mAuth = FirebaseAuth.getInstance();
 
+        ProgressBar bar = findViewById(R.id.driver_signup_progress_bar);
+        bar.setVisibility(View.INVISIBLE);
+
         EditText firstNameEditText = findViewById(R.id.driverSignupFName);
         EditText lastNameEditText = findViewById(R.id.driverSignupLName);
         EditText emailAddressEditText = findViewById(R.id.driverSignupEmailAddress);
@@ -55,6 +55,7 @@ public class DriverSignUpActivity extends AppCompatActivity {
 
         //Uses the email address and password fields to create a new user within the database.
         signUpDriver.setOnClickListener((View v) -> {
+            bar.setVisibility(View.VISIBLE);
             String email = emailAddressEditText.getText().toString().trim();
             String passWord = passWordEditText.getText().toString();
             String firstNameText = firstNameEditText.getText().toString().trim();
@@ -76,7 +77,6 @@ public class DriverSignUpActivity extends AppCompatActivity {
                                     Log.d(TAG, "createUserWithEmail:Success");
                                     //Get the newly created user. We can use this to actually build the contact info page.
                                     FirebaseUser user = mAuth.getCurrentUser();
-
 
                                     //Add data from other fields if registration was successful:
 
@@ -101,6 +101,11 @@ public class DriverSignUpActivity extends AppCompatActivity {
                                                     Log.w(TAG, "Error, something went wrong with storing your info to the database.", e);
                                                 }
                                             });
+
+
+                                    // Open the driver's profile after they signup - temporary
+                                    openDriverHomeActivity();
+
 
                                 } else {
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -136,6 +141,11 @@ public class DriverSignUpActivity extends AppCompatActivity {
     }
     public void OpenDriverModeActivity(){
         Intent intent = new Intent(this,DriverModeActivity.class);
+        startActivity(intent);
+    }
+
+    public void openDriverHomeActivity() {
+        Intent intent = new Intent(this, DriverHomeActivity.class);
         startActivity(intent);
     }
 }

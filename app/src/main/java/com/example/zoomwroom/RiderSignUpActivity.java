@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.zoomwroom.Entities.ContactInformation;
@@ -19,7 +20,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +30,7 @@ public class RiderSignUpActivity extends AppCompatActivity {
     // Write this to get access to the database! NEED!
     FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-    //Used for user authentication and signup
+    //Used for user authentication and sign up
     private FirebaseAuth mAuth;
 
     private static final String TAG = "EmailPassword";
@@ -44,6 +44,9 @@ public class RiderSignUpActivity extends AppCompatActivity {
         //Get Auth instance from Firebase
         mAuth = FirebaseAuth.getInstance();
 
+        ProgressBar bar = findViewById(R.id.rider_signup_progress_bar);
+        bar.setVisibility(View.INVISIBLE);
+
         EditText firstNameEditText = findViewById(R.id.riderSignupFName);
         EditText lastNameEditText = findViewById(R.id.riderSignupLName);
         EditText emailAddressEditText = findViewById(R.id.riderSignupEmailAddress);
@@ -54,6 +57,7 @@ public class RiderSignUpActivity extends AppCompatActivity {
 
 
         signUpRider.setOnClickListener((View v) -> {
+            bar.setVisibility(View.VISIBLE);
             String email = emailAddressEditText.getText().toString().trim();
             String passWord = passWordEditText.getText().toString();
             String firstNameText = firstNameEditText.getText().toString().trim();

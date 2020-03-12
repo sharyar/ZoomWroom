@@ -12,7 +12,14 @@ import android.widget.Button;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.Map;
+
+import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.Entities.Driver;
+import com.example.zoomwroom.Entities.Rider;
+import com.example.zoomwroom.database.MyDataBase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.android.volley.Response;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -47,21 +54,6 @@ public class MainActivity extends AppCompatActivity {
                 OpenActivityRiderMode();
             }
         });
-        /////////////////////////////////
-
-        // Map button bypass. To remove later.
-        Button mapbtn = findViewById(R.id.bypasstomap);
-        mapbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OpenActivityMaps();
-            }
-        });
-    }
-
-    public void OpenActivityMaps() {
-        Intent intent = new Intent(this, RiderHomeActivity.class);
-        startActivity(intent);
     }
 
     ////////////////////////////////////////////////

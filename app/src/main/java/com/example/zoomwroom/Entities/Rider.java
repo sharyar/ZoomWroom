@@ -1,14 +1,15 @@
 package com.example.zoomwroom.Entities;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 
+/**
+ * Useless class warning
+ */
 public class Rider extends User {
     // Declare variables required for class.
     ArrayList<DriveRequest> ridesRequested;
 
-
+    public Rider(){}
     public Rider(String name, String userName, String userID) {
         super(name, userName, userID);
     }
@@ -17,7 +18,4 @@ public class Rider extends User {
         return ridesRequested;
     }
 
-    public void setRidesRequested(ArrayList<DriveRequest> ridesRequested) {
-        this.ridesRequested = ridesRequested;
-    }
 }

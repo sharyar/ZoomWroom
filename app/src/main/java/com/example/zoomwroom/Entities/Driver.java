@@ -8,10 +8,11 @@ import java.util.ArrayList;
  * Stores a driver's personal information including name, ratings, currentRequest, userName and
  * userID (email address)
  *
- * V1.0
+ * @version 1.0
  *
  * Date: Feb 26, 2020
  *
+ * @author Sharyar Memon
  */
 public class Driver extends User {
     // Declare variables required for class

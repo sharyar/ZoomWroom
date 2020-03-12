@@ -1,15 +1,17 @@
 package com.example.zoomwroom.Entities;
 
 /**
-* ContactInformation
-*
-* Stores user's contact information as a separate object.
-*
-* V1.0
-*
-* Date: Feb 26, 2020
-*
-*/
+ * ContactInformation
+ *
+ * Stores user's contact information as a separate object.
+ *
+ * @version 1.0
+ *
+ * Feb 26, 2020
+ *
+ * @author Sharyar Memon
+ *
+ */
 public class ContactInformation {
     private String phoneNumber; // Stores user's phone number as a string
     private String email; // Stores user's email address as a string

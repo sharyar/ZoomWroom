@@ -55,20 +55,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         /////////////////////////////////
-
-        // Map button bypass. To remove later.
-        Button mapbtn = findViewById(R.id.bypasstomap);
-        mapbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OpenActivityMaps();
-            }
-        });
-    }
-
-    public void OpenActivityMaps() {
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
     }
 
     ////////////////////////////////////////////////

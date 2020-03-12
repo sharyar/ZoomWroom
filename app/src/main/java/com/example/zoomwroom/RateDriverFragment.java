@@ -14,8 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.zoomwroom.Entities.DriveRequest;
-
 public class RateDriverFragment extends DialogFragment {
     public interface OnFragmentInteractionListener {
         void onConfirmPressed(int rateValue);   // receive the rate value

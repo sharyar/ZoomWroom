@@ -1,10 +1,17 @@
 package com.example.zoomwroom.Entities;
 
-import com.example.zoomwroom.Location;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 
+/**
+ * DriveRequest
+ *
+ * Stores information about a DriveRequest a user has made including the user who has requested it,
+ * the driver who has accepted it, current status of the request, pickup and drop off location, fare
+ * rating given to driver by rider.
+ *
+ */
 public class DriveRequest {
 
     //<editor-fold desc="Status">

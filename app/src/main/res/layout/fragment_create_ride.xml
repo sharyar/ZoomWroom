@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="330dp"
     android:background="@color/colorWhite">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="280dp"
         android:orientation="vertical">
 
         <TextView
@@ -18,22 +18,20 @@
             android:text="Where are you going?"
             android:textColor="@color/colorLightGray" />
 
+
         <EditText
             android:id="@+id/destination_text"
-            android:layout_width="218dp"
-            android:layout_height="26dp"
+            android:layout_width="257dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:textSize="30dp"
-            android:ems="10"
-            android:textColor="@color/colorLightGray" />
+            android:textColor="@color/colorLightGray"
+            android:textSize="20dp" />
 
         <View
             android:layout_width="350dp"
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
             android:background="@color/colorLightGray" />
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,12 +43,34 @@
 
         <EditText
             android:id="@+id/pickup_text"
-            android:layout_width="218dp"
-            android:layout_height="26dp"
+            android:layout_width="257dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:textColor="@color/Black1" />
+            android:textColor="@color/colorLightGray"
+            android:textSize="20dp" />
+
+        <View
+            android:layout_width="350dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/colorLightGray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Where are you going?"
+            android:textColor="@color/colorLightGray" />
+
+        <EditText
+            android:id="@+id/fare_text"
+            android:layout_width="257dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:hint="Offered fare: "
+            android:textColorHint="@color/colorVLightGray"
+            android:textSize="20dp" />
 
         <View
             android:layout_width="350dp"
@@ -59,9 +79,7 @@
             android:background="@color/colorLightGray" />
 
 
-
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -93,6 +111,8 @@
 
 
     </LinearLayout>
+
+
 
 
 

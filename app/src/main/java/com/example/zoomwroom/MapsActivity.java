@@ -138,21 +138,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
+     * gets the recommended fare price using formula baseprice + multiplier * distance between points
+     *
+     * @param basePrice
+     * @param multiplier
+     * @return price
+     */
+    public double getPrice(double basePrice, double multiplier) {
+        if(departureMarker.isVisible() && destinationMarker.isVisible()) {
+            double price = basePrice + multiplier *
+                    getDistance(departureMarker.getPosition().latitude,
+                            destinationMarker.getPosition().latitude,
+                            departureMarker.getPosition().longitude,
+                            destinationMarker.getPosition().longitude);
+            return round(price, 2);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * gets distance in kilometers from two latitude/longitude points
      * by using the haversine formula : https://www.movable-type.co.uk/scripts/latlong.html
      *
      * Adapted from javascript code
      * @return distance
      */
-    public double getDistance() {
+    protected double getDistance(double lat1, double lat2, double long1, double long2) {
         final int R = 6371; // Radius of the earth in Km
-        Double latDistance = toRad(departureMarker.getPosition().latitude
-                                        - destinationMarker.getPosition().latitude);
-        Double lonDistance = toRad(departureMarker.getPosition().longitude
-                - destinationMarker.getPosition().longitude);
+        Double latDistance = toRad(lat1 - lat2);
+        Double lonDistance = toRad(long1
+                - long2);
         Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
-                Math.cos(toRad(departureMarker.getPosition().latitude)) *
-                        Math.cos(toRad(destinationMarker.getPosition().latitude)) *
+                Math.cos(toRad(lat1)) *
+                        Math.cos(toRad(lat2)) *
                         Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         return R * c;
@@ -165,7 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param places
      * @return roundedNum
      */
-    public static double round(double value, int places) {
+    protected static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = BigDecimal.valueOf(value);

@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -102,6 +103,12 @@ public class DriverSignUpActivity extends AppCompatActivity {
                                                 }
                                             });
 
+
+                                    // Open the driver's profile after they signup - temporary
+                                    openDriverHomeActivity();
+
+
+
                                 } else {
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                     Toast.makeText(DriverSignUpActivity.this, "Sign up Failed, please check your fields",
@@ -136,6 +143,11 @@ public class DriverSignUpActivity extends AppCompatActivity {
     }
     public void OpenDriverModeActivity(){
         Intent intent = new Intent(this,DriverModeActivity.class);
+        startActivity(intent);
+    }
+
+    public void openDriverHomeActivity() {
+        Intent intent = new Intent(this, EditUserProfileActivity.class);
         startActivity(intent);
     }
 }

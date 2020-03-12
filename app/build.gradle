@@ -36,6 +36,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:19.0.0'
     // google play for reading QR code
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
 
     //utilities for maps to add custom markers
     implementation 'com.google.maps.android:android-maps-utils:1.0.0'

@@ -2,4 +2,9 @@
     <string name="app_name">My Application</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_driver_home">Driver Map</string>
+    <string name="complete">Complete</string>
+    <string name="qr_display_hint">Please show this QR code to the driver.</string>
+    <string name="rate_driver_positive_text">Great!</string>
+    <string name="rate_driver_negative_text">Terrible.</string>
+    <string name="confirm">Confirm</string>
 </resources>

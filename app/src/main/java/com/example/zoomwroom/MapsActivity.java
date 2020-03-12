@@ -130,22 +130,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     public double getPrice(double basePrice, double multiplier) {
         if(departureMarker.isVisible() && destinationMarker.isVisible()) {
-            double price = basePrice + multiplier * getDistance();
-            return round(price, 2);
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * gets the recommended fare price using formula baseprice + multiplier * distance between points
-     *
-     * @param basePrice
-     * @param multiplier
-     * @return price
-     */
-    public double getPrice(double basePrice, double multiplier) {
-        if(departureMarker.isVisible() && destinationMarker.isVisible()) {
             double price = basePrice + multiplier *
                     getDistance(departureMarker.getPosition().latitude,
                             destinationMarker.getPosition().latitude,

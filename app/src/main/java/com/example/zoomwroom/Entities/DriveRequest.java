@@ -39,6 +39,12 @@ public class DriveRequest {
     private int status;
     private Rating rating;
 
+    // only for firebase
+    private double pickupLocationLat;
+    private double pickupLocationLng;
+    private double destinationLat;
+    private double destinationLng;
+
     /**
      * Default constructor, create an empty DriveRequest
      */
@@ -137,9 +143,62 @@ public class DriveRequest {
     public void setRating(Rating rating) {
         this.rating = rating;
     }
+
+    public double getPickupLocationLat() {
+        return pickupLocationLat;
+    }
+
+    public void setPickupLocationLat(double pickupLocationLat) {
+        this.pickupLocationLat = pickupLocationLat;
+    }
+
+    public double getPickupLocationLng() {
+        return pickupLocationLng;
+    }
+
+    public void setPickupLocationLng(double pickupLocationLng) {
+        this.pickupLocationLng = pickupLocationLng;
+    }
+
+    public double getDestinationLat() {
+        return destinationLat;
+    }
+
+    public void setDestinationLat(double destinationLat) {
+        this.destinationLat = destinationLat;
+    }
+
+    public double getDestinationLng() {
+        return destinationLng;
+    }
+
+    public void setDestinationLng(double destinationLng) {
+        this.destinationLng = destinationLng;
+    }
     //</editor-fold>
 
     public String toQRBucksString() {
         return String.format("%s, %s, %f", riderID, driverID, offeredFare);
+    }
+
+    /**
+     * call this method before upload to firebase
+     */
+    public void toFirebaseMode() {
+        pickupLocationLat = pickupLocation.latitude;
+        pickupLocationLng = pickupLocation.longitude;
+        destinationLat = destination.latitude;
+        destinationLng = destination.longitude;
+
+        pickupLocation = null;
+        destination = null;
+    }
+
+    /**
+     * call this method after download from firebase
+     */
+    public void toLocalMode() {
+        pickupLocation = new LatLng(pickupLocationLat, pickupLocationLng);
+        destination = new LatLng(destinationLat, destinationLng);
     }
 }

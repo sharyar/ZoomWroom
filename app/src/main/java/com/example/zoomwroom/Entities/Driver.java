@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class Driver extends User {
     // Declare variables required for class
-    private ArrayList<Rating> ratings; // stores an array of ratings given to driver
+    private Ratings ratings; // stores an array of ratings given to driver
     private DriveRequest currentRequest; // stores the currentRequest the driver is involved in
 
     /**
@@ -28,7 +28,7 @@ public class Driver extends User {
      */
     public Driver(String name, String userName, String userID) {
         super(name, userName, userID);
-        ratings = new ArrayList<>();
+        ratings = new Ratings();
     }
 
     /**
@@ -43,7 +43,7 @@ public class Driver extends User {
      *
      * @return      array list of ratings for the driver object
      */
-    public ArrayList<Rating> getRatings() {
+    public Ratings getRatings() {
         return ratings;
     }
 
@@ -52,7 +52,7 @@ public class Driver extends User {
      *
      * @param ratings   ArrayList of ratings
      */
-    public void setRatings(ArrayList<Rating> ratings) {
+    public void setRatings(Ratings ratings) {
         this.ratings = ratings;
     }
 

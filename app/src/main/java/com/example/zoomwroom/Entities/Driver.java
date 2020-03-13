@@ -16,8 +16,7 @@ import java.util.ArrayList;
  */
 public class Driver extends User {
     // Declare variables required for class
-    private Ratings ratings; // stores an array of ratings given to driver
-    private DriveRequest currentRequest; // stores the currentRequest the driver is involved in
+    private Rating rating;
 
     /**
      * Constructor for class. Returns an instance of Driver
@@ -28,7 +27,7 @@ public class Driver extends User {
      */
     public Driver(String name, String userName, String userID) {
         super(name, userName, userID);
-        ratings = new Ratings();
+        rating = new Rating();
     }
 
     /**
@@ -37,50 +36,12 @@ public class Driver extends User {
     public Driver(){}
 
     //<editor-fold desc="Getter & Setter">
-    /**
-     * Returns a list of ratings of the driver. Will be used to display the cumulative ratings
-     * in an activity
-     *
-     * @return      array list of ratings for the driver object
-     */
-    public Ratings getRatings() {
-        return ratings;
+    public Rating getRating() {
+        return rating;
     }
 
-    /**
-     * Sets the ratings of the drivers via an array list of ratings
-     *
-     * @param ratings   ArrayList of ratings
-     */
-    public void setRatings(Ratings ratings) {
-        this.ratings = ratings;
-    }
-
-    /**
-     * Adds a rating to the current ArrayList of the driver
-     *
-     * @param rating    the rating to be added to the instance's ArrayList of ratings
-     */
-    public void addRating(Rating rating) {
-        this.ratings.add(rating);
-    }
-
-    /**
-     * Gets the current DriveRequest the driver is involved in.
-     *
-     * @return      the current DriveRequest the driver is involved in.
-     */
-    public DriveRequest getCurrentRequest() {
-        return currentRequest;
-    }
-
-    /**
-     * Sets the current request the driver is involved in so it can be referenced for use.
-     *
-     * @param currentRequest    DriveRequest the driver is currently assigned to or involved in
-     */
-    public void setCurrentRequest(DriveRequest currentRequest) {
-        this.currentRequest = currentRequest;
+    public void setRating(Rating rating) {
+        this.rating = rating;
     }
     //</editor-fold>
 }

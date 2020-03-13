@@ -66,8 +66,8 @@ public class UserProfileActivity extends AppCompatActivity {
         phoneTextView.setText(currentUser.getContactDetails().getPhoneNumber());
 
         if (isDriver) {
-            numThumbsUpTextView.setText(String.valueOf(((Driver) currentUser).getRatings().getNumThumbsUp()));
-            numThumbsDownTextView.setText(String.valueOf(((Driver) currentUser).getRatings().getNumThumbsDown()));
+            numThumbsUpTextView.setText(String.valueOf(((Driver) currentUser).getRating().getThumbsUp()));
+            numThumbsDownTextView.setText(String.valueOf(((Driver) currentUser).getRating().getThumbsDown()));
         } else {
             thumbsUpImageView.setVisibility(View.INVISIBLE);
             thumbsDownImageView.setVisibility(View.INVISIBLE);

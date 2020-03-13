@@ -41,7 +41,7 @@ public class FragmentDisplayDriveRequestInfo extends BottomSheetDialogFragment {
         acceptRequest = view.findViewById(R.id.accept_request_btn);
 
         riderNameTextView.setText(bundle.getString("RiderName"));
-        fareTextView.setText(String.format(Locale.CANADA,"$%.0f",bundle.getFloat("OfferedFare")));
+        fareTextView.setText(String.format(Locale.CANADA,"$%.0f",bundle.getFloat("SuggestedFare")));
         distanceTextView.setText(String.format(Locale.CANADA, "Distance: %.0fkm",bundle.getDouble("Distance")));
 
         DriveRequest request = MyDataBase.getDriveRequestByID(bundle.getString("DriveRequestID"));
@@ -49,7 +49,7 @@ public class FragmentDisplayDriveRequestInfo extends BottomSheetDialogFragment {
         acceptRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                request.setStatus(DriveRequest.Status.PENDING);
+                request.setStatus(DriveRequest.Status.ACCEPTED);
                 request.setDriverID(bundle.getString("DriverID"));
                 MyDataBase.updateRequest(request);
             }

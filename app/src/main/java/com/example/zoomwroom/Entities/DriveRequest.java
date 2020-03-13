@@ -52,19 +52,19 @@ public class DriveRequest {
         requestDateTime = new Date();
         status = Status.PENDING;
     }
-    
+
     public DriveRequest(String riderID, LatLng pickupLocation, LatLng destination) {
         this();
         this.riderID = riderID;
         this.pickupLocation = pickupLocation;
         this.destination = destination;
     }
-    
+
     //<editor-fold desc="getter & setter">
     public String getRequestID() {
         return requestID;
     }
-  
+
     public void setRequestID(String requestID) {
         this.requestID = requestID;
     }
@@ -185,13 +185,16 @@ public class DriveRequest {
      * call this method before upload to firebase
      */
     public void toFirebaseMode() {
-        pickupLocationLat = pickupLocation.latitude;
-        pickupLocationLng = pickupLocation.longitude;
-        destinationLat = destination.latitude;
-        destinationLng = destination.longitude;
-
-        pickupLocation = null;
-        destination = null;
+        if (pickupLocation != null) {
+            pickupLocationLat = pickupLocation.latitude;
+            pickupLocationLng = pickupLocation.longitude;
+            pickupLocation = null;
+        }
+        if (destination != null) {
+            destinationLat = destination.latitude;
+            destinationLng = destination.longitude;
+            destination = null;
+        }
     }
 
     /**

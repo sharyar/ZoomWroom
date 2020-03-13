@@ -67,8 +67,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
                         MyDataBase.updateDriver(driver);
 
                         Toast.makeText(EditUserProfileActivity.this, "Your info has been updated.", Toast.LENGTH_SHORT).show();
-
-
+                        finish();
                     } else if (isRider) {
                         rider.setName(fullNameEditText.getText().toString());
                         rider.setUserName(userNameEditText.getText().toString());
@@ -77,7 +76,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
                         MyDataBase.updateRider(rider);
 
                         Toast.makeText(EditUserProfileActivity.this, "Your info has been updated.", Toast.LENGTH_SHORT).show();
-
+                        finish();
                     } else
                         Toast.makeText(EditUserProfileActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }

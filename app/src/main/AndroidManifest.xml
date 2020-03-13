@@ -27,7 +27,6 @@
         android:theme="@style/AppTheme"
         android:hardwareAccelerated="true">
 
-        <activity android:name=".RiderHomeActivity"></activity>
         <activity android:name=".EditUserProfileActivity"/>
 
         <!--
@@ -66,7 +65,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Entities.UserProfileActivity" />
+        <activity android:name=".UserProfileActivity" />
         <activity android:name=".FragmentTestActivity" />
 
         <service

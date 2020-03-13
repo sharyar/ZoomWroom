@@ -1,7 +1,12 @@
-package com.example.zoomwroom.Entities;
+/**
+ * @author Dulong Sang
+ */
+
+package com.example.zoomwroom;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +16,7 @@ import com.example.zoomwroom.R;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.example.zoomwroom.Entities.User;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -30,6 +36,11 @@ public class UserProfileActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile_activity);
+
+        Button editButton = findViewById(R.id.profile_edit_button);
+        editButton.setOnClickListener(v -> {
+            // TODO: open the edit profile activity
+        });
     }
 
 

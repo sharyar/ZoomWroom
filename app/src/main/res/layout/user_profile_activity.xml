@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4D5C68"
-    tools:context=".RiderProfileActivity">
+    tools:context=".UserProfileActivity">
 
     <RelativeLayout
         android:id="@+id/editpage_grad_layout"
@@ -171,7 +171,7 @@
 
 
             <Button
-                android:id="@+id/edit_profileBT"
+                android:id="@+id/profile_edit_button"
                 android:layout_width="228dp"
                 android:layout_height="52dp"
                 android:layout_alignParentEnd="true"

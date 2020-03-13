@@ -72,27 +72,55 @@ public class RiderLoginSignupTest {
         solo.assertCurrentActivity("Wrong Activity", RiderHomeActivity.class);
 
     }
+
+
     /**
-     * 1. Try logging in without a username or password
-     * 2. Try logging in with only a username
-     * 3. Try logging in with only password
+     * Try logging in without a username or password
      * */
     @Test
-    public void unsuccessfulRiderLogin(){
+    public void emptyRiderLogin(){
         solo.clickOnButton("Rider");
+        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
         solo.clickOnButton("Log in");
         solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+    }
 
+    /**
+     * Try logging in with only a username
+     * */
+    @Test
+    public void unsuccessfulRiderUsername(){
+        solo.clickOnButton("Rider");
+        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
         solo.enterText((EditText) solo.getView(R.id.rider_email_login), "anguyen@gmail.com");
         solo.clickOnButton("Log in");
         solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
-        solo.clearEditText((EditText) solo.getView(R.id.rider_email_login));
 
+    }
 
+    /**
+     * Try logging in with only password
+     * */
+    @Test
+    public void unsuccessfulRiderPassword(){
+        solo.clickOnButton("Rider");
+        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
         solo.enterText((EditText) solo.getView(R.id.rider_password_login), "anguyen");
         solo.clickOnButton("Log in");
         solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+    }
 
+    /**
+     * Try logging in with an incorrect password but a correct email
+     * */
+    @Test
+    public void incorrectUserPassword(){
+        solo.clickOnButton("Rider");
+        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.enterText((EditText) solo.getView(R.id.rider_email_login), "anguyen@gmail.com");
+        solo.enterText((EditText) solo.getView(R.id.rider_password_login), "anguyen");
+        solo.clickOnButton("Log in");
+        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
     }
 
     /**

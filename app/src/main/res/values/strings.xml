@@ -7,4 +7,5 @@
     <string name="rate_driver_positive_text">Great!</string>
     <string name="rate_driver_negative_text">Terrible.</string>
     <string name="confirm">Confirm</string>
+    <string name="profile_title">Profile</string>
 </resources>

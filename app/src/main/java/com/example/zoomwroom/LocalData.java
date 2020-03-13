@@ -18,7 +18,6 @@ public class LocalData {
 
     private User currentUser;
     private String currentUserID;
-    private ArrayList<DriveRequest> currentRequests;
     private DriveRequest currentRequest;
 
     //<editor-fold desc="getters & setters">
@@ -41,15 +40,6 @@ public class LocalData {
         this.currentUserID = currentUserID;
     }
 
-    public ArrayList<DriveRequest> getCurrentRequests() {
-        updateCurrentRequests();
-        return currentRequests;
-    }
-
-    public void setCurrentRequests(ArrayList<DriveRequest> currentRequests) {
-        this.currentRequests = currentRequests;
-    }
-
     public DriveRequest getCurrentRequest() {
         return currentRequest;
     }
@@ -63,13 +53,6 @@ public class LocalData {
         //currentUser = MyDatabase.getUser(currentUserID);
         if (User.userNotFound(currentUser)) {
             return false;
-        }
-        return true;
-    }
-
-    public boolean updateCurrentRequests() {
-        if (currentRequests == null) {
-            //currentRequests = MyDatabase.getDriveRequests(currentUserID);
         }
         return true;
     }

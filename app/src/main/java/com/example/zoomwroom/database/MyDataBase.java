@@ -3,7 +3,6 @@ package com.example.zoomwroom.database;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.Entities.Rider;
@@ -11,11 +10,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MyDataBase {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -142,9 +143,9 @@ public class MyDataBase {
 
     /**
      * Returns open request that have their status as PENDING
-     * Created by Sharyar for DriverHomePageActivity
-     * @return
-     *      Arraylist of drive requests that have status pending and have not been picked by a driver
+     *
+     * @return      Arraylist of drive requests that have status pending and have not been
+     *              picked by a driver
      */
     public static ArrayList<DriveRequest> getOpenRequests() {
         final CollectionReference collectionReference = db.collection("DriverRequest");
@@ -154,12 +155,30 @@ public class MyDataBase {
                 .whereEqualTo("status", 0)
                 .get();
         while (!task.isSuccessful()) {}
-        for (QueryDocumentSnapshot doc: task.getResult()) {
+        for (QueryDocumentSnapshot doc: Objects.requireNonNull(task.getResult())) {
             DriveRequest request = doc.toObject(DriveRequest.class);
             driveRequests.add(request);
             request.toLocalMode();
+
         }
         return driveRequests;
+    }
+
+    /**
+     * Returns a driveRequest by using its driveID
+     *
+     * @param driveID
+     * @return
+     */
+    public static DriveRequest getDriveRequestByID(String driveID) {
+        DocumentReference docRef = db.collection("DriverRequest").document(driveID);
+
+        Task<DocumentSnapshot> task = docRef
+                .get();
+        while (!task.isSuccessful()) {}
+        DriveRequest request = task.getResult().toObject(DriveRequest.class);
+        return request;
+
     }
 
     /**

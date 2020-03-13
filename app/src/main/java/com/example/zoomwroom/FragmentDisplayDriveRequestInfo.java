@@ -6,9 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.Locale;
-import java.util.Objects;
 
 
 public class FragmentDisplayDriveRequestInfo extends BottomSheetDialogFragment {
@@ -43,11 +44,14 @@ public class FragmentDisplayDriveRequestInfo extends BottomSheetDialogFragment {
         fareTextView.setText(String.format(Locale.CANADA,"$%.0f",bundle.getFloat("OfferedFare")));
         distanceTextView.setText(String.format(Locale.CANADA, "Distance: %.0fkm",bundle.getDouble("Distance")));
 
+        DriveRequest request = MyDataBase.getDriveRequestByID(bundle.getString("DriveRequestID"));
 
         acceptRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                request.setStatus(DriveRequest.Status.PENDING);
+                request.setDriverID(bundle.getString("DriverID"));
+                MyDataBase.updateRequest(request);
             }
         });
 

@@ -15,6 +15,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.Entities.UserProfileActivity;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,6 +54,7 @@ import android.os.Looper;
  */
 public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    private ArrayList<DriveRequest> requests; // stores a list of currently open requests locally
     private GoogleMap mMap; // Stores the instance google maps used to display the markers
     private ArrayList<Marker> markers = new ArrayList<>(); // stores a list of markers on the map
 
@@ -60,7 +62,7 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
     Marker pickupLocationMarker; // used to mark the location of the pickup
     Marker destinationLocationMarker; // used to mark the location of the drop off
 
-    LatLng driverLocation = new LatLng(0,0); // stores driver's current location. Used to set the default position of map
+    LatLng driverLocation; // stores driver's current location. Used to set the default position of map
 
     FloatingActionButton profileBtn; // Used to open the user's profile
 
@@ -68,13 +70,13 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
     int PERMISSION_ID = 44; // used for driver's current location permissions
     FusedLocationProviderClient mFusedLocationClient;
 
-    ArrayList<DriveRequest> requests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_home);
 
+        // This gets the user's current location. Currently display California as the emulator does not use current location.
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
@@ -83,20 +85,16 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         // Profile button - Open's user's profile
         profileBtn = findViewById(R.id.floatingActionButton);
 
-
-
         /*
-        * Sets the listener so it open's the  driver's profile. Currently set to the edit profile
-        * activity as the user profile activity has not been completed.
+        * Sets the listener so it open's the  driver's profile.
         */
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(v.getContext(), EditUserProfileActivity.class);
+                Intent myIntent = new Intent(v.getContext(), UserProfileActivity.class);
                 startActivityForResult(myIntent, 0);
             }
         });
@@ -119,9 +117,17 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         // Get the currently open requests from the database and stores them in an ArrayList
         updateMap();
 
+        // Sets the markerclicklistener and allows the user to select a marker
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
     }
 
+    /**
+     * Opens a fragment to show the details of the currently selected request and allows the driver
+     * to accept a request. Calls the showDriveRequestFragment.
+     *
+     * @param marker    user selected marker
+     * @return          boolean value indicating if the fragment was consumed or not.
+     */
     @Override
     public boolean onMarkerClick(final Marker marker) {
 
@@ -142,7 +148,12 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         return false;
     }
 
-
+    /**
+     * Bundles required information and passes it to the driveRequestFragment. Which then uses
+     * the bundled information to display details of the drive request to the driver.
+     *
+     * @param request       currently selected request based on map marker click
+     */
     public void showDriveRequestFragment(DriveRequest request) {
 
         Bundle b = new Bundle();
@@ -160,7 +171,12 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         driveRequestFragment.show(getSupportFragmentManager(), driveRequestFragment.getTag());
     }
 
-
+    /**
+     * Calculates distance between the destination and pickup location.
+     *
+     * @param request       currently selected driveRequest
+     * @return              double value indicating distance between the locations
+     */
     public double getDistance(DriveRequest request) {
         final int R = 6371; // Radius of the earth in Km
         Double latDistance = MapsActivity.toRad(request.getPickupLocation().latitude
@@ -176,17 +192,19 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
     }
 
 
-    // This method resets the markers so they go back to what they were before the user clicked the map marker.
+    /**
+     * Resets the markers upon fragment closure so only open requests are displayed. Removes the
+     * markers as needed as well.
+     */
     public void resetMarkers() {
         pickupLocationMarker.remove();
         destinationLocationMarker.remove();
         updateMap();
-//        for (Marker m: markers) {
-//            m.setVisible(true);
-//
-//        }
     }
 
+    /**
+     * Uses to get the user's last location.
+     */
     private void getLastLocation(){
         if (checkPermissions()) {
             if (isLocationEnabled()) {
@@ -214,6 +232,9 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         }
     }
 
+    /**
+     * This function is called if the lastlocation value is null.
+     */
     private void requestNewLocationData(){
 
         LocationRequest mLocationRequest = new LocationRequest();
@@ -230,6 +251,9 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
 
     }
 
+    /**
+     * Updates the camera location based on user's current location.
+     */
     private LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -239,6 +263,12 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         }
     };
 
+    /**
+     * Checks if the user has given location permissions to the app to avoid exceptions related
+     * to that issue.
+     *
+     * @return      boolean value indicating the status of location permission by user.
+     */
     private boolean checkPermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -247,6 +277,9 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         return false;
     }
 
+    /**
+     * Requests user permission for location access
+     */
     private void requestPermissions() {
         ActivityCompat.requestPermissions(
                 this,
@@ -255,6 +288,11 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         );
     }
 
+    /**
+     * Checks if the user's location has been enabled in the settings.
+     *
+     * @return      boolean indicating status of location setting (phone location setting)
+     */
     private boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
@@ -262,6 +300,14 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         );
     }
 
+    /**
+     * Checks if user has given permission, check if location is enabled in settings and then calls
+     * the getLastLocation function to get the user's location if the above conditions are satisfied
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -272,6 +318,9 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         }
     }
 
+    /**
+     * If the activity is resumed, it updates the user's location if required.
+     */
     @Override
     public void onResume(){
         super.onResume();
@@ -280,6 +329,10 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         }
     }
 
+    /**
+     * This updates the currently open map with the markers for open requests. This called in several
+     * places throughout this activity
+     */
     public void updateMap() {
         requests = MyDataBase.getOpenRequests();
 

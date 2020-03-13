@@ -52,19 +52,19 @@ public class DriveRequest {
         requestDateTime = new Date();
         status = Status.PENDING;
     }
-    
+
     public DriveRequest(String riderID, LatLng pickupLocation, LatLng destination) {
         this();
         this.riderID = riderID;
         this.pickupLocation = pickupLocation;
         this.destination = destination;
     }
-    
+
     //<editor-fold desc="getter & setter">
     public String getRequestID() {
         return requestID;
     }
-  
+
     public void setRequestID(String requestID) {
         this.requestID = requestID;
     }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -67,6 +68,8 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
     int PERMISSION_ID = 44; // used for driver's current location permissions
     FusedLocationProviderClient mFusedLocationClient;
 
+    ArrayList<DriveRequest> requests;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +87,8 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         // Profile button - Open's user's profile
         profileBtn = findViewById(R.id.floatingActionButton);
 
+
+
         /*
         * Sets the listener so it open's the  driver's profile. Currently set to the edit profile
         * activity as the user profile activity has not been completed.
@@ -96,16 +101,6 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
-        // manually add data to the DriverRequest Array to simulate the map markers
-        LatLng edmonton1 = new LatLng(53.559045, -113.491904);
-        LatLng edmonton2 = new LatLng(53.522416, -113.571706);
-        LatLng edmonton3 = new LatLng(53.496032, -113.489151);
-        LatLng edmonton4 = new LatLng(53.518621, -113.416631);
-        LatLng edmonton5 = new LatLng(53.473828, -113.438895);
-        LatLng edmonton6 = new LatLng(53.595629, -113.412256);
-
-//        DriveRequest request1 =
-//
     }
 
     /**
@@ -122,24 +117,7 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         mMap = googleMap;
 
         // Get the currently open requests from the database and stores them in an ArrayList
-        ArrayList<DriveRequest> requests = MyDataBase.getOpenRequests();
-
-        if (!requests.isEmpty()) { // Checks to ensure that the ArrayList of requests is not empty
-            /*
-             * Iterates over the requests in the ArrayList and creates a map marker for each of
-             * the requests.
-             */
-            for (DriveRequest request : requests) {
-                LatLng requestLocationStart = request.getPickupLocation();
-                String riderName = MyDataBase.getRider(request.getRiderID()).getName();
-                Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
-                m.setTag(request);
-                markers.add(m);
-            }
-
-        } else {
-            Toast.makeText(this, "No requests in your area currently.", Toast.LENGTH_SHORT).show();
-        }
+        updateMap();
 
         mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
     }
@@ -156,8 +134,11 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         pickupLocationMarker = mMap.addMarker(new MarkerOptions().position(pickedRequest.getPickupLocation()).title("Pickup"));
         destinationLocationMarker = mMap.addMarker(new MarkerOptions().position(pickedRequest.getDestination()).title("Destination"));
 
-        LatLngBounds currentRequestBounds = new LatLngBounds(pickedRequest.getPickupLocation(), pickedRequest.getDestination());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(currentRequestBounds,0));
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(pickedRequest.getPickupLocation()).include(pickedRequest.getDestination());
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(),150,200,10);
+        mMap.moveCamera(cameraUpdate);
         return false;
     }
 
@@ -168,7 +149,7 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
 
         b.putString("DriverID", FirebaseAuth.getInstance().getCurrentUser().getEmail());
         b.putString("RiderName", MyDataBase.getRider(request.getRiderID()).getName());
-        b.putFloat("OfferedFare", request.getOfferedFare());
+        b.putFloat("SuggestedFare", request.getSuggestedFare());
         b.putDouble("Distance", getDistance(request));
         b.putString("DriveRequestID", request.getRequestID());
 
@@ -197,12 +178,13 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
 
     // This method resets the markers so they go back to what they were before the user clicked the map marker.
     public void resetMarkers() {
-        for (Marker m: markers) {
-            m.setVisible(true);
-            pickupLocationMarker.remove();
-            destinationLocationMarker.remove();
-        }
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(driverLocation));
+        pickupLocationMarker.remove();
+        destinationLocationMarker.remove();
+        updateMap();
+//        for (Marker m: markers) {
+//            m.setVisible(true);
+//
+//        }
     }
 
     private void getLastLocation(){
@@ -295,6 +277,27 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         super.onResume();
         if (checkPermissions()) {
             getLastLocation();
+        }
+    }
+
+    public void updateMap() {
+        requests = MyDataBase.getOpenRequests();
+
+        if (!requests.isEmpty()) { // Checks to ensure that the ArrayList of requests is not empty
+            /*
+             * Iterates over the requests in the ArrayList and creates a map marker for each of
+             * the requests.
+             */
+            for (DriveRequest request : requests) {
+                LatLng requestLocationStart = request.getPickupLocation();
+                String riderName = MyDataBase.getRider(request.getRiderID()).getName();
+                Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
+                m.setTag(request);
+                markers.add(m);
+            }
+
+        } else {
+            Toast.makeText(this, "No requests in your area currently.", Toast.LENGTH_SHORT).show();
         }
     }
 

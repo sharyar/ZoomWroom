@@ -185,13 +185,16 @@ public class DriveRequest {
      * call this method before upload to firebase
      */
     public void toFirebaseMode() {
-        pickupLocationLat = pickupLocation.latitude;
-        pickupLocationLng = pickupLocation.longitude;
-        destinationLat = destination.latitude;
-        destinationLng = destination.longitude;
-
-        pickupLocation = null;
-        destination = null;
+        if (pickupLocation != null) {
+            pickupLocationLat = pickupLocation.latitude;
+            pickupLocationLng = pickupLocation.longitude;
+            pickupLocation = null;
+        }
+        if (destination != null) {
+            destinationLat = destination.latitude;
+            destinationLng = destination.longitude;
+            destination = null;
+        }
     }
 
     /**

@@ -61,42 +61,6 @@ public class Rating {
         this.rider = rider;
     }
 
-    /**
-     * Setter method sets the thumbStatus, driver and rider of an instance of rating
-     *
-     * @param thumbStatus   Boolean indicating thumbsUp or thumbsDown
-     * @param driver        Driver of the DriveRequest
-     * @param rider         Rider of the DriveRequest
-     */
-    public void giveRating(Boolean thumbStatus, Driver driver, Rider rider) {
-        setThumbStatus(thumbStatus);
-        setDriver(driver);
-        setRider(rider);
-    }
-
-
-    /**
-     * Returns an array list of Strings showing ratings from a list of Ratings provided as an argument
-     * It is meant to be used to display the ratings of a driver on their profile
-     *
-     * @param listOfRatings ArrayList of Ratings
-     * @return              ArrayList of strings with ratings given to driver
-     */
-    public static ArrayList<String> showRatings(ArrayList<Rating> listOfRatings) {
-        ArrayList<String> allRatingsForDriver = new ArrayList<>();
-        for (Rating r: listOfRatings){
-            StringBuilder s = new StringBuilder();
-            s.append(r.getRider().getUserName());
-            s.append(": ");
-            if (r.thumbStatus)
-                s.append("Thumbs Up");
-            else
-                s.append("Thumbs Down");
-            allRatingsForDriver.add(s.toString());
-        }
-        return allRatingsForDriver;
-    }
-
     //<editor-fold desc="Getter & Setter Methods">
 
     /**

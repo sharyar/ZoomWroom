@@ -22,8 +22,8 @@ public class DriverModeActivity extends AppCompatActivity {
     Button riderModeBtn;
     Button driverSignUpBtn;
     Button loginBtn;
-    EditText driverEmail;
-    EditText driverPassword;
+    EditText driverEmailEditText;
+    EditText driverPasswordEditText;
     private FirebaseAuth mAuth;
     private static final String TAG = "DriverLoginActivity";
 
@@ -34,8 +34,8 @@ public class DriverModeActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        driverEmail = findViewById(R.id.driver_email_login);
-        driverPassword = findViewById(R.id.driver_password);
+        driverEmailEditText = findViewById(R.id.driver_email_login);
+        driverPasswordEditText = findViewById(R.id.driver_password);
 
         loginBtn = findViewById(R.id.driver_LoginBT);
 
@@ -79,25 +79,34 @@ public class DriverModeActivity extends AppCompatActivity {
     }
 
     public void logIn() {
-        mAuth.signInWithEmailAndPassword(driverEmail.getText().toString(), driverPassword.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(DriverModeActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
-                            openDriverHome();
 
-                        } else {
-                            Log.w(TAG, "signInWithEmail: failure", task.getException());
-                            Toast.makeText(DriverModeActivity.this, "Login failed. Please check your info and try again.", Toast.LENGTH_SHORT).show();
+        String driverEmail = driverEmailEditText.getText().toString();
+        String driverPassword = driverPasswordEditText.getText().toString();
+        if (driverEmail.isEmpty() || driverPassword.isEmpty()) {
+            Toast.makeText(DriverModeActivity.this, "Please ensure you have " +
+                    "filled out all the fields.", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            mAuth.signInWithEmailAndPassword(driverEmail, driverPassword)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Toast.makeText(DriverModeActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
+                                openDriverHome();
+
+                            } else {
+                                Log.w(TAG, "signInWithEmail: failure", task.getException());
+                                Toast.makeText(DriverModeActivity.this, "Login failed. Please check your info and try again.", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
-    public void openDriverHome() {
+    public void openDriverHome(){
         Intent intent = new Intent(this, DriverHomeActivity.class);
         startActivity(intent);
     }

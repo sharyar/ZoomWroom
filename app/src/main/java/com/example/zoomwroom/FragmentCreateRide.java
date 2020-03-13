@@ -20,6 +20,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
  * Author : Amanda Nguyen
  * Creates a ride fragment where destination and pickup markers will be replaced to where the user wants to go
  *
+ * March 12, 2020
+ *
+ * Under the Apache 2.0 license
  */
 
 public class FragmentCreateRide  extends BottomSheetDialogFragment {
@@ -32,9 +35,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         super.onCreate(savedInstancesState);
 
     }
-    /**
-     * Displays the fragment xml for creating a ride
-     * */
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_ride, container, false);

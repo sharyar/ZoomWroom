@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4D5C68"
-    tools:context=".RiderProfileActivity">
+    tools:context=".UserProfileActivity">
 
     <RelativeLayout
         android:id="@+id/editpage_grad_layout"
@@ -21,11 +21,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="Profile"
                 android:layout_centerInParent="true"
-                android:textSize="45dp"
-                android:textColor="@color/grey"/>
+                android:gravity="center_horizontal"
+                android:text="@string/profile_title"
+                android:textColor="@color/grey"
+                android:textSize="45dp" />
 
         </RelativeLayout>
 
@@ -75,44 +75,40 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/profile_username_textview"
+                        android:id="@+id/profile_username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:textColor='@color/white'
+                        android:layout_marginTop="20dp"
                         android:fontFamily="sans-serif-light"
-                        android:text="bababoooey"/>
-                    <TextView
-                        android:id="@+id/profile_firstname_textview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textSize="45dp"
-                        android:text="Joey"/>
-                    <TextView
-                        android:id="@+id/profile_lastname_textview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textSize="45dp"
-                        android:text="Baboey"/>
-                    <TextView
-                        android:id="@+id/profile_email_textview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
+                        android:text="username line"
                         android:textColor='@color/white'
-                        android:fontFamily="sans-serif-light"
-                        android:text="275475610@qq.com"/>
+                        android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/profile_phone_textview"
+                        android:id="@+id/profile_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:textColor='@color/white'
+                        android:text="Full Name"
+                        android:textColor="@color/white"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        android:id="@+id/profile_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:text="(780) 885 2269"/>
+                        android:text="user email"
+                        android:textColor='@color/white'
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/profile_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="user phone number"
+                        android:textColor='@color/white'
+                        android:textSize="18sp" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
@@ -127,44 +123,43 @@
             android:id="@+id/editpage_rating_page_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:orientation="horizontal">
             <ImageView
-                android:id="@+id/driver_thumbs_down_imageBT"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_thumb_up_black_24dp"
+                android:id="@+id/profile_thumbs_up_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="50dp"
+                android:src="@drawable/thumbs_up_unsel"
                 android:fontFamily="sans-serif-light"
                 android:textSize="25sp"
                 android:textColor="@color/white"/>
-            <EditText
-                android:id="@+id/editpage_numberof_thumbsup"
+            <TextView
+                android:id="@+id/profile_num_thumbsup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="100"
-                android:inputType="number"
+                android:layout_marginStart="10dp"
+                android:text="23"
                 android:fontFamily="sans-serif-light"
-                android:textSize="13dp"
+                android:textSize="26sp"
                 android:textColor="@color/white"/>
             <ImageView
-
-                android:layout_marginLeft="14dp"
-                android:id="@+id/driver_thumbs_up_imageBT"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_thumb_down_black_24dp"
+                android:layout_marginStart="20dp"
+                android:id="@+id/profile_thumbs_down_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/thumbs_down_unsel"
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
                 android:fontFamily="sans-serif-light"
                 android:textSize="25sp" />
-            <EditText
-                android:id="@+id/editpage_numberof_thumbsdown"
+            <TextView
+                android:id="@+id/profile_num_thumbsdown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="23"
+                android:layout_marginStart="10dp"
+                android:text="23"
                 android:fontFamily="sans-serif-light"
-                android:textSize="13dp"
+                android:textSize="26sp"
                 android:textColor="@color/white"/>
 
 
@@ -176,7 +171,7 @@
 
 
             <Button
-                android:id="@+id/edit_profileBT"
+                android:id="@+id/profile_edit_button"
                 android:layout_width="228dp"
                 android:layout_height="52dp"
                 android:layout_alignParentEnd="true"

@@ -7,11 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.Entities.Driver;
+import com.example.zoomwroom.Entities.Rider;
+import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,10 +24,20 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 
 /**
  * Rider Home Activity
@@ -50,11 +64,45 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private Marker destinationMarker;
     private FloatingActionButton profileButton;
     private Button rideButton;
+    private Rider currentRider;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_home);
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                token = instanceIdResult.getToken();
+                Log.d("newToken-----", token);
+            }
+        });
+
+        //get current user;
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            currentRider = MyDataBase.getRider(user.getEmail());
+        }
+
+        FirebaseFirestore.getInstance().collection("DriverRequest")
+                .whereEqualTo("riderID", currentRider.getUserID())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        ArrayList<DriveRequest> requests =  MyDataBase.getRiderRequest(currentRider.getUserID());
+                        for (DriveRequest request :requests) {
+                            if (request.getStatus() == 1) {
+                                Log.d("newToken", token);
+                                Driver driver = MyDataBase.getDriver(request.getDriverID());
+                                new Notify(token, driver.getName()).execute();
+                            }
+                        }
+
+                    }
+                });
+
         mLocation = new Location();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -133,9 +181,13 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         if(f){
             mLocation.setDepart(point);
             f = false;
+            Log.d("Lon", Double.toString(mLocation.getDepart().longitude));
+            Log.d("Lat", Double.toString(mLocation.getDepart().latitude));
         } else {
             mLocation.setDestination(point);
             f = true;
+            Log.d("Lon", Double.toString(mLocation.getDestination().longitude));
+            Log.d("Lat", Double.toString(mLocation.getDestination().latitude));
         }
         updateMarkers();
     }
@@ -235,6 +287,18 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     public void openRideCreation() {
 
         Bundle b = new Bundle();
+        Log.d("Lon", Double.toString(mLocation.getDepart().longitude));
+        Log.d("Lat", Double.toString(mLocation.getDepart().latitude));
+        Log.d("Lon", Double.toString(mLocation.getDestination().longitude));
+        Log.d("Lat", Double.toString(mLocation.getDestination().latitude));
+        Log.d("price", Double.toString(getPrice(5.00, 0.5)));
+        b.putDouble("desLat", mLocation.getDestination().latitude);
+        b.putDouble("desLon", mLocation.getDestination().longitude);
+        b.putDouble("depLat", mLocation.getDepart().latitude);
+        b.putDouble("depLon", mLocation.getDepart().longitude);
+        b.putDouble("price", getPrice(5.00, 0.5));
+        b.putString("userID", currentRider.getUserID());
+
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -50,12 +50,12 @@ public class RiderLoginSignupTest {
         solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
         solo.clickOnButton("Sign Up");
         solo.assertCurrentActivity("Wrong Activity", RiderSignUpActivity.class);
-        solo.enterText((EditText) solo.getView(R.id.riderSignupFName), "Johnny");
+        solo.enterText((EditText) solo.getView(R.id.riderSignupFName), "Sarah");
         solo.enterText((EditText) solo.getView(R.id.riderSignupLName), "Le");
-        solo.enterText((EditText) solo.getView(R.id.riderSignupEmailAddress), "johnnyle@gmail.com");
-        solo.enterText((EditText) solo.getView(R.id.riderSignupUserName), "johnnyle");
-        solo.enterText((EditText) solo.getView(R.id.riderSignupPassWord), "acbd1234");
-        solo.enterText((EditText) solo.getView(R.id.riderSignupPhoneNumber), "7801234567");
+        solo.enterText((EditText) solo.getView(R.id.riderSignupEmailAddress), "Sarahle@gmail.com");
+        solo.enterText((EditText) solo.getView(R.id.riderSignupUserName), "sarahle");
+        solo.enterText((EditText) solo.getView(R.id.riderSignupPassWord), "password1234");
+        solo.enterText((EditText) solo.getView(R.id.riderSignupPhoneNumber), "780-123-2341");
         solo.clickOnButton("Sign Up");
         solo.assertCurrentActivity("Wrong Activity", RiderHomeActivity.class);
 

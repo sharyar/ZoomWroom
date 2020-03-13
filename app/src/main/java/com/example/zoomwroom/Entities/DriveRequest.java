@@ -75,6 +75,10 @@ public class DriveRequest {
         return driverID;
     }
 
+    public void setDriverID(String driverId) {
+        this.driverID = driverId;
+    }
+
     public LatLng getPickupLocation() {
         return pickupLocation;
     }

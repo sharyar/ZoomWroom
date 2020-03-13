@@ -3,7 +3,6 @@ package com.example.zoomwroom.database;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.Entities.Rider;
@@ -11,10 +10,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
 
 public class MyDataBase {
@@ -156,6 +156,22 @@ public class MyDataBase {
 
         }
         return driveRequests;
+    }
+
+    /**
+     * Returns a driveRequest by using its driveID
+     * @param driveID
+     * @return
+     */
+    public static DriveRequest getDriveRequestByID(String driveID) {
+        DocumentReference docRef = db.collection("DriverRequest").document(driveID);
+
+        Task<DocumentSnapshot> task = docRef
+                .get();
+        while (!task.isSuccessful()) {}
+        DriveRequest request = task.getResult().toObject(DriveRequest.class);
+        return request;
+
     }
 
     /**

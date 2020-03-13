@@ -124,6 +124,9 @@ public class RiderSignUpActivity extends AppCompatActivity {
         });
 
     }
+    /**
+     * switch mode between driver and rider
+     */
 
     public void OpenRiderModeActivity() {
         Intent intent = new Intent(this,RiderModeActivity.class);

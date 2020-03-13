@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //////////////////////
         // Driver Button
         Button driverBT = findViewById(R.id.DriverBT);
         driverBT.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
                 OpenActivityRiderMode();
             }
         });
-        /////////////////////////////////
 
         // Map button bypass. To remove later.
         Button mapbtn = findViewById(R.id.bypasstomap);
@@ -65,20 +63,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    /**
+     * change to Maoactivity
+     */
+
 
     public void OpenActivityMaps() {
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 
-    ////////////////////////////////////////////////
+
+    /**
+     * switch mode between driver and rider
+     */
 
     public void OpenActivityRiderMode(){
         Intent intent = new Intent(this,RiderModeActivity.class);
         startActivity(intent);
     }
 
-    //OpenActivityDriverMode
+    /**
+     * switch mode between driver and rider
+     */
+
     public void OpenActivityDriverMode() {
 
         Intent intent = new Intent(this,DriverModeActivity.class);

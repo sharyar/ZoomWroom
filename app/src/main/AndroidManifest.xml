@@ -66,6 +66,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Entities.UserProfileActivity" />
+        <activity android:name=".FragmentTestActivity" />
 
         <service
             android:name=".MyFirebaseMessagingService"

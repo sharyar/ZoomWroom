@@ -118,7 +118,8 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //OpenProfileActivity();
+                Intent myIntent = new Intent(v.getContext(), UserProfileActivity.class);
+                startActivityForResult(myIntent, 0);
             }
         });
 
@@ -130,7 +131,6 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                 openRideCreation();
             }
         });
-
 
     }
 

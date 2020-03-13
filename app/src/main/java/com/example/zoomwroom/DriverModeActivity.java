@@ -43,7 +43,6 @@ public class DriverModeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 logIn();
-                openDriverHome();
             }
         });
 
@@ -88,6 +87,7 @@ public class DriverModeActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(DriverModeActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
+                            openDriverHome();
 
                         } else {
                             Log.w(TAG, "signInWithEmail: failure", task.getException());

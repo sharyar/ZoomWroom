@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MyDataBase {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -138,9 +139,9 @@ public class MyDataBase {
 
     /**
      * Returns open request that have their status as PENDING
-     * Created by Sharyar for DriverHomePageActivity
-     * @return
-     *      Arraylist of drive requests that have status pending and have not been picked by a driver
+     *
+     * @return      Arraylist of drive requests that have status pending and have not been
+     *              picked by a driver
      */
     public static ArrayList<DriveRequest> getOpenRequests() {
         final CollectionReference collectionReference = db.collection("DriverRequest");
@@ -150,16 +151,16 @@ public class MyDataBase {
                 .whereEqualTo("status", 0)
                 .get();
         while (!task.isSuccessful()) {}
-        for (QueryDocumentSnapshot doc: task.getResult()) {
+        for (QueryDocumentSnapshot doc: Objects.requireNonNull(task.getResult())) {
             DriveRequest request = doc.toObject(DriveRequest.class);
             driveRequests.add(request);
-
         }
         return driveRequests;
     }
 
     /**
      * Returns a driveRequest by using its driveID
+     *
      * @param driveID
      * @return
      */

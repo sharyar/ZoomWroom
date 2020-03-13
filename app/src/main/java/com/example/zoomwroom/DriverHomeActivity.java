@@ -15,7 +15,6 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 import com.example.zoomwroom.Entities.DriveRequest;
-import com.example.zoomwroom.Entities.UserProfileActivity;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -54,9 +53,10 @@ import android.os.Looper;
  */
 public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    private ArrayList<DriveRequest> requests; // stores a list of currently open requests locally
     private GoogleMap mMap; // Stores the instance google maps used to display the markers
     private ArrayList<Marker> markers = new ArrayList<>(); // stores a list of markers on the map
+
+    ArrayList<DriveRequest> requests = new ArrayList<>();
 
     /* Both of the following fields are only used for the currently selected request */
     Marker pickupLocationMarker; // used to mark the location of the pickup
@@ -80,6 +80,7 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
+        requests = MyDataBase.getOpenRequests();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -334,6 +335,7 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
      * places throughout this activity
      */
     public void updateMap() {
+        // stores a list of currently open requests locally
         requests = MyDataBase.getOpenRequests();
 
         if (!requests.isEmpty()) { // Checks to ensure that the ArrayList of requests is not empty

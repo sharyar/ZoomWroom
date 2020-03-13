@@ -67,6 +67,7 @@
         </activity>
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".FragmentTestActivity" />
+        <activity android:name=".RiderHomeActivity" />
 
         <service
             android:name=".MyFirebaseMessagingService"

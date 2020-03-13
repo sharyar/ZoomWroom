@@ -4,6 +4,7 @@
 
 package com.example.zoomwroom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,11 +13,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.zoomwroom.R;
+import com.example.zoomwroom.Entities.Driver;
+import com.example.zoomwroom.Entities.User;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.example.zoomwroom.Entities.User;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -39,7 +40,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         Button editButton = findViewById(R.id.profile_edit_button);
         editButton.setOnClickListener(v -> {
-            // TODO: open the edit profile activity
+            openEditProfileActivity();
         });
     }
 
@@ -85,6 +86,11 @@ public class UserProfileActivity extends AppCompatActivity {
         numThumbsDownTextView = findViewById(R.id.profile_num_thumbsdown);
         thumbsUpImageView = findViewById(R.id.profile_thumbs_up_icon);
         thumbsDownImageView = findViewById(R.id.profile_thumbs_down_icon);
+    }
+
+    private void openEditProfileActivity() {
+        Intent intent = new Intent(this, EditUserProfileActivity.class);
+        startActivity(intent);
     }
 
 }

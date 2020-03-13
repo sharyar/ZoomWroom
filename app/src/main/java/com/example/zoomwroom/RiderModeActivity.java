@@ -87,7 +87,8 @@ public class RiderModeActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(RiderModeActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
-                            // go to rider mod comes here.
+                            OpenRiderHomeActivity();
+
                         } else {
                             Log.w(TAG, "signInWithEmail: failure", task.getException());
                             Toast.makeText(RiderModeActivity.this, "Login failed. Please check your info and try again.", Toast.LENGTH_SHORT).show();
@@ -96,4 +97,12 @@ public class RiderModeActivity extends AppCompatActivity {
                 });
 
     }
+    /**
+     * Opens into the Rider's main page if login is successful
+     * */
+    public void OpenRiderHomeActivity() {
+        Intent intent = new Intent(this,RiderHomeActivity.class);
+        startActivity(intent);
+    }
+
 }

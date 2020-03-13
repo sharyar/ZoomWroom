@@ -1,11 +1,17 @@
 
 package com.example.zoomwroom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.zoomwroom.Entities.DriveRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,6 +20,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,7 +28,7 @@ import java.math.RoundingMode;
 /**
  * Google Maps Activity
  *
- * Author : Henry Lin
+ * Author : Henry Lin, Amanda Nguyen
  * Creates a google map fragment where markers can be placed
  *
  * @see com.example.zoomwroom.Location
@@ -30,23 +37,49 @@ import java.math.RoundingMode;
  * Modified source from: https://developers.google.com/maps/documentation/android-sdk/start
  * Under the Apache 2.0 license
  */
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private GoogleMap mMap;
     protected Location mLocation;
     private boolean f;
     private Marker departureMarker;
     private Marker destinationMarker;
+    private FloatingActionButton profileButton;
+    private Button rideButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_rider_home);
         mLocation = new Location();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        FragmentManager fragmentManager = getSupportFragmentManager(); // this is creaitng a fragment manager
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction(); // something you just have to do
+        final FragmentDisplayDriveRequestInfo driveRequestFragment = new FragmentDisplayDriveRequestInfo(); // this is your fragment class
+
+        // User profile button
+        profileButton = (FloatingActionButton) findViewById(R.id.rider_profile_button);
+        profileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //OpenProfileActivity();
+            }
+        });
+
+        // Create a ride button
+        rideButton = findViewById(R.id.create_ride_button);
+        rideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRideCreation();
+            }
+        });
+
+
     }
 
 
@@ -130,11 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     public double getPrice(double basePrice, double multiplier) {
         if(departureMarker.isVisible() && destinationMarker.isVisible()) {
-            double price = basePrice + multiplier *
-                    getDistance(departureMarker.getPosition().latitude,
-                            destinationMarker.getPosition().latitude,
-                            departureMarker.getPosition().longitude,
-                            destinationMarker.getPosition().longitude);
+            double price = basePrice + multiplier * getDistance();
             return round(price, 2);
         } else {
             return 0;
@@ -148,14 +177,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Adapted from javascript code
      * @return distance
      */
-    protected double getDistance(double lat1, double lat2, double long1, double long2) {
+    public double getDistance() {
         final int R = 6371; // Radius of the earth in Km
-        Double latDistance = toRad(lat1 - lat2);
-        Double lonDistance = toRad(long1
-                - long2);
+        Double latDistance = toRad(departureMarker.getPosition().latitude
+                - destinationMarker.getPosition().latitude);
+        Double lonDistance = toRad(departureMarker.getPosition().longitude
+                - destinationMarker.getPosition().longitude);
         Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
-                Math.cos(toRad(lat1)) *
-                        Math.cos(toRad(lat2)) *
+                Math.cos(toRad(departureMarker.getPosition().latitude)) *
+                        Math.cos(toRad(destinationMarker.getPosition().latitude)) *
                         Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         return R * c;
@@ -168,7 +198,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param places
      * @return roundedNum
      */
-    protected static double round(double value, int places) {
+    public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = BigDecimal.valueOf(value);
@@ -181,7 +211,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param value
      * @return radian
      */
-    static Double toRad(Double value) {
+    private static Double toRad(Double value) {
         return value * Math.PI / 180;
+    }
+
+    /**
+     * Called when user has clicked profile button
+     * Leads into the user profile activity
+     * */
+    public void OpenProfileActivity(){
+        //Intent intent = new Intent(this, BAJINS.class);
+        //startActivity(intent);
+    }
+
+    /**
+     * Called when user wants to create a ride
+     * */
+    public void openRideCreation() {
+
+        Bundle b = new Bundle();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        final FragmentCreateRide createRideFragment = new FragmentCreateRide();
+
+        createRideFragment.setArguments(b);
+        createRideFragment.show(getSupportFragmentManager(), createRideFragment.getTag());
     }
 }

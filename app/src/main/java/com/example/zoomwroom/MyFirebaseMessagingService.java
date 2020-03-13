@@ -37,6 +37,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         int notificationID = new Random().nextInt(3000);
 
+        RemoteMessage.Notification not = remoteMessage.getNotification();
+        String body = not.getBody();
+        String title = not.getTitle();
+
       /*
         Apps targeting SDK 26 or above (Android O) must implement notification channels and add its notifications
         to at least one of them. Therefore, confirm if version is Oreo or higher, then setup notification channel
@@ -54,13 +58,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Uri notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark_normal_background)
+                .setSmallIcon(R.drawable.driverlogo)
                 .setLargeIcon(largeIcon)
-                .setContentTitle(remoteMessage.getData().get("title"))
-                .setContentText(remoteMessage.getData().get("message"))
-                .setAutoCancel(true)
-                .setSound(notificationSoundUri)
-                .setContentIntent(pendingIntent);
+                .setColor(Color.BLUE)
+                .setContentTitle(title)
+                .setContentText(body + " just accepted your request!")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
         //Set notification color to match app color template
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){

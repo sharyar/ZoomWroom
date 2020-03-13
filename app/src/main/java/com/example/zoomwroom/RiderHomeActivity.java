@@ -96,7 +96,9 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                             if (request.getStatus() == 1) {
                                 Log.d("newToken", token);
                                 Driver driver = MyDataBase.getDriver(request.getDriverID());
-                                new Notify(token, driver.getName()).execute();
+                                if (driver != null) {
+                                    new Notify(token, driver.getName()).execute();
+                                }
                             }
                         }
 

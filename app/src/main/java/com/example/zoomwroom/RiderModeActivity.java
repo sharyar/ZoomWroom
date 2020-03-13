@@ -22,8 +22,8 @@ public class RiderModeActivity extends AppCompatActivity {
     Button driverModBtn;
     Button riderSignUpBtn;
     Button loginBtn;
-    EditText riderEmail;
-    EditText riderPassword;
+    EditText riderEmailEditText;
+    EditText riderPasswordEditText;
     private FirebaseAuth mAuth;
     private static final String TAG = "RiderLoginActivity";
 
@@ -34,8 +34,8 @@ public class RiderModeActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        riderEmail = findViewById(R.id.rider_email_login);
-        riderPassword = findViewById(R.id.rider_password_login);
+        riderEmailEditText = findViewById(R.id.rider_email_login);
+        riderPasswordEditText = findViewById(R.id.rider_password_login);
 
         loginBtn = findViewById(R.id.rider_LoginBT);
 
@@ -79,23 +79,31 @@ public class RiderModeActivity extends AppCompatActivity {
     }
 
     public void logIn() {
-        mAuth.signInWithEmailAndPassword(riderEmail.getText().toString(), riderPassword.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(RiderModeActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
-                            OpenRiderHomeActivity();
+        String riderEmail = riderEmailEditText.getText().toString();
+        String riderPassword = riderPasswordEditText.getText().toString();
+        if (riderEmail.isEmpty() || riderPassword.isEmpty()) {
+            Toast.makeText(RiderModeActivity.this, "Please ensure you have " +
+                    "filled out all the fields.", Toast.LENGTH_SHORT).show();
+        }
+        else {
 
-                        } else {
-                            Log.w(TAG, "signInWithEmail: failure", task.getException());
-                            Toast.makeText(RiderModeActivity.this, "Login failed. Please check your info and try again.", Toast.LENGTH_SHORT).show();
+            mAuth.signInWithEmailAndPassword(riderEmail, riderPassword)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Toast.makeText(RiderModeActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
+                                OpenRiderHomeActivity();
+
+                            } else {
+                                Log.w(TAG, "signInWithEmail: failure", task.getException());
+                                Toast.makeText(RiderModeActivity.this, "Login failed. Please check your info and try again.", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
-
+                    });
+        }
     }
     /**
      * Opens into the Rider's main page if login is successful

@@ -1,12 +1,15 @@
-// geocode source: https://www.journaldev.com/15676/android-geocoder-reverse-geocoding
-
 package com.example.zoomwroom;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -25,14 +28,33 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+/**
+ * DriverHomeActivity
+ *
+ * Serves as the Activity where a driver can pick up new jobs. It uses google maps to display
+ * markers for currently open requests (with status pending).
+ *
+ * March 12, 2020
+ *
+ * @author Sharyar Memon, Henry Lin
+ *
+ * Sources: https://www.androdocs.com/java/getting-current-location-latitude-longitude-in-android-using-java.html
+ *
+ */
 public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    private GoogleMap mMap;
-    private ArrayList<Marker> markers = new ArrayList<>();
+    private GoogleMap mMap; // Stores the instance google maps used to display the markers
+    private ArrayList<Marker> markers = new ArrayList<>(); // stores a list of markers on the map
 
-    Marker pickupLocationMarker;
-    Marker destinationLocationMarker;
-    FloatingActionButton profileBtn;
+    /* Both of the following fields are only used for the currently selected request */
+    Marker pickupLocationMarker; // used to mark the location of the pickup
+    Marker destinationLocationMarker; // used to mark the location of the drop off
+
+    LatLng driverLocation; // stores driver's current location. Used to set the default position of map
+
+    FloatingActionButton profileBtn; // Used to open the user's profile
+
+    int PERMISSION_ID = 44; // used for driver's current location permissions
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +69,10 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         // Profile button - Open's user's profile
         profileBtn = findViewById(R.id.floatingActionButton);
 
+        /*
+        * Sets the listener so it open's the  driver's profile. Currently set to the edit profile
+        * activity as the user profile activity has not been completed.
+        */
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +80,9 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
                 startActivityForResult(myIntent, 0);
             }
         });
+
+        // Used for getting driver's current location and permissions for location
+
     }
 
     /**
@@ -69,13 +98,15 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // The first array list gets and stores the current active requests. The second array list is used to store markers for those requests
-        ArrayList<DriveRequest> requests = new ArrayList<>();
+        // Get the currently open requests from the database and stores them in an ArrayList
+        ArrayList<DriveRequest> requests = MyDataBase.getOpenRequests();
 
-        // Get the currently open requests from the database.
-        requests = MyDataBase.getOpenRequests();
 
-        if (!requests.isEmpty()) {
+        if (!requests.isEmpty()) { // Checks to ensure that the ArrayList of requests is not empty
+            /*
+             * Iterates over the requests in the arraylist and creates a map marker for each of
+             * the requests.
+             */
             for (DriveRequest request : requests) {
                 LatLng requestLocationStart = request.getPickupLocation();
                 String riderName = MyDataBase.getRider(request.getRiderID()).getName();
@@ -150,6 +181,41 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         }
         mMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
     }
+
+    // Checks if the app has location permission
+    private boolean checkPermissions(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            return true;
+        }
+        return false;
+    }
+
+    private void requestPermissions(){
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSION_ID
+        );
+    }
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+        );
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Granted. Start getting the location information
+            }
+        }
+    }
+
 
 
 }

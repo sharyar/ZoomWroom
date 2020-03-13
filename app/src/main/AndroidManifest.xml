@@ -64,6 +64,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Entities.UserProfileActivity" />
+        <activity android:name=".FragmentTestActivity" />
     </application>
 
 </manifest>

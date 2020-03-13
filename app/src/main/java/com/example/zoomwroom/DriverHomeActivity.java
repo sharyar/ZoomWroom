@@ -96,8 +96,16 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
-        // Used for getting driver's current location and permissions for location
+        // manually add data to the DriverRequest Array to simulate the map markers
+        LatLng edmonton1 = new LatLng(53.559045, -113.491904);
+        LatLng edmonton2 = new LatLng(53.522416, -113.571706);
+        LatLng edmonton3 = new LatLng(53.496032, -113.489151);
+        LatLng edmonton4 = new LatLng(53.518621, -113.416631);
+        LatLng edmonton5 = new LatLng(53.473828, -113.438895);
+        LatLng edmonton6 = new LatLng(53.595629, -113.412256);
 
+//        DriveRequest request1 =
+//
     }
 
     /**

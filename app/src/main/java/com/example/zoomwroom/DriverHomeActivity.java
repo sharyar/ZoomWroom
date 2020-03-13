@@ -32,6 +32,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
 import android.location.Location;
 import java.util.ArrayList;
 import android.os.Looper;
@@ -157,9 +158,11 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
 
         Bundle b = new Bundle();
 
+        b.putString("DriverID", FirebaseAuth.getInstance().getCurrentUser().getEmail());
         b.putString("RiderName", MyDataBase.getRider(request.getRiderID()).getName());
         b.putFloat("OfferedFare", request.getOfferedFare());
         b.putDouble("Distance", getDistance(request));
+        b.putString("DriveRequestID", request.getRequestID());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

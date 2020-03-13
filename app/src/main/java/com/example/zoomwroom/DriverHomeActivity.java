@@ -15,7 +15,6 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 import com.example.zoomwroom.Entities.DriveRequest;
-import com.example.zoomwroom.Entities.UserProfileActivity;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;

@@ -17,7 +17,7 @@ import com.example.zoomwroom.database.MyDataBase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.example.zoomwroom.Entities.User;
-
+import com.example.zoomwroom.Entities.Driver;
 public class UserProfileActivity extends AppCompatActivity {
 
     private User currentUser;

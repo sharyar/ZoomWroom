@@ -40,13 +40,17 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 
 /**
- * Google Maps Activity
+ * Rider Home Activity
  *
  * Author : Henry Lin, Amanda Nguyen
  * Creates a google map fragment where markers can be placed
+ * Allows the user to create a ride and see their profile from fragments
+ *
  *
  * @see com.example.zoomwroom.Location
  * @see com.google.android.gms.maps.GoogleMap
+ *
+ * March 12, 2020
  *
  * Modified source from: https://developers.google.com/maps/documentation/android-sdk/start
  * Under the Apache 2.0 license
@@ -278,6 +282,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
 
     /**
      * Called when user wants to create a ride
+     * Will open up a fragment to deal with creating a ride request
      * */
     public void openRideCreation() {
 

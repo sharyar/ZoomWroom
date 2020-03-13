@@ -19,7 +19,7 @@
             android:layout_width="319dp"
             android:layout_height="405dp"
             android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/logoblue" />
+            app:srcCompat="@drawable/officiallogo" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,12 +56,6 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/bypasstomap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bypass to map"
-            style="@style/Widget.MaterialComponents.Button"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

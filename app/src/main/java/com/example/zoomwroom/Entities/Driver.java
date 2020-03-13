@@ -1,40 +1,47 @@
 package com.example.zoomwroom.Entities;
-import android.app.DownloadManager;
 
 import java.util.ArrayList;
 
+/**
+ * Driver
+ *
+ * Stores a driver's personal information including name, ratings, currentRequest, userName and
+ * userID (email address)
+ *
+ * @version 1.0
+ *
+ * Date: Feb 26, 2020
+ *
+ * @author Sharyar Memon
+ */
 public class Driver extends User {
     // Declare variables required for class
-    private ArrayList<Rating> ratings;
-    private DriveRequest currentRequest;
+    private Rating rating;
 
     /**
-     * Constructor
-     * @param name
-     * @param userName
-     * @param userID
+     * Constructor for class. Returns an instance of Driver
+     *
+     * @param name      Full name of driver
+     * @param userName  unique userName of the driver
+     * @param userID    unique userID of the user. We are currently using their email address
      */
     public Driver(String name, String userName, String userID) {
         super(name, userName, userID);
+        rating = new Rating();
     }
 
-    //<editor-fold desc="Getter & Setter">
-    public ArrayList<Rating> getRatings() {
-        return ratings;
-    }
-
+    /**
+     * Empty Constructor for class. Returns an instance of driver. Does not require any arguments
+     */
     public Driver(){}
 
-    public void setRatings(ArrayList<Rating> ratings) {
-        this.ratings = ratings;
+    //<editor-fold desc="Getter & Setter">
+    public Rating getRating() {
+        return rating;
     }
 
-    public DriveRequest getCurrentRequest() {
-        return currentRequest;
-    }
-
-    public void setCurrentRequest(DriveRequest currentRequest) {
-        this.currentRequest = currentRequest;
+    public void setRating(Rating rating) {
+        this.rating = rating;
     }
     //</editor-fold>
 }

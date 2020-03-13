@@ -3,22 +3,20 @@ package com.example.zoomwroom.database;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.Entities.Rider;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MyDataBase {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -34,6 +32,7 @@ public class MyDataBase {
         final CollectionReference collectionReference = db.collection("DriverRequest");
         String requestID = collectionReference.document().getId();
         driveRequest.setRequestID(requestID);
+        driveRequest.toFirebaseMode();
 
         collectionReference
                 .document(requestID)
@@ -56,19 +55,20 @@ public class MyDataBase {
 
     /**
      * This function get an array of requests
-     * @param driver  target object
+     * @param driverID  string of driverID
      * @return driveRequests an array of drive requests related to this driver
      */
-    public static ArrayList<DriveRequest> getDriverRequest(Driver driver){
+    public static ArrayList<DriveRequest> getDriverRequest(String driverID){
         final CollectionReference collectionReference = db.collection("DriverRequest");
         ArrayList<DriveRequest> driveRequests = new ArrayList<>();
 
         Task<QuerySnapshot> task = collectionReference
-                .whereEqualTo("driver", driver)
+                .whereEqualTo("driverID", driverID)
                 .get();
         while (!task.isSuccessful()) {}
         for (QueryDocumentSnapshot doc : task.getResult()) {
             DriveRequest request = doc.toObject(DriveRequest.class);
+            request.toLocalMode();
             driveRequests.add(request);
         }
 
@@ -83,6 +83,7 @@ public class MyDataBase {
     public static void updateRequest(DriveRequest driveRequest) {
         final CollectionReference collectionReference = db.collection("DriverRequest");
         String requestID = driveRequest.getRequestID();
+        driveRequest.toFirebaseMode();
         collectionReference.document(requestID).set(driveRequest);
     }
 
@@ -122,28 +123,29 @@ public class MyDataBase {
 
     /**
      * similar to getDriverRequest
-     * @param rider
+     * @param riderID
      */
-    public static ArrayList<DriveRequest> getRiderRequest(Rider rider){
+    public static ArrayList<DriveRequest> getRiderRequest(String riderID){
         final CollectionReference collectionReference = db.collection("DriverRequest");
         ArrayList<DriveRequest> driveRequests = new ArrayList<>();
 
         Task<QuerySnapshot> task = collectionReference
-                .whereEqualTo("rider", rider)
+                .whereEqualTo("riderID", riderID)
                 .get();
         while (!task.isSuccessful()) {}
         for (QueryDocumentSnapshot doc : task.getResult()) {
             DriveRequest request = doc.toObject(DriveRequest.class);
             driveRequests.add(request);
+            request.toLocalMode();
         }
         return driveRequests;
     }
 
     /**
      * Returns open request that have their status as PENDING
-     * Created by Sharyar for DriverHomePageActivity
-     * @return
-     *      Arraylist of drive requests that have status pending and have not been picked by a driver
+     *
+     * @return      Arraylist of drive requests that have status pending and have not been
+     *              picked by a driver
      */
     public static ArrayList<DriveRequest> getOpenRequests() {
         final CollectionReference collectionReference = db.collection("DriverRequest");
@@ -153,12 +155,29 @@ public class MyDataBase {
                 .whereEqualTo("status", 0)
                 .get();
         while (!task.isSuccessful()) {}
-        for (QueryDocumentSnapshot doc: task.getResult()) {
+        for (QueryDocumentSnapshot doc: Objects.requireNonNull(task.getResult())) {
             DriveRequest request = doc.toObject(DriveRequest.class);
+            request.toLocalMode();
             driveRequests.add(request);
-
         }
         return driveRequests;
+    }
+
+    /**
+     * Returns a driveRequest by using its driveID
+     *
+     * @param driveID
+     * @return
+     */
+    public static DriveRequest getDriveRequestByID(String driveID) {
+        DocumentReference docRef = db.collection("DriverRequest").document(driveID);
+
+        Task<DocumentSnapshot> task = docRef
+                .get();
+        while (!task.isSuccessful()) {}
+        DriveRequest request = task.getResult().toObject(DriveRequest.class);
+        return request;
+
     }
 
     /**
@@ -167,20 +186,24 @@ public class MyDataBase {
      */
     public static Rider getRider(String userID) {
         final CollectionReference collectionReference = db.collection("Riders");
+        ArrayList<Rider> riders = new ArrayList<Rider>();
         Task<QuerySnapshot> task = collectionReference
                 .whereEqualTo("userID", userID)
                 .get();
         while (!task.isSuccessful()) {}
-        if (task.getResult().toObjects(Rider.class).size() == 0){
+        for (QueryDocumentSnapshot doc : task.getResult()) {
+            Rider rider = doc.toObject(Rider.class);
+            riders.add(rider);
+        }
+        if (riders.size() == 0){
             Log.d("Rider", "no user is found");
             return null;
         }
-        if (task.getResult().toObjects(Rider.class).size() > 1){
+        if (riders.size() > 1){
             Log.d("Rider", "userID is not unique");
             return null;
         }
-        Rider rider = task.getResult().toObjects(Rider.class).get(0);
-        return rider;
+        return riders.get(0);
     }
 
     /**
@@ -239,20 +262,24 @@ public class MyDataBase {
      */
     public static Driver getDriver(String userID) {
         final CollectionReference collectionReference = db.collection("Drivers");
+        ArrayList<Driver> drivers = new ArrayList<Driver>();
         Task<QuerySnapshot> task = collectionReference
                 .whereEqualTo("userID", userID)
                 .get();
         while (!task.isSuccessful()) {}
-        if (task.getResult().toObjects(Driver.class).size() == 0){
+        for (QueryDocumentSnapshot doc : task.getResult()) {
+            Driver driver = doc.toObject(Driver.class);
+            drivers.add(driver);
+        }
+        if (drivers.size() == 0){
             Log.d("Driver", "no user is found");
             return null;
         }
-        if (task.getResult().toObjects(Driver.class).size() > 1){
+        if (drivers.size() > 1){
             Log.d("Driver", "userID is not unique");
             return null;
         }
-        Driver driver = task.getResult().toObjects(Driver.class).get(0);
-        return driver;
+        return drivers.get(0);
     }
 
 }

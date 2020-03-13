@@ -40,7 +40,7 @@
                 style="@style/EditTextDefaultRiderRegister" />
 
             <EditText
-                android:id="@+id/rider_password"
+                android:id="@+id/rider_password_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rider_signup_shape"
@@ -83,6 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"/>
             <Button
+                android:visibility="invisible"
                 android:id="@+id/reset_Password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

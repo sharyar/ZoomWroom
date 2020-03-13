@@ -24,8 +24,8 @@ public class Rating {
     private Rider rider;
 
     // Constants for variable thumbStatus
-    public final boolean THUMBSUP = true;
-    public final boolean THUMBSDOWN = false;
+    public static final boolean THUMBSUP = true;
+    public static final boolean THUMBSDOWN = false;
 
     //Constructors
     /**

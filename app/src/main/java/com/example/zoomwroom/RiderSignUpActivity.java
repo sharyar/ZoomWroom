@@ -99,6 +99,8 @@ public class RiderSignUpActivity extends AppCompatActivity {
                                                 public void onSuccess(Void aVoid) {
                                                     Toast.makeText(RiderSignUpActivity.this, "You are now signed up!",
                                                             Toast.LENGTH_SHORT).show();
+                                                    OpenRiderHomeActivity();
+
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -107,6 +109,7 @@ public class RiderSignUpActivity extends AppCompatActivity {
                                                     Log.w(TAG, "Error adding document", e);
                                                 }
                                             });
+
 
                                 } else {
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -133,5 +136,15 @@ public class RiderSignUpActivity extends AppCompatActivity {
         Intent intent = new Intent(this,RiderModeActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * Opens into the Rider's main page if login is successful
+     * */
+    public void OpenRiderHomeActivity() {
+        Intent intent = new Intent(this,RiderHomeActivity.class);
+        startActivity(intent);
+    }
+
+
 
 }

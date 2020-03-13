@@ -157,9 +157,8 @@ public class MyDataBase {
         while (!task.isSuccessful()) {}
         for (QueryDocumentSnapshot doc: Objects.requireNonNull(task.getResult())) {
             DriveRequest request = doc.toObject(DriveRequest.class);
-            driveRequests.add(request);
             request.toLocalMode();
-
+            driveRequests.add(request);
         }
         return driveRequests;
     }

@@ -58,7 +58,7 @@
                             android:padding="3dp"
                             android:background="@drawable/circle"
                             android:scaleType="centerInside"
-                            android:src="@drawable/user" />
+                            android:src="@drawable/ic_person_outline_white_24dp" />
 
                     </RelativeLayout>
                 </LinearLayout>

@@ -41,6 +41,11 @@ public class UserProfileActivity extends AppCompatActivity {
         editButton.setOnClickListener(v -> {
             openEditProfileActivity();
         });
+
+        Button backButton = findViewById(R.id.profile_back_button);
+        backButton.setOnClickListener(v -> {
+            finish();
+        });
     }
 
 
@@ -60,7 +65,7 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
         findViews();
-        usernameTextView.setText(currentUser.getUserID());
+        usernameTextView.setText(currentUser.getUserName());
         nameTextView.setText(currentUser.getName());
         emailTextView.setText(currentUser.getContactDetails().getEmail());
         phoneTextView.setText(currentUser.getContactDetails().getPhoneNumber());

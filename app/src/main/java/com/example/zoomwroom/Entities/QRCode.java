@@ -33,11 +33,20 @@ public class QRCode {
     private int size = defaultSize;
     private Bitmap bitmap;
 
+    /**
+     * @deprecated
+     * @param content the message to be stored in the QR code
+     */
     public QRCode(String content) {
         this.content = content;
         this.bitmap = generateQRCodeBitmap(content, size);
     }
 
+    /**
+     * @deprecated might cause errors
+     * @param content the message to be stored in the QR code
+     * @param size    the size of the output QR code
+     */
     public QRCode(String content, int size) {
         this.content = content;
         this.size = size;
@@ -99,6 +108,11 @@ public class QRCode {
         return bitmap;
     }
 
+    /**
+     * This method generate a QR code from the content and set it to the imageView.
+     * @param content   the message to be stored in the QR code
+     * @param imageView the ImageView to display the QR code
+     */
     public static void setQRCodeToImageView(String content, ImageView imageView) {
         imageView.setImageBitmap(generateQRCodeBitmap(content, defaultSize));
     }

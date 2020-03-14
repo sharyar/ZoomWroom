@@ -35,6 +35,9 @@ public class RateDriverFragment extends DialogFragment {
         void onConfirmPressed(int rateValue);   // receive the rate value
     }
 
+    /**
+     * constants, indicate the rate result.
+     */
     public static final int NO_RATE = 0;
     public static final int POSITIVE_RATE = 1;
     public static final int NEGATIVE_RATE = 2;

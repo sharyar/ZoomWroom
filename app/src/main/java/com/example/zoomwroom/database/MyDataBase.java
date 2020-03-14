@@ -190,7 +190,7 @@ public class MyDataBase {
         Task<QuerySnapshot> task = collectionReference
                 .whereEqualTo("userID", userID)
                 .get();
-        while (!task.isSuccessful()) {}
+        while (!task.isSuccessful());
         for (QueryDocumentSnapshot doc : task.getResult()) {
             Rider rider = doc.toObject(Rider.class);
             riders.add(rider);

@@ -52,6 +52,7 @@ public class FragmentDisplayDriveRequestInfo extends BottomSheetDialogFragment {
                 request.setStatus(DriveRequest.Status.ACCEPTED);
                 request.setDriverID(bundle.getString("DriverID"));
                 MyDataBase.updateRequest(request);
+                dismiss();
             }
         });
 

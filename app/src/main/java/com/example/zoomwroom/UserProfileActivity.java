@@ -46,9 +46,16 @@ public class UserProfileActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> {
             finish();
         });
+
+        findViews();
     }
 
 
+    /**
+     * This method will be called when the activity is resumed.
+     * It will retrieve the current user from firebase in order to get the up-to-date info, and
+     * display the user info.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -62,14 +69,16 @@ public class UserProfileActivity extends AppCompatActivity {
                 currentUser = MyDataBase.getRider(user.getEmail());
                 isDriver = false;
             }
+        } else {
+            return;
         }
 
-        findViews();
         usernameTextView.setText(currentUser.getUserName());
         nameTextView.setText(currentUser.getName());
         emailTextView.setText(currentUser.getContactDetails().getEmail());
         phoneTextView.setText(currentUser.getContactDetails().getPhoneNumber());
 
+        // display the number of thumbs up and down if the user is a driver.
         if (isDriver) {
             numThumbsUpTextView.setText(String.valueOf(((Driver) currentUser).getRating().getThumbsUp()));
             numThumbsDownTextView.setText(String.valueOf(((Driver) currentUser).getRating().getThumbsDown()));
@@ -80,6 +89,7 @@ public class UserProfileActivity extends AppCompatActivity {
             numThumbsDownTextView.setVisibility(View.INVISIBLE);
         }
     }
+
 
     private void findViews() {
         usernameTextView = findViewById(R.id.profile_username);

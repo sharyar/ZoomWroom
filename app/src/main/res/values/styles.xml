@@ -71,4 +71,13 @@
         <item name="android:background">@color/colorWhite</item>
     </style>
 
+    <style name="ProfileButton">
+        <item name="android:background">@drawable/rounded_button</item>
+        <item name="android:backgroundTint">@android:color/white</item>
+        <item name="android:textColor">@color/headings</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>

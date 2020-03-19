@@ -16,27 +16,12 @@ package com.example.zoomwroom.Entities;
  */
 public class User {
 
-    // this static instance of the class is used to avoid crashes within the app
-    public static User notFound = new User("", "", "not found");
-
-    /**
-     *
-     * @param user
-     * @return
-     */
-    public static boolean userNotFound(User user) {
-        if (user.getUserID().equals("not found")) {
-            return true;
-        }
-        return false;
-    }
-
     // Declare variables required for class.
     private String name;
     private String userName;
     private String userID;
     private ContactInformation contactDetails;
-    private float balance;
+    private DriveRequest currentRequest; // stores the currentRequest the driver is involved in
 
     /**
      * Empty constructor, required by firebase.
@@ -131,33 +116,21 @@ public class User {
     }
 
     /**
-     * Returns the balance of QR bucks the user has
+     * Gets the current DriveRequest the driver is involved in.
      *
-     * @return
+     * @return      the current DriveRequest the driver is involved in.
      */
-    public float getBalance() {
-        return balance;
+    public DriveRequest getCurrentRequest() {
+        return currentRequest;
     }
 
     /**
-     * Sets the balance of QR bucks the user has
+     * Sets the current request the driver is involved in so it can be referenced for use.
      *
-     * @param balance   float value to set as the balance of the user. Maybe negative for rider
-     *                  as they owe money to the driver
+     * @param currentRequest    DriveRequest the driver is currently assigned to or involved in
      */
-    public void setBalance(float balance) {
-        this.balance = balance;
+    public void setCurrentRequest(DriveRequest currentRequest) {
+        this.currentRequest = currentRequest;
     }
     //</editor-fold>
-
-    /**
-     * Adds an amount to the current balance of the user and returns the current total balance
-     *
-     * @param amount    amount to add/subtract from the balance of the user
-     * @return          new balance of the user after the addition/subtraction
-     */
-    public float addBalance(float amount) {
-        balance += amount;
-        return balance;
-    }
 }

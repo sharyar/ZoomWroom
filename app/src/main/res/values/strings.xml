@@ -8,4 +8,6 @@
     <string name="rate_driver_negative_text">Terrible.</string>
     <string name="confirm">Confirm</string>
     <string name="profile_title">Profile</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="back">Back</string>
 </resources>

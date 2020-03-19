@@ -64,7 +64,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private Marker destinationMarker;
     private FloatingActionButton profileButton;
     private Button rideButton;
-    private Rider currentRider;
+    private String riderEmail;
     private String token;
 
     @Override
@@ -81,22 +81,23 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         });
 
         //get current user;
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            currentRider = MyDataBase.getRider(user.getEmail());
-        }
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        riderEmail = user.getEmail();
 
         FirebaseFirestore.getInstance().collection("DriverRequest")
-                .whereEqualTo("riderID", currentRider.getUserID())
+                .whereEqualTo("riderID", user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        ArrayList<DriveRequest> requests =  MyDataBase.getRiderRequest(currentRider.getUserID());
+                        ArrayList<DriveRequest> requests =  MyDataBase.getRiderRequest(riderEmail);
                         for (DriveRequest request :requests) {
                             if (request.getStatus() == 1) {
                                 Log.d("newToken", token);
                                 Driver driver = MyDataBase.getDriver(request.getDriverID());
-                                new Notify(token, driver.getName()).execute();
+                                if (driver != null) {
+                                    new Notify(token, driver.getName()).execute();
+                                }
                             }
                         }
 
@@ -118,7 +119,8 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //OpenProfileActivity();
+                Intent myIntent = new Intent(v.getContext(), UserProfileActivity.class);
+                startActivityForResult(myIntent, 0);
             }
         });
 
@@ -130,7 +132,6 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                 openRideCreation();
             }
         });
-
 
     }
 
@@ -297,7 +298,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         b.putDouble("depLat", mLocation.getDepart().latitude);
         b.putDouble("depLon", mLocation.getDepart().longitude);
         b.putDouble("price", getPrice(5.00, 0.5));
-        b.putString("userID", currentRider.getUserID());
+        b.putString("userID", riderEmail);
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();

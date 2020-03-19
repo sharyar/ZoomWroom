@@ -65,11 +65,20 @@ public class RiderModeActivity extends AppCompatActivity {
             }
         });
     }
+    /**
+     * switch mode between driver and rider
+     */
+
 
     public void OpenActivityDriverMode() {
         Intent intent = new Intent(this,DriverModeActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * change activity to rider signup page for driver to sign up
+     */
+
 
     public void OpenRiderSignUpActivity() {
         Intent intent = new Intent(this,RiderSignUpActivity.class);

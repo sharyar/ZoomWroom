@@ -3,6 +3,7 @@ package com.example.zoomwroom.database;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.Entities.Rider;
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -280,6 +282,40 @@ public class MyDataBase {
             return null;
         }
         return drivers.get(0);
+    }
+
+    // checks if the username is unique. If it is unique and no other user with that username exists
+    // returns true, otherwise returns false.
+    public static Boolean isUserNameUnique(String userName) {
+        final CollectionReference driverCollectionReference = db.collection("Drivers");
+        final CollectionReference riderCollectionReference = db.collection("Riders");
+
+        ArrayList<Driver> drivers = new ArrayList<>();
+        ArrayList<Rider> riders = new ArrayList<>();
+
+        Task<QuerySnapshot> task1 = driverCollectionReference
+                .whereEqualTo("userName", userName)
+                .get();
+
+        Task<QuerySnapshot> task2 = riderCollectionReference
+                .whereEqualTo("userName", userName)
+                .get();
+
+        while (!task1.isSuccessful()) {
+        }
+        while (!task2.isSuccessful()) {
+        }
+
+        for (QueryDocumentSnapshot doc : task1.getResult()) {
+            Driver user = doc.toObject(Driver.class);
+            drivers.add(user);
+        }
+
+        for (QueryDocumentSnapshot doc : task2.getResult()) {
+            Rider user = doc.toObject(Rider.class);
+            riders.add(user);
+        }
+        return (riders.isEmpty() && drivers.isEmpty());
     }
 
 }

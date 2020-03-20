@@ -56,7 +56,7 @@ import java.util.ArrayList;
  * Modified source from: https://developers.google.com/maps/documentation/android-sdk/start
  * Under the Apache 2.0 license
  */
-public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, FragmentChangeListener{
+public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener{
 
     private GoogleMap mMap;
     protected Location mLocation;
@@ -135,8 +135,9 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onClick(View v) {
                 Fragment createRideFragment = new FragmentCreateRide();
-                replaceFragment(createRideFragment);
-                rideButton.setVisibility(View.GONE);
+                addFragment(createRideFragment);
+
+                //rideButton.setVisibility(View.GONE);
 
             }
         });
@@ -203,17 +204,39 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         }
         updateMarkers();
     }
-    @Override
+
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.create_ride_fragment, fragment, fragment.toString());
-        fragmentTransaction.addToBackStack(fragment.toString());
+        fragmentTransaction.replace(R.id.rider_fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
+    public void addFragment(Fragment fragment){
+
+        Bundle b = new Bundle();
+        Log.d("Lon", Double.toString(mLocation.getDepart().longitude));
+        Log.d("Lat", Double.toString(mLocation.getDepart().latitude));
+        Log.d("Lon", Double.toString(mLocation.getDestination().longitude));
+        Log.d("Lat", Double.toString(mLocation.getDestination().latitude));
+        Log.d("price", Double.toString(getPrice(5.00, 0.5)));
+        b.putDouble("desLat", mLocation.getDestination().latitude);
+        b.putDouble("desLon", mLocation.getDestination().longitude);
+        b.putDouble("depLat", mLocation.getDepart().latitude);
+        b.putDouble("depLon", mLocation.getDepart().longitude);
+        b.putDouble("price", getPrice(5.00, 0.5));
+        b.putString("userID", riderEmail);
 
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment.setArguments(b);
+        fragmentTransaction.add(R.id.rider_fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+    }
 
         /**
          * Moves markers to the current latlng position and updates the estimated fare

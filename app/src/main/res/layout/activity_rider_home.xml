@@ -47,4 +47,10 @@
         android:textColorHint="@color/colorWhite"
         android:backgroundTint="@color/colorAccentPurple"/>
 
+    <FrameLayout
+        android:id="@+id/create_ride_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        app:layout_constraintBottom_toBottomOf="@+id/map" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

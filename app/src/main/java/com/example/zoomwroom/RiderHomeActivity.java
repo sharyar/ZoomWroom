@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -55,7 +56,7 @@ import java.util.ArrayList;
  * Modified source from: https://developers.google.com/maps/documentation/android-sdk/start
  * Under the Apache 2.0 license
  */
-public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, FragmentChangeListener{
 
     private GoogleMap mMap;
     protected Location mLocation;
@@ -66,6 +67,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private Button rideButton;
     private String riderEmail;
     private String token;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,9 +131,11 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         rideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openRideCreation();
+                Fragment createRideFragment = new FragmentCreateRide();
+                replaceFragment(createRideFragment);
             }
         });
+
 
     }
 
@@ -192,10 +196,20 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         }
         updateMarkers();
     }
+    @Override
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.create_ride_fragment, fragment, fragment.toString());
+        fragmentTransaction.addToBackStack(fragment.toString());
+        fragmentTransaction.commit();
+    }
 
-    /**
-     * Moves markers to the current latlng position and updates the estimated fare
-     */
+
+
+        /**
+         * Moves markers to the current latlng position and updates the estimated fare
+         */
     public void updateMarkers() {
         LatLng depart = mLocation.getDepart();
         LatLng destination = mLocation.getDestination();
@@ -308,4 +322,5 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         createRideFragment.setArguments(b);
         createRideFragment.show(getSupportFragmentManager(), createRideFragment.getTag());
     }
+
 }

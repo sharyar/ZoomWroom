@@ -47,7 +47,6 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
         Bundle bundle = getArguments();
 
-
         double desLat = bundle.getDouble("desLat");
         double desLon = bundle.getDouble("desLon");
         double depLat = bundle.getDouble("depLat");
@@ -70,20 +69,35 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         Button cancel = view.findViewById(R.id.cancel_button);
         Button confirm = view.findViewById(R.id.confirm_button);
 
+
+        // Confirm button in order to send new DriveRequest to Firebase
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LatLng departure = new LatLng(depLat, depLon);
                 LatLng destination = new LatLng(desLat, desLon);
                 newRequest = new DriveRequest(userID, departure, destination);
-                newRequest.setSuggestedFare((float) price);
-                MyDataBase.addRequest(newRequest);
-                Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
 
+                // grabbing the fare offered by the user
+                newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
+                Float offeredFare = Float.valueOf(fare.getText().toString());
+
+                // Do not accept ride requests where the offer is lower than the suggested price
+                if (offeredFare < price){
+                    Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    MyDataBase.addRequest(newRequest);
+                    Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
 
+        // Cancel button
+        // First check if user has created a ride request or not
+        // If so, set the status to 5 and update the database
+        // restart the activity all together
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

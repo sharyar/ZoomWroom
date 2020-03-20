@@ -24,6 +24,9 @@ public class FragmentAcceptedRide extends FragmentCreateRide {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // ******************** Setting textview to the appropriate values ***************
+
         View view = inflater.inflate(R.layout.fragment_accepted_ride, container, false);
         Bundle bundle = getArguments();
         DriveRequest driveRequest = (DriveRequest) bundle.getSerializable("driveRequest");
@@ -48,8 +51,11 @@ public class FragmentAcceptedRide extends FragmentCreateRide {
         String stringFare = Float.toString(driveRequest.getSuggestedFare());
         fare.setText("Fare: " + stringFare);
 
+        // ******************** Setting textview to the appropriate values ***************
 
-
+        // Cancel button
+        // Set the status to 5, then update firebase
+        // restart main activity
         Button cancel = view.findViewById(R.id.cancel_button);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override

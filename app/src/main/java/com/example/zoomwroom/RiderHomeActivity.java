@@ -128,7 +128,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         final FragmentDisplayDriveRequestInfo driveRequestFragment = new FragmentDisplayDriveRequestInfo(); // this is your fragment class
 
         // User profile button
-        profileButton = (FloatingActionButton) findViewById(R.id.rider_profile_button);
+        profileButton = findViewById(R.id.rider_profile_button);
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,8 +147,6 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                 showButton();
             }
         });
-
-
 
     }
 

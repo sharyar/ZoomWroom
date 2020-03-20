@@ -1,7 +1,10 @@
 package com.example.zoomwroom.Entities;
 
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +19,7 @@ import java.util.Date;
  * @version 1.1
  * @author Dulong Sang
  */
-public class DriveRequest {
+public class DriveRequest implements Serializable {
 
     //<editor-fold desc="Status">
     /**

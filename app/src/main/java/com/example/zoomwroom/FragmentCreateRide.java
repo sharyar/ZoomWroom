@@ -1,5 +1,6 @@
 package com.example.zoomwroom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
@@ -28,6 +32,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
     public FragmentCreateRide(){};
+    private DriveRequest newRequest;
 
 
     @Override
@@ -41,6 +46,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.fragment_create_ride, container, false);
 
         Bundle bundle = getArguments();
+
 
         double desLat = bundle.getDouble("desLat");
         double desLon = bundle.getDouble("desLon");
@@ -69,18 +75,26 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 LatLng departure = new LatLng(depLat, depLon);
                 LatLng destination = new LatLng(desLat, desLon);
-                DriveRequest newRequest = new DriveRequest(userID, departure, destination);
+                newRequest = new DriveRequest(userID, departure, destination);
                 newRequest.setSuggestedFare((float) price);
                 MyDataBase.addRequest(newRequest);
                 Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
-                dismiss();
+
+
             }
         });
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                if (newRequest != null){
+                    newRequest.setStatus(5);
+                    MyDataBase.updateRequest(newRequest);
+                }
+                Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
             }
         });
 

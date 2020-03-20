@@ -11,15 +11,17 @@
         android:orientation="vertical">
 
 
-        <EditText
+        <TextView
             android:id="@+id/destination_text"
-            android:layout_width="257dp"
+            android:layout_width="352dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:inputType="text"
-            android:text="Destintation: "
+            android:text="Destination: "
             android:textColor="@color/colorLightGray"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"/>
+
 
         <View
             android:layout_width="350dp"
@@ -27,16 +29,16 @@
             android:layout_marginStart="10dp"
             android:background="@color/colorLightGray" />
 
-
-        <EditText
+        <TextView
             android:id="@+id/pickup_text"
-            android:layout_width="257dp"
+            android:layout_width="351dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:inputType="text"
             android:text="Pickup: "
             android:textColor="@color/colorLightGray"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"/>
 
         <View
             android:layout_width="350dp"
@@ -45,14 +47,15 @@
             android:background="@color/colorLightGray" />
 
 
-        <EditText
+        <TextView
             android:id="@+id/fare_text"
-            android:layout_width="257dp"
+            android:layout_width="351dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="Fare: "
             android:textColor="@color/colorLightGray"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"/>
 
         <View
             android:layout_width="350dp"
@@ -64,21 +67,20 @@
             android:id="@+id/driver_name"
             android:layout_width="239dp"
             android:layout_height="45dp"
-            android:text= "Michael Scott"
             android:textColor="@color/colorLightGray"
-            android:textSize="25sp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp">
+            android:textSize="40sp"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            >
         </TextView>
 
         <TextView
             android:id="@+id/driver_username"
             android:layout_width="239dp"
             android:layout_height="45dp"
-            android:text= "worldsbestboss"
             android:textColor="@color/colorLightGray"
-            android:textSize="20sp"
-            android:layout_marginStart="10dp">
+            android:textSize="30sp"
+            android:layout_gravity="center">
         </TextView>
 
 
@@ -91,28 +93,16 @@
 
         <Button
             android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CANCEL"
-            android:layout_marginLeft="20dp"
             style="@style/PrimaryButtonRegisterRider"
-            android:textColorHint="@color/colorWhite"
-            android:backgroundTint="@color/colorAccentPurple">
-
-        </Button>
-
-        <Button
-            android:id="@+id/confirm_button"
-            android:layout_width="wrap_content"
+            android:layout_width="310dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
             android:backgroundTint="@color/colorAccentPurple"
-            android:layout_marginLeft="130dp"
-            android:layout_marginRight="20dp"
-            style="@style/PrimaryButtonRegisterRider"
-            android:text="CONFIRM"
+            android:text="CANCEL"
             android:textColorHint="@color/colorWhite">
 
         </Button>
+
 
 
     </LinearLayout>

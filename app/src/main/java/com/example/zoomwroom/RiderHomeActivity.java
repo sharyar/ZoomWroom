@@ -100,6 +100,9 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                                 if (driver != null) {
                                     new Notify(token, driver.getName()).execute();
                                 }
+
+                                Fragment acceptedRideFragment = new FragmentAcceptedRide();
+                                replaceFragment(acceptedRideFragment);
                             }
                         }
 
@@ -133,8 +136,12 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
             public void onClick(View v) {
                 Fragment createRideFragment = new FragmentCreateRide();
                 replaceFragment(createRideFragment);
+                rideButton.setVisibility(View.GONE);
+
             }
         });
+
+
 
 
     }
@@ -204,6 +211,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
     }
+
 
 
 

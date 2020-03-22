@@ -1,6 +1,7 @@
 package com.example.zoomwroom;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -12,9 +13,11 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,6 +29,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -34,6 +38,14 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
 import android.location.Location;
 import java.util.ArrayList;
 import android.os.Looper;
@@ -70,6 +82,9 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
     int PERMISSION_ID = 44; // used for driver's current location permissions
     FusedLocationProviderClient mFusedLocationClient;
 
+    private String token;
+    private String driverID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +94,36 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
         // This gets the user's current location. Currently display California as the emulator does not use current location.
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
+
+        // This gets device's token. Used for notification
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                token = instanceIdResult.getToken();
+                Log.d("newToken-----", token);
+            }
+        });
+
+        //get current user;
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        driverID = user.getEmail();
+
+        FirebaseFirestore.getInstance().collection("DriverRequest")
+                .whereEqualTo("driverID", driverID)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        ArrayList<DriveRequest> requests =  MyDataBase.getDriverRequest(driverID);
+                        for (DriveRequest request :requests) {
+                            if (request.getStatus() == 2) {
+                                Log.d("newToken", token);
+                                String message = "Your offer has been accepted!";
+                                new Notify(token, message).execute();
+                            }
+                        }
+
+                    }
+                });
 
         requests = MyDataBase.getOpenRequests();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.

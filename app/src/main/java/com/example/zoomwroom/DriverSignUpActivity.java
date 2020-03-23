@@ -1,8 +1,7 @@
 //sources: https://firebase.google.com/docs/auth/android/password-auth#create_a_password-based_account
 
 package com.example.zoomwroom;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,8 +11,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.zoomwroom.Entities.ContactInformation;
 import com.example.zoomwroom.Entities.Driver;
+import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -67,6 +70,10 @@ public class DriverSignUpActivity extends AppCompatActivity {
                     lastNameText.isEmpty() || userName.isEmpty() || phoneNumber.isEmpty()) {
                 Toast.makeText(DriverSignUpActivity.this, "Please ensure you have " +
                         "filled out all the fields.", Toast.LENGTH_SHORT).show();
+
+
+            } else if (MyDataBase.isUserNameUnique(userName)) {
+                Toast.makeText(this, "This username is already taken, please use a new one", Toast.LENGTH_SHORT).show();
             } else {
 
                 mAuth.createUserWithEmailAndPassword(email, passWord)

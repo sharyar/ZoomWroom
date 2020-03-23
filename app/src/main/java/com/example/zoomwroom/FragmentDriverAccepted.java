@@ -13,7 +13,7 @@ import com.example.zoomwroom.database.MyDataBase;
 
 import org.w3c.dom.Text;
 
-public class FragmentAcceptedRide extends FragmentCreateRide {
+public class FragmentDriverAccepted extends FragmentCreateRide {
     public void FragmentAcceptedRide(){};
 
     @Override
@@ -27,7 +27,7 @@ public class FragmentAcceptedRide extends FragmentCreateRide {
 
         // ******************** Setting textview to the appropriate values ***************
 
-        View view = inflater.inflate(R.layout.fragment_accepted_ride, container, false);
+        View view = inflater.inflate(R.layout.fragment_driver_accepted, container, false);
         Bundle bundle = getArguments();
         DriveRequest driveRequest = (DriveRequest) bundle.getSerializable("driveRequest");
 

@@ -107,8 +107,8 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                                     new Notify(token, driver.getName()).execute();
                                 }
 
-                                FragmentAcceptedRide acceptedRideFragment = new FragmentAcceptedRide();
-                                startAcceptedRide(acceptedRideFragment, request);
+                                FragmentDriverAccepted driverAcceptedFragment = new FragmentDriverAccepted();
+                                startAcceptedRide(driverAcceptedFragment, request);
                                 showButton();
 
                             }
@@ -219,7 +219,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
      * of the create ride fragment
      * In this case, we use replace and not add!
      * */
-    public void startAcceptedRide(FragmentAcceptedRide fragment, DriveRequest driveRequest) {
+    public void startAcceptedRide(FragmentDriverAccepted fragment, DriveRequest driveRequest) {
         Bundle b = new Bundle();
         b.putSerializable("driveRequest", driveRequest);
 

@@ -94,11 +94,23 @@
         <Button
             android:id="@+id/cancel_button"
             style="@style/PrimaryButtonRegisterRider"
-            android:layout_width="310dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:backgroundTint="@color/colorAccentPurple"
             android:text="CANCEL"
+            android:textColorHint="@color/colorWhite">
+
+        </Button>
+
+        <Button
+            android:id="@+id/confirm_button"
+            style="@style/PrimaryButtonRegisterRider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:backgroundTint="@color/colorAccentPurple"
+            android:text="CONFIRM"
             android:textColorHint="@color/colorWhite">
 
         </Button>

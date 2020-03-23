@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 OpenActivityRiderMode();
             }
         });
+
     }
 
 
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
     ///////////////////////////////////////////////
 
 }

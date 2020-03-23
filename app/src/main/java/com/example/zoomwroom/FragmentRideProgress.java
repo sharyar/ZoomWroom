@@ -13,7 +13,7 @@ import com.example.zoomwroom.database.MyDataBase;
 
 import org.w3c.dom.Text;
 
-public class FragmentDriverAccepted extends FragmentCreateRide {
+public class FragmentRideProgress extends FragmentCreateRide {
     public void FragmentAcceptedRide(){};
 
     @Override
@@ -27,7 +27,7 @@ public class FragmentDriverAccepted extends FragmentCreateRide {
 
         // ******************** Setting textview to the appropriate values ***************
 
-        View view = inflater.inflate(R.layout.fragment_driver_accepted, container, false);
+        View view = inflater.inflate(R.layout.fragment_ride_progress, container, false);
         Bundle bundle = getArguments();
         DriveRequest driveRequest = (DriveRequest) bundle.getSerializable("driveRequest");
 
@@ -53,34 +53,15 @@ public class FragmentDriverAccepted extends FragmentCreateRide {
 
         // ******************** Setting textview to the appropriate values ***************
 
-        TextView rideStatus = ((RiderHomeActivity) getActivity()).findViewById(R.id.rideStatus);
-        rideStatus.setText("ACCEPTED");
 
-        // Cancel button
-        // Set the status to 5, then update firebase
-        // restart main activity
-        Button cancel = view.findViewById(R.id.cancel_button);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                driveRequest.setStatus(5);
-                MyDataBase.updateRequest(driveRequest);
-                Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
-
-        // hide the button
-        // ride is now confirmed
-        Button confirm = view.findViewById(R.id.confirm_button);
+        // set the drive request to 4 ie complete
+        Button confirm = view.findViewById(R.id.complete_button);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                driveRequest.setStatus(2);
+                driveRequest.setStatus(4);
                 MyDataBase.updateRequest(driveRequest);
                 confirm.setVisibility(View.GONE);
-
             }
         });
 

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
@@ -89,6 +90,9 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                 else{
                     MyDataBase.addRequest(newRequest);
                     Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
+                    TextView rideStatus = ((RiderHomeActivity) getActivity()).findViewById(R.id.rideStatus);
+                    rideStatus.setVisibility(View.VISIBLE);
+                    rideStatus.setText("PENDING");
                 }
 
             }

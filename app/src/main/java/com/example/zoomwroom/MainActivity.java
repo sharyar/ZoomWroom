@@ -39,13 +39,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OpenRiderHomeActivity();
-            }
-        });
     }
 
 
@@ -69,10 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void OpenRiderHomeActivity() {
-        Intent intent = new Intent(this,RiderHomeActivity.class);
-        startActivity(intent);
-    }
     ///////////////////////////////////////////////
 
 }

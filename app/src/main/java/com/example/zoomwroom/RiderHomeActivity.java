@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -72,12 +73,15 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private Button rideButton;
     private String riderEmail;
     private String token;
+    private TextView rideStatus;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_home);
+
+
 
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
@@ -112,6 +116,11 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                                 showButton();
 
                             }
+                            else if (request.getStatus() == 2){
+                                FragmentDriverAccepted driverAcceptedFragment = new FragmentDriverAccepted();
+                                startAcceptedRide(driverAcceptedFragment, request);
+                                showButton();
+                            }
                         }
 
                     }
@@ -123,9 +132,6 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        FragmentManager fragmentManager = getSupportFragmentManager(); // this is creaitng a fragment manager
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction(); // something you just have to do
-        final FragmentDisplayDriveRequestInfo driveRequestFragment = new FragmentDisplayDriveRequestInfo(); // this is your fragment class
 
         // User profile button
         profileButton = findViewById(R.id.rider_profile_button);
@@ -145,6 +151,8 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                 FragmentCreateRide createRideFragment = new FragmentCreateRide();
                 startCreateRide(createRideFragment);
                 showButton();
+
+
             }
         });
 

@@ -92,28 +92,19 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/confirm_button"
+            android:id="@+id/complete_button"
             style="@style/PrimaryButtonRegisterRider"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:backgroundTint="@color/colorAccentPurple"
-            android:text="CONFIRM"
-            android:textColorHint="@color/colorWhite">
+            android:text="COMPLETE RIDE"
+            android:textColorHint="@color/colorWhite"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
 
         </Button>
 
-        <Button
-            android:id="@+id/cancel_button"
-            style="@style/PrimaryButtonRegisterRider"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:backgroundTint="@color/colorAccentPurple"
-            android:text="CANCEL"
-            android:textColorHint="@color/colorWhite">
-
-        </Button>
 
 
 

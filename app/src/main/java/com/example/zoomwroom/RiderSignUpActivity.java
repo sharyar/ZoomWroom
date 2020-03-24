@@ -2,8 +2,6 @@
 
 package com.example.zoomwroom;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,16 +11,20 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.zoomwroom.Entities.ContactInformation;
 import com.example.zoomwroom.Entities.Rider;
+import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RiderSignUpActivity extends AppCompatActivity {
     Rider test;
@@ -71,6 +73,8 @@ public class RiderSignUpActivity extends AppCompatActivity {
                     lastNameText.isEmpty() || userName.isEmpty() || phoneNumber.isEmpty()) {
                 Toast.makeText(RiderSignUpActivity.this, "Please ensure you have " +
                         "filled out all the fields.", Toast.LENGTH_SHORT).show();
+            } else if (!MyDataBase.isUserNameUnique(userName)) {
+                Toast.makeText(this, "This username is already taken, please use a new one", Toast.LENGTH_SHORT).show();
             } else {
                 mAuth.createUserWithEmailAndPassword(email, passWord)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -131,6 +135,9 @@ public class RiderSignUpActivity extends AppCompatActivity {
         });
 
     }
+    /**
+     * switch mode between driver and rider
+     */
 
     public void OpenRiderModeActivity() {
         Intent intent = new Intent(this,RiderModeActivity.class);

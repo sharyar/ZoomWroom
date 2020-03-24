@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //////////////////////
         // Driver Button
         Button driverBT = findViewById(R.id.DriverBT);
         driverBT.setOnClickListener(new View.OnClickListener() {
@@ -39,22 +38,30 @@ public class MainActivity extends AppCompatActivity {
                 OpenActivityRiderMode();
             }
         });
+
     }
 
-    ////////////////////////////////////////////////
+
+    /**
+     * switch mode between driver and rider
+     */
 
     public void OpenActivityRiderMode(){
         Intent intent = new Intent(this,RiderModeActivity.class);
         startActivity(intent);
     }
 
-    //OpenActivityDriverMode
+    /**
+     * switch mode between driver and rider
+     */
+
     public void OpenActivityDriverMode() {
 
         Intent intent = new Intent(this,DriverModeActivity.class);
         startActivity(intent);
 
     }
+
     ///////////////////////////////////////////////
 
 }

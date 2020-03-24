@@ -1,21 +1,16 @@
 package com.example.zoomwroom.Entities;
 
-import java.util.ArrayList;
-
 /**
  * Rating
  *
- * Stores the rating given to a driver by a user. Is stored within a drive request as it is
- * provided by the user at the end of a drive.
+ * A Rating object stores the number of thumbsUp and thumbsDown that a driver received.
+ * The Rating class was refactored on Mar 13.
  *
- * @see DriveRequest
+ * @version 1.2
  *
- * @version 1.0
+ * Mar 13, 2020
  *
- * Feb 26, 2020
- *
- * @author Sharyar Memon
- *
+ * @author Sharyar Memon, Dulong Sang
  */
 public class Rating {
     private int thumbsUp;
@@ -26,7 +21,22 @@ public class Rating {
         thumbsDown = 0;
     }
 
+    /**
+     * @param isThumbsUp true if the rider gives a thumbs up, false if gives a thumbs down
+     */
+    public void addRating(boolean isThumbsUp) {
+        if (isThumbsUp) {
+            thumbsUp++;
+        } else {
+            thumbsDown++;
+        }
+    }
+
     //<editor-fold desc="getter & setter">
+
+    /**
+     * @return  the number of thumbsUp that a driver received
+     */
     public int getThumbsUp() {
         return thumbsUp;
     }
@@ -35,6 +45,9 @@ public class Rating {
         this.thumbsUp = thumbsUp;
     }
 
+    /**
+     * @return  the number of thumbsDown that a driver received.
+     */
     public int getThumbsDown() {
         return thumbsDown;
     }
@@ -42,6 +55,5 @@ public class Rating {
     public void setThumbsDown(int thumbsDown) {
         this.thumbsDown = thumbsDown;
     }
-
     //</editor-fold>
 }

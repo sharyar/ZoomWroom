@@ -65,6 +65,10 @@ public class DriverModeActivity extends AppCompatActivity {
         });
 
     }
+    /**
+     * change to driver signup page for driver to signup
+     */
+
 
     public void OpenDriverSignUpActivity(){
         Intent intent = new Intent(this,DriverSignUpActivity.class);
@@ -72,6 +76,11 @@ public class DriverModeActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * switch mode between driver and rider
+     */
+
     public void OpenActivityRiderMode() {
         Intent intent = new Intent(this,RiderModeActivity.class);
         startActivity(intent);

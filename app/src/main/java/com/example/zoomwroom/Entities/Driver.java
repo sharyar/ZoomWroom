@@ -1,14 +1,12 @@
 package com.example.zoomwroom.Entities;
 
-import java.util.ArrayList;
-
 /**
  * Driver
  *
  * Stores a driver's personal information including name, ratings, currentRequest, userName and
  * userID (email address)
  *
- * @version 1.0
+ * @version 1.1
  *
  * Date: Feb 26, 2020
  *

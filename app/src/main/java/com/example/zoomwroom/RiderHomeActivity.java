@@ -3,11 +3,16 @@ package com.example.zoomwroom;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,6 +30,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.vision.Frame;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +41,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -55,7 +62,7 @@ import java.util.ArrayList;
  * Modified source from: https://developers.google.com/maps/documentation/android-sdk/start
  * Under the Apache 2.0 license
  */
-public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, Serializable {
 
     private GoogleMap mMap;
     protected Location mLocation;
@@ -64,13 +71,18 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private Marker destinationMarker;
     private FloatingActionButton profileButton;
     private Button rideButton;
-    private String riderID;
+    private String riderEmail;
     private String token;
+    private TextView rideStatus;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_home);
+
+
+
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
@@ -81,24 +93,35 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         });
 
         //get current user;
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        riderID = user.getEmail();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        riderEmail = user.getEmail();
 
         FirebaseFirestore.getInstance().collection("DriverRequest")
-                .whereEqualTo("riderID", riderID)
+                .whereEqualTo("riderID", user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        ArrayList<DriveRequest> requests =  MyDataBase.getRiderRequest(riderID);
+                        ArrayList<DriveRequest> requests =  MyDataBase.getRiderRequest(riderEmail);
                         for (DriveRequest request :requests) {
-                            if (request.getStatus() == 2) {
-                                Log.d("newToken", token);
+                            if (request.getStatus() == 1) {
+                                //Log.d("newToken", token);
                                 Driver driver = MyDataBase.getDriver(request.getDriverID());
                                 if (driver != null) {
                                     String name = driver.getName();
                                     String message = name + " just accepted your request!";
                                     new Notify(token, message).execute();
                                 }
+
+                                FragmentDriverAccepted driverAcceptedFragment = new FragmentDriverAccepted();
+                                startAcceptedRide(driverAcceptedFragment, request);
+                                showButton();
+
+                            }
+                            else if (request.getStatus() == 2){
+                                FragmentDriverAccepted driverAcceptedFragment = new FragmentDriverAccepted();
+                                startAcceptedRide(driverAcceptedFragment, request);
+                                showButton();
                             }
                         }
 
@@ -111,16 +134,14 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        FragmentManager fragmentManager = getSupportFragmentManager(); // this is creaitng a fragment manager
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction(); // something you just have to do
-        final FragmentDisplayDriveRequestInfo driveRequestFragment = new FragmentDisplayDriveRequestInfo(); // this is your fragment class
 
         // User profile button
-        profileButton = (FloatingActionButton) findViewById(R.id.rider_profile_button);
+        profileButton = findViewById(R.id.rider_profile_button);
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //OpenProfileActivity();
+                Intent myIntent = new Intent(v.getContext(), UserProfileActivity.class);
+                startActivityForResult(myIntent, 0);
             }
         });
 
@@ -129,10 +150,13 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         rideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openRideCreation();
+                FragmentCreateRide createRideFragment = new FragmentCreateRide();
+                startCreateRide(createRideFragment);
+                showButton();
+
+
             }
         });
-
 
     }
 
@@ -193,10 +217,80 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         }
         updateMarkers();
     }
+    /**
+     * Function is called when the drive request has been accepted
+     * @param fragment
+     *      the fragment where we will be switching activities
+     * @param driveRequest
+     *      pass in the driveRequest object so we can switch the status if the rider cancels
+     *  Note: this function is only called for FragmentAcceptedRide
+     *
+     * Two separate functions are made since accepted ride fragment will always be displayed "on top"
+     * of the create ride fragment
+     * In this case, we use replace and not add!
+     * */
+    public void startAcceptedRide(FragmentDriverAccepted fragment, DriveRequest driveRequest) {
+        Bundle b = new Bundle();
+        b.putSerializable("driveRequest", driveRequest);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment.setArguments(b);
+        fragmentTransaction.replace(R.id.rider_fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+    }
 
     /**
-     * Moves markers to the current latlng position and updates the estimated fare
-     */
+     * Function is called when the user wants to create a ride
+     * @param fragment
+     *  represents which fragment it will go to
+     * Note: this function is only called for FragmentCreateRide
+     * */
+    public void startCreateRide(FragmentCreateRide fragment){
+
+        Bundle b = new Bundle();
+        Log.d("Lon", Double.toString(mLocation.getDepart().longitude));
+        Log.d("Lat", Double.toString(mLocation.getDepart().latitude));
+        Log.d("Lon", Double.toString(mLocation.getDestination().longitude));
+        Log.d("Lat", Double.toString(mLocation.getDestination().latitude));
+        Log.d("price", Double.toString(getPrice(5.00, 0.5)));
+        b.putDouble("desLat", mLocation.getDestination().latitude);
+        b.putDouble("desLon", mLocation.getDestination().longitude);
+        b.putDouble("depLat", mLocation.getDepart().latitude);
+        b.putDouble("depLon", mLocation.getDepart().longitude);
+        b.putDouble("price", getPrice(5.00, 0.5));
+        b.putString("userID", riderEmail);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment.setArguments(b);
+        fragmentTransaction.add(R.id.rider_fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+
+    }
+    /**
+     * Checks to see if there is a fragment in the current FrameLayout
+     * if there isn't, display the create a ride button
+     *
+     * */
+    public void showButton(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment checkCreate = fragmentManager.findFragmentById(R.id.rider_fragment);
+        if (checkCreate == null){
+            rideButton.setVisibility(View.VISIBLE);
+        }
+        else{
+            rideButton.setVisibility(View.GONE);
+        }
+    }
+
+        /**
+         * Moves markers to the current latlng position and updates the estimated fare
+         */
     public void updateMarkers() {
         LatLng depart = mLocation.getDepart();
         LatLng destination = mLocation.getDestination();
@@ -273,14 +367,6 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         return value * Math.PI / 180;
     }
 
-    /**
-     * Called when user has clicked profile button
-     * Leads into the user profile activity
-     * */
-    public void OpenProfileActivity(){
-        //Intent intent = new Intent(this, BAJINS.class);
-        //startActivity(intent);
-    }
 
     /**
      * Called when user wants to create a ride
@@ -299,8 +385,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         b.putDouble("depLat", mLocation.getDepart().latitude);
         b.putDouble("depLon", mLocation.getDepart().longitude);
         b.putDouble("price", getPrice(5.00, 0.5));
-        b.putString("userID", riderID);
-
+        b.putString("userID", riderEmail);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -309,4 +394,5 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         createRideFragment.setArguments(b);
         createRideFragment.show(getSupportFragmentManager(), createRideFragment.getTag());
     }
+
 }

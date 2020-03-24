@@ -77,6 +77,7 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
     LatLng driverLocation; // stores driver's current location. Used to set the default position of map
 
     FloatingActionButton profileBtn; // Used to open the user's profile
+    FloatingActionButton driveRequestListBtn;
 
     // Required for current driver location
     int PERMISSION_ID = 44; // used for driver's current location permissions
@@ -141,6 +142,15 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(v.getContext(), UserProfileActivity.class);
+                startActivityForResult(myIntent, 0);
+            }
+        });
+
+        driveRequestListBtn = findViewById(R.id.drive_request_list_btn_driver_home);
+        driveRequestListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(v.getContext(), AcceptedRequestActivity.class);
                 startActivityForResult(myIntent, 0);
             }
         });

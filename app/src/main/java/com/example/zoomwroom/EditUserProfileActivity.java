@@ -1,11 +1,12 @@
 package com.example.zoomwroom;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.Entities.Rider;
@@ -60,23 +61,65 @@ public class EditUserProfileActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (isDriver) {
-                        driver.setName(fullNameEditText.getText().toString());
-                        driver.setUserName(userNameEditText.getText().toString());
-                        driver.getContactDetails().setPhoneNumber(phoneNumberEditText.getText().toString());
 
-                        MyDataBase.updateDriver(driver);
+                        if (userNameEditText.getText().toString().equalsIgnoreCase(driver.getUserName())) {
+                            driver.setName(fullNameEditText.getText().toString());
+                            driver.getContactDetails().setPhoneNumber(phoneNumberEditText.getText().toString());
 
-                        Toast.makeText(EditUserProfileActivity.this, "Your info has been updated.", Toast.LENGTH_SHORT).show();
-                        finish();
+                            MyDataBase.updateDriver(driver);
+
+                            Toast.makeText(EditUserProfileActivity.this, "Your info has been updated.", Toast.LENGTH_SHORT).show();
+                            finish();
+
+                        } else {
+
+                            if (MyDataBase.isUserNameUnique(userNameEditText.getText().toString())) {
+                                driver.setName(fullNameEditText.getText().toString());
+                                driver.setUserName(userNameEditText.getText().toString());
+                                driver.getContactDetails().setPhoneNumber(phoneNumberEditText.getText().toString());
+
+                                MyDataBase.updateDriver(driver);
+
+                                Toast.makeText(EditUserProfileActivity.this, "Your info has been updated.", Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toast.makeText(EditUserProfileActivity.this,
+                                        "This username is already taken, please " +
+                                                "use a different username", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+
                     } else if (isRider) {
-                        rider.setName(fullNameEditText.getText().toString());
-                        rider.setUserName(userNameEditText.getText().toString());
-                        rider.getContactDetails().setPhoneNumber(phoneNumberEditText.getText().toString());
 
-                        MyDataBase.updateRider(rider);
+                        if (userNameEditText.getText().toString().equalsIgnoreCase(rider.getUserName())) {
+                            rider.setName(fullNameEditText.getText().toString());
+                            rider.getContactDetails().setPhoneNumber(phoneNumberEditText.getText().toString());
 
-                        Toast.makeText(EditUserProfileActivity.this, "Your info has been updated.", Toast.LENGTH_SHORT).show();
-                        finish();
+                            MyDataBase.updateRider(rider);
+
+                            Toast.makeText(EditUserProfileActivity.this, "Your info has been updated.", Toast.LENGTH_SHORT).show();
+                            finish();
+
+                        } else {
+
+                            if (MyDataBase.isUserNameUnique(userNameEditText.getText().toString())) {
+                                rider.setName(fullNameEditText.getText().toString());
+                                rider.setUserName(userNameEditText.getText().toString());
+                                rider.getContactDetails().setPhoneNumber(phoneNumberEditText.getText().toString());
+
+                                MyDataBase.updateRider(rider);
+
+                                Toast.makeText(EditUserProfileActivity.this, "Your info has been updated.", Toast.LENGTH_SHORT).show();
+                                finish();
+
+                            } else {
+                                Toast.makeText(EditUserProfileActivity.this,
+                                        "This username is already taken, please " +
+                                                "use a different username", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
                     } else
                         Toast.makeText(EditUserProfileActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }

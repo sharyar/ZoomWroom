@@ -15,10 +15,10 @@ public class Notify extends AsyncTask<Void,Void,Void>
     final private String serverKey = "key=" + "AIzaSyCzF5PRcdDADRymHeRF2piC4TOUDIflvZM";
     final private String contentType = "application/json";
     private String token;
-    private String driverName;
+    private String message;
 
-    Notify(String token, String driverName){
-        this.driverName = driverName;
+    Notify(String token, String message){
+        this.message = message;
         this.token = token;
     }
     @Override
@@ -44,7 +44,7 @@ public class Notify extends AsyncTask<Void,Void,Void>
 
             JSONObject info = new JSONObject();
             info.put("title", "Request Accepted");   // Notification title
-            info.put("body", driverName); // Notification body
+            info.put("body", message); // Notification body
 
             json.put("notification", info);
 

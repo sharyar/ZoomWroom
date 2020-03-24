@@ -62,7 +62,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setLargeIcon(largeIcon)
                 .setColor(Color.BLUE)
                 .setContentTitle(title)
-                .setContentText(body + " just accepted your request!")
+                .setContentText(body)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE);
 

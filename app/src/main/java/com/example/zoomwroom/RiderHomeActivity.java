@@ -108,7 +108,9 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                                 //Log.d("newToken", token);
                                 Driver driver = MyDataBase.getDriver(request.getDriverID());
                                 if (driver != null) {
-                                    new Notify(token, driver.getName()).execute();
+                                    String name = driver.getName();
+                                    String message = name + " just accepted your request!";
+                                    new Notify(token, message).execute();
                                 }
 
                                 FragmentDriverAccepted driverAcceptedFragment = new FragmentDriverAccepted();
@@ -384,7 +386,6 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         b.putDouble("depLon", mLocation.getDepart().longitude);
         b.putDouble("price", getPrice(5.00, 0.5));
         b.putString("userID", riderEmail);
-
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

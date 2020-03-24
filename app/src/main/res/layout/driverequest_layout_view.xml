@@ -26,13 +26,5 @@
         android:layout_weight=".5"
         android:textSize="15sp"
         android:textStyle="bold"/>
-    <Button
-        android:id="@+id/request_details_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight=".7"
-        android:text="Details"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/CyanBlueGreen"/>
 
 </LinearLayout>

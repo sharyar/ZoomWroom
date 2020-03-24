@@ -171,7 +171,7 @@ public class DriverHomeActivity extends FragmentActivity implements OnMapReadyCa
 
         b.putString("DriverID", FirebaseAuth.getInstance().getCurrentUser().getEmail());
         b.putString("RiderName", MyDataBase.getRider(request.getRiderID()).getName());
-        b.putFloat("SuggestedFare", request.getSuggestedFare());
+        b.putFloat("OfferedFare", request.getOfferedFare());
         b.putDouble("Distance", getDistance(request));
         b.putString("DriveRequestID", request.getRequestID());
 

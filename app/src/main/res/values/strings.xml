@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Zoom Wroom</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_driver_home">Driver Map</string>
     <string name="complete">Complete</string>

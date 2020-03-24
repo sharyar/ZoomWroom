@@ -4,9 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -19,19 +17,20 @@ import java.util.ArrayList;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHolder> {
     private ArrayList<DriveRequest> requests;
-
+    private OnRequestClickListener onRequestClickListener;
     private final LayoutInflater mInflater;
 
 
-    public RequestAdapter(Context context, ArrayList<DriveRequest> requests) {
+    public RequestAdapter(Context context, ArrayList<DriveRequest> requests, OnRequestClickListener onRequestClickListener) {
         mInflater = LayoutInflater.from(context);
         this.requests = requests;
+        this.onRequestClickListener = onRequestClickListener;
     }
 
     @Override
     public RequestAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = mInflater.inflate(R.layout.driverequest_layout_view, parent, false);
-        return new MyViewHolder(itemView);
+        return new MyViewHolder(itemView, onRequestClickListener);
     }
 
     @Override
@@ -40,17 +39,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
             DriveRequest current = requests.get(position);
             Rider currentRequestRider = MyDataBase.getRider(current.getRiderID());
             holder.riderNameTextView.setText(currentRequestRider.getName());
-            holder.driveRequestStatusTextView.setText(giveStatus(current.getStatus()));
-
-
-            // to be implemented
-            holder.viewDetailsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
+            holder.driveRequestStatusTextView.setText(DriveRequest.giveStatus(current.getStatus()));
 
             // changes the background of the record if it is currently active
             if (current.getStatus() == 3) {
@@ -80,88 +69,33 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
     }
 
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView riderNameTextView;
         private final TextView driveRequestStatusTextView;
         private final LinearLayout requestView;
-        private final Button viewDetailsButton;
+        OnRequestClickListener onRequestClickListener;
 
-        private MyViewHolder(View itemView) {
+        private MyViewHolder(View itemView, OnRequestClickListener listener) {
             super(itemView);
             riderNameTextView = itemView.findViewById(R.id.drive_request_user_name_textView);
             driveRequestStatusTextView = itemView.findViewById(R.id.drive_request_status_textView);
             requestView = itemView.findViewById(R.id.drive_request_linear_layout);
-            viewDetailsButton = itemView.findViewById(R.id.request_details_btn);
+
+            this.onRequestClickListener = listener;
+
+            itemView.setOnClickListener(this);
         }
 
-    }
-
-    private String giveStatus(int status) {
-        String strStatus;
-
-        switch (status) {
-            case 1:
-                strStatus = "Accepted (Awaiting Rider Confirmation)";
-                break;
-            case 2:
-                strStatus = "Confirmed";
-                break;
-            case 3:
-                strStatus = "Ongoing";
-                break;
-            case 4:
-                strStatus = "Completed";
-                break;
-            case 5:
-                strStatus = "Cancelled";
-                break;
-            case 6:
-                strStatus = "Declined";
-                break;
-            case 7:
-                strStatus = "Aborted";
-                break;
-            default:
-                strStatus = "Unknown";
+        @Override
+        public void onClick(View v) {
+            onRequestClickListener.onRequestClick(getAdapterPosition());
         }
-
-        return strStatus;
     }
-    //////
 
 
-//    public static class MyViewHolder extends RecyclerView.ViewHolder {
-//        public TextView textView;
-//        public TextView texView2;
-//        public MyViewHolder(TextView v) {
-//            super(v);
-//            textView = v;
-//        }
-//    }
-//
-//    public RequestAdapter(String[] myDataset) {
-//        mDataset = myDataset;
-//    }
-//
-//    @Override
-//    public RequestAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        TextView v = (TextView) LayoutInflater.from(parent.getContext())
-//                .inflate(R.layout.driverequest_layout_view, parent, false);
-//
-//
-//        MyViewHolder vh = new MyViewHolder(v);
-//        return vh;
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(MyViewHolder holder, int position) {
-//
-//        holder.textView.setText(mDataset[position]);
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return mDataset.length;
-//    }
+
+    public interface OnRequestClickListener {
+        void onRequestClick(int position);
+    }
 
 }

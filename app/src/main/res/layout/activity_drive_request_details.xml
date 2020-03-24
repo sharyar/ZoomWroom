@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityDriveRequestDetails"
+    android:background="@color/white">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="Rider's Name"
+            style="@style/TextLayoutStyleUserEditProfile">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/drive_request_details_riders_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextInputUserEditProfile"
+                android:focusable="false"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="Offered Fare"
+            style="@style/TextLayoutStyleUserEditProfile">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/drive_request_details_offered_fare"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextInputUserEditProfile"
+                android:focusable="false"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="Date of Request"
+            style="@style/TextLayoutStyleUserEditProfile">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/drive_request_details_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextInputUserEditProfile"
+                android:focusable="false"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="Status of Request"
+            style="@style/TextLayoutStyleUserEditProfile">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/drive_request_details_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextInputUserEditProfile"
+                android:focusable="false"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="Distance"
+            style="@style/TextLayoutStyleUserEditProfile">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/drive_request_details_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextInputUserEditProfile"
+                android:focusable="false"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

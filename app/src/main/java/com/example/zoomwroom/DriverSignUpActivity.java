@@ -72,7 +72,7 @@ public class DriverSignUpActivity extends AppCompatActivity {
                         "filled out all the fields.", Toast.LENGTH_SHORT).show();
 
 
-            } else if (MyDataBase.isUserNameUnique(userName)) {
+            } else if (!MyDataBase.isUserNameUnique(userName)) {
                 Toast.makeText(this, "This username is already taken, please use a new one", Toast.LENGTH_SHORT).show();
             } else {
 

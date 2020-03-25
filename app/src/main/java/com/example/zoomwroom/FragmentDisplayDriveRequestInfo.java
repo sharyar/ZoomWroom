@@ -41,7 +41,7 @@ public class FragmentDisplayDriveRequestInfo extends BottomSheetDialogFragment {
         acceptRequest = view.findViewById(R.id.accept_request_btn);
 
         riderNameTextView.setText(bundle.getString("RiderName"));
-        fareTextView.setText(String.format(Locale.CANADA,"$%.0f",bundle.getFloat("SuggestedFare")));
+        fareTextView.setText(String.format(Locale.CANADA,"$%.0f",bundle.getFloat("OfferedFare")));
         distanceTextView.setText(String.format(Locale.CANADA, "Distance: %.0fkm",bundle.getDouble("Distance")));
 
         DriveRequest request = MyDataBase.getDriveRequestByID(bundle.getString("DriveRequestID"));

@@ -117,12 +117,17 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                             }
                             else if (request.getStatus() == 2){
                                 rideStatus.setText("WAITING FOR DRIVER");
-                                createRideFragment.confirmRidePhase(request);
                             }
 
                             else if (request.getStatus() == 3) {
                                 rideStatus.setText("RIDE IN PROGRESS");
+                                createRideFragment.ridingPhase(request);
                             }
+
+                            else if (request.getStatus() == 4){
+                                rideStatus.setText("RIDE COMPLETED");
+                            }
+
                         }
 
                     }

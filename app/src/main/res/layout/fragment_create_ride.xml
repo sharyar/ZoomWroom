@@ -16,7 +16,6 @@
             android:layout_width="352dp"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:text="Destination: "
             android:textColor="@color/colorLightGray"
             android:textSize="15dp"
             android:layout_gravity="center"
@@ -34,7 +33,6 @@
             android:layout_width="351dp"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:text="Pickup: "
             android:textColor="@color/colorLightGray"
             android:textSize="15dp"
             android:layout_gravity="center"
@@ -51,11 +49,10 @@
             android:id="@+id/fare_text"
             android:layout_width="351dp"
             android:layout_height="wrap_content"
-            android:text="Fare: "
             android:textColor="@color/colorLightGray"
             android:textSize="15sp"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="10dp"/>
 
         <View
             android:layout_width="350dp"

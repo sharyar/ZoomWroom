@@ -7,19 +7,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="267dp"
         android:orientation="vertical">
 
 
         <TextView
             android:id="@+id/destination_text"
             android:layout_width="352dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
             android:inputType="text"
             android:textColor="@color/colorLightGray"
-            android:textSize="15dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"/>
+            android:textSize="15dp" />
 
 
         <View
@@ -31,12 +32,13 @@
         <TextView
             android:id="@+id/pickup_text"
             android:layout_width="351dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
             android:inputType="text"
             android:textColor="@color/colorLightGray"
-            android:textSize="15dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"/>
+            android:textSize="15dp" />
 
         <View
             android:layout_width="350dp"
@@ -48,11 +50,12 @@
         <EditText
             android:id="@+id/fare_text"
             android:layout_width="351dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorLightGray"
-            android:textSize="15sp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="15dp"
+            android:textColor="@color/colorLightGray"
+            android:textSize="15sp" />
 
         <View
             android:layout_width="350dp"
@@ -63,24 +66,23 @@
         <TextView
             android:id="@+id/driver_name"
             android:layout_width="239dp"
-            android:layout_height="45dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
             android:textColor="@color/colorLightGray"
             android:textSize="30sp"
-            android:layout_marginTop="15dp"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            >
-        </TextView>
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/driver_username"
             android:layout_width="239dp"
-            android:layout_height="45dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
             android:textColor="@color/colorLightGray"
             android:textSize="20sp"
-            android:layout_gravity="center"
-            android:visibility="gone">
-        </TextView>
+            android:visibility="invisible" />
 
 
     </LinearLayout>
@@ -88,52 +90,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/confirm_button"
-            style="@style/PrimaryButtonRegisterRider"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:backgroundTint="@color/colorAccentPurple"
-            android:text="CONFIRM"
-            android:textColorHint="@color/colorWhite">
-
-        </Button>
 
         <Button
             android:id="@+id/cancel_button"
             style="@style/PrimaryButtonRegisterRider"
-            android:layout_width="300dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
             android:backgroundTint="@color/colorAccentPurple"
             android:text="CANCEL"
-            android:textColorHint="@color/colorWhite">
+            android:textColorHint="@color/colorWhite"/>
 
-        </Button>
+        <Button
+            android:id="@+id/confirm_button"
+            style="@style/PrimaryButtonRegisterRider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/colorAccentPurple"
+            android:text="CONFIRM"
+            android:textColorHint="@color/colorWhite"/>
 
         <Button
             android:id="@+id/complete_button"
             style="@style/PrimaryButtonRegisterRider"
-            android:layout_width="300dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginLeft="50dp"
             android:backgroundTint="@color/colorAccentPurple"
             android:text="RIDE COMPLETED"
             android:textColorHint="@color/colorWhite"
-            android:visibility="invisible">
-        </Button>
-
-
-
+            android:visibility="gone"/>
 
 
     </LinearLayout>
-
-
-
 
 
 </LinearLayout>

@@ -34,11 +34,18 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
     public FragmentCreateRide(){};
     private DriveRequest newRequest;
-    TextView driverName;
-    TextView driverUserName;
-    Button confirm;
-    Button cancel;
-    Button complete;
+    private TextView driverName;
+    private TextView driverUserName;
+    private Button confirm;
+    private Button cancel;
+    private Button complete;
+    private EditText fare;
+    private double price;
+    private double desLat;
+    private double desLon;
+    private double depLat;
+    private double depLon;
+    private String userID;
 
 
     @Override
@@ -62,16 +69,16 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         double depLat = bundle.getDouble("depLat");
         double depLon = bundle.getDouble("depLon");
         double oldPrice = bundle.getDouble("price");
-        double price = RiderHomeActivity.round(oldPrice, 2);
+        price = RiderHomeActivity.round(oldPrice, 2);
         String userID = bundle.getString("userID");
 
         TextView destination = view.findViewById(R.id.destination_text);
         TextView pickup= view.findViewById(R.id.pickup_text);
-        EditText fare = view.findViewById(R.id.fare_text);
+        fare = view.findViewById(R.id.fare_text);
 
 
-        String des = "Destination: Lon: " + RiderHomeActivity.round(desLon,2) + " Lat: " + RiderHomeActivity.round(desLat,2);
-        String dep = "Pickup: Lon: " + RiderHomeActivity.round(depLon,2) + " Lat: " + RiderHomeActivity.round(depLat,2);
+        String des = "Destination: Lon: " + RiderHomeActivity.round(desLon,4) + " Lat: " + RiderHomeActivity.round(desLat,4);
+        String dep = "Pickup: Lon: " + RiderHomeActivity.round(depLon,4) + " Lat: " + RiderHomeActivity.round(depLat,4);
         String fa = "Fare: " + Double.toString(price);
         destination.setText(des);
         pickup.setText(dep);
@@ -102,10 +109,11 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
                         // grabbing the fare offered by the user
                         newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
+                        fare.setEnabled(false);
                         pendingPhase();
                     }
-                }
 
+                }
 
             }
         });
@@ -137,10 +145,29 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     //  1. create a ride
     //  2. set the status as accepted and let the driver know to drive over
 
+    public void createRide(){
+        Float offeredFare = Float.valueOf(fare.getText().toString());
+        // Do not accept ride requests where the offer is lower than the suggested price
+        if (offeredFare < price){
+            Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();
+        }
+        else{
+            LatLng departure = new LatLng(depLat, depLon);
+            LatLng destination = new LatLng(desLat, desLon);
+            newRequest = new DriveRequest(userID, departure, destination);
+
+            // grabbing the fare offered by the user
+            newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
+            fare.setEnabled(false);
+            pendingPhase();
+        }
+
+    }
+
     // phase 0
     // make the confirm button disappear since they don't need to confirm another ride
     public void pendingPhase(){
-        confirm.setVisibility(View.INVISIBLE);
+        confirm.setVisibility(View.GONE);
         MyDataBase.addRequest(newRequest);
         Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
     }
@@ -150,6 +177,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     // change the fragment to accepted
     // see the confirm button again so they can accept the ride
     public void DriverAcceptedPhase(DriveRequest driveRequest){
+        newRequest = driveRequest;
         confirm.setVisibility(View.VISIBLE);
         String stringName = MyDataBase.getDriver(driveRequest.getDriverID()).getName();
         driverName.setText(stringName);
@@ -195,14 +223,6 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
     }
 
-    public void cancelRide(DriveRequest driveRequest){
-        driveRequest.setStatus(5);
-        MyDataBase.updateRequest(driveRequest);
-
-        Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
 
 
 

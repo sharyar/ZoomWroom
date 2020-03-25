@@ -115,6 +115,18 @@
 
         </Button>
 
+        <Button
+            android:id="@+id/complete_button"
+            style="@style/PrimaryButtonRegisterRider"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:backgroundTint="@color/colorAccentPurple"
+            android:text="RIDE COMPLETED"
+            android:textColorHint="@color/colorWhite"
+            android:visibility="invisible">
+        </Button>
+
 
 
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -74,15 +75,12 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private String riderEmail;
     private String token;
     private TextView rideStatus;
-
+    private FragmentDriverAccepted driverAcceptedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_home);
-
-
-
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
@@ -97,6 +95,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         assert user != null;
         riderEmail = user.getEmail();
 
+        rideStatus = findViewById(R.id.rideStatus);
         FirebaseFirestore.getInstance().collection("DriverRequest")
                 .whereEqualTo("riderID", user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -105,21 +104,22 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                         ArrayList<DriveRequest> requests =  MyDataBase.getRiderRequest(riderEmail);
                         for (DriveRequest request :requests) {
                             if (request.getStatus() == 1) {
-                                //Log.d("newToken", token);
                                 Driver driver = MyDataBase.getDriver(request.getDriverID());
                                 if (driver != null) {
                                     new Notify(token, driver.getName()).execute();
                                 }
-
-                                FragmentDriverAccepted driverAcceptedFragment = new FragmentDriverAccepted();
-                                startAcceptedRide(driverAcceptedFragment, request);
-                                showButton();
+                                System.out.println(driverAcceptedFragment);
+                                if(driverAcceptedFragment == null){
+                                    driverAcceptedFragment = new FragmentDriverAccepted();
+                                    startAcceptedRide(driverAcceptedFragment, request);
+                                    showButton();
+                                }
 
                             }
-                            else if (request.getStatus() == 2){
-                                FragmentDriverAccepted driverAcceptedFragment = new FragmentDriverAccepted();
-                                startAcceptedRide(driverAcceptedFragment, request);
-                                showButton();
+
+                            else if (request.getStatus() ==3) {
+                                rideStatus.setText("RIDE IN PROGRESS");
+                                driverAcceptedFragment.phaseThree();
                             }
                         }
 

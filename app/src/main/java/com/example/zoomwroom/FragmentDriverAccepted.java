@@ -11,10 +11,13 @@ import android.widget.TextView;
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
 
-import org.w3c.dom.Text;
+
 
 public class FragmentDriverAccepted extends FragmentCreateRide {
-    public void FragmentAcceptedRide(){};
+    public void FragmentDriverAccepted(){};
+    private Button cancel;
+    private Button complete;
+    private Button confirm;
 
     @Override
     public void onCreate(Bundle savedInstancesState) {
@@ -54,12 +57,12 @@ public class FragmentDriverAccepted extends FragmentCreateRide {
         // ******************** Setting textview to the appropriate values ***************
 
         TextView rideStatus = ((RiderHomeActivity) getActivity()).findViewById(R.id.rideStatus);
-        rideStatus.setText("ACCEPTED");
+        rideStatus.setText("ACCEPTED BY DRIVER");
 
         // Cancel button
         // Set the status to 5, then update firebase
         // restart main activity
-        Button cancel = view.findViewById(R.id.cancel_button);
+        cancel = view.findViewById(R.id.cancel_button);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,20 +76,29 @@ public class FragmentDriverAccepted extends FragmentCreateRide {
 
         // hide the button
         // ride is now confirmed
-        Button confirm = view.findViewById(R.id.confirm_button);
+        confirm = view.findViewById(R.id.confirm_button);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 driveRequest.setStatus(2);
                 MyDataBase.updateRequest(driveRequest);
+                rideStatus.setText("WAITING FOR DRIVER");
                 confirm.setVisibility(View.GONE);
-
             }
         });
+        complete = view.findViewById(R.id.complete_button);
+
+
+
 
 
 
         return view;
+    }
+
+    public void phaseThree(){
+        complete.setVisibility(View.VISIBLE);
+        cancel.setVisibility(View.INVISIBLE);
     }
 
 }

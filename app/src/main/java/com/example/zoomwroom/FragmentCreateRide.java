@@ -34,6 +34,9 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
     public FragmentCreateRide(){};
     private DriveRequest newRequest;
+    TextView driverName;
+    TextView driverUserName;
+    Button confirm;
 
 
     @Override
@@ -48,52 +51,59 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
         Bundle bundle = getArguments();
 
+        driverName = view.findViewById(R.id.driver_name);
+        driverUserName = view.findViewById(R.id.driver_username);
+
+        // ****** Setting up information ********
         double desLat = bundle.getDouble("desLat");
         double desLon = bundle.getDouble("desLon");
         double depLat = bundle.getDouble("depLat");
         double depLon = bundle.getDouble("depLon");
-        double price = bundle.getDouble("price");
+        double oldPrice = bundle.getDouble("price");
+        double price = RiderHomeActivity.round(oldPrice, 2);
         String userID = bundle.getString("userID");
 
-        EditText destination = view.findViewById(R.id.destination_text);
-        EditText pickup= view.findViewById(R.id.pickup_text);
+        TextView destination = view.findViewById(R.id.destination_text);
+        TextView pickup= view.findViewById(R.id.pickup_text);
         EditText fare = view.findViewById(R.id.fare_text);
 
-        String des = "Lon: " + desLon + " Lat: " + desLat;
-        String dep = "Lon: " + depLon + " Lat: " + depLat;
-        String fa = Double.toString(price);
+
+        String des = "Destination: Lon: " + RiderHomeActivity.round(desLon,2) + " Lat: " + RiderHomeActivity.round(desLat,2);
+        String dep = "Pickup: Lon: " + RiderHomeActivity.round(depLon,2) + " Lat: " + RiderHomeActivity.round(depLat,2);
+        String fa = "Fare: " + Double.toString(price);
         destination.setText(des);
         pickup.setText(dep);
-        fare.setText(fa);
+        fare.setText(Double.toString(price));
+
+        // ****** Setting up information ********
 
 
         Button cancel = view.findViewById(R.id.cancel_button);
-        Button confirm = view.findViewById(R.id.confirm_button);
+        confirm = view.findViewById(R.id.confirm_button);
 
 
         // Confirm button in order to send new DriveRequest to Firebase
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LatLng departure = new LatLng(depLat, depLon);
-                LatLng destination = new LatLng(desLat, desLon);
-                newRequest = new DriveRequest(userID, departure, destination);
+                if (newRequest == null){
+                    LatLng departure = new LatLng(depLat, depLon);
+                    LatLng destination = new LatLng(desLat, desLon);
+                    newRequest = new DriveRequest(userID, departure, destination);
 
-                // grabbing the fare offered by the user
-                newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
-                Float offeredFare = Float.valueOf(fare.getText().toString());
+                    // grabbing the fare offered by the user
+                    newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
+                    Float offeredFare = Float.valueOf(fare.getText().toString());
 
-                // Do not accept ride requests where the offer is lower than the suggested price
-                if (offeredFare < price){
-                    Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();
+                    // Do not accept ride requests where the offer is lower than the suggested price
+                    if (offeredFare < price){
+                        Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        pendingPhase();
+                    }
                 }
-                else{
-                    MyDataBase.addRequest(newRequest);
-                    Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
-                    TextView rideStatus = ((RiderHomeActivity) getActivity()).findViewById(R.id.rideStatus);
-                    rideStatus.setVisibility(View.VISIBLE);
-                    rideStatus.setText("PENDING");
-                }
+
 
             }
         });
@@ -109,6 +119,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                     newRequest.setStatus(5);
                     MyDataBase.updateRequest(newRequest);
                 }
+
                 Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -118,4 +129,65 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
         return view;
     }
+
+    // PROBLEM:
+    // the confirm button needs to do 2 different things depending on two things:
+    //  1. create a ride
+    //  2. set the status as accepted and let the driver know to drive over
+
+    // phase 0
+    // make the confirm button disappear since they don't need to confirm another ride
+    public void pendingPhase(){
+        confirm.setVisibility(View.INVISIBLE);
+        MyDataBase.addRequest(newRequest);
+        Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
+    }
+
+    // phase 1
+    // have the driver name and username show up
+    // change the fragment to accepted
+    // see the confirm button again so they can accept the ride
+    public void DriverAcceptedPhase(DriveRequest driveRequest){
+        confirm.setVisibility(View.VISIBLE);
+        String stringName = MyDataBase.getDriver(driveRequest.getDriverID()).getName();
+        driverName.setText(stringName);
+        driverName.setVisibility(View.VISIBLE);
+
+        String stringUsername = MyDataBase.getDriver(driveRequest.getDriverID()).getUserName();
+        driverUserName.setText(stringUsername);
+        driverUserName.setVisibility(View.VISIBLE);
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmRidePhase(driveRequest);
+            }
+        });
+
+
+
+    }
+
+    // phase 2
+    // rider has confirmed that they want to take the ride
+    // hide the confirm button
+    public void confirmRidePhase(DriveRequest driveRequest){
+        driveRequest.setStatus(2);
+        MyDataBase.updateRequest(driveRequest);
+        confirm.setVisibility(View.GONE);
+    }
+
+    // phase 3
+    // waiting for the driver?
+    // do nothing for now
+
+    //phase 4
+    // ride is complete
+    public void completeRidePhase(DriveRequest driveRequest){
+        driveRequest.setStatus(4);
+        MyDataBase.updateRequest(driveRequest);
+
+    }
+
+
 }

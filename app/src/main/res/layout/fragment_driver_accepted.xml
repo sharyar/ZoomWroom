@@ -47,7 +47,7 @@
             android:background="@color/colorLightGray" />
 
 
-        <TextView
+        <EditText
             android:id="@+id/fare_text"
             android:layout_width="351dp"
             android:layout_height="wrap_content"

@@ -75,7 +75,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     private String riderEmail;
     private String token;
     private TextView rideStatus;
-    private FragmentDriverAccepted driverAcceptedFragment;
+    private FragmentCreateRide createRideFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,23 +103,25 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         ArrayList<DriveRequest> requests =  MyDataBase.getRiderRequest(riderEmail);
                         for (DriveRequest request :requests) {
-                            if (request.getStatus() == 1) {
-                                Driver driver = MyDataBase.getDriver(request.getDriverID());
-                                if (driver != null) {
-                                    new Notify(token, driver.getName()).execute();
-                                }
-                                System.out.println(driverAcceptedFragment);
-                                if(driverAcceptedFragment == null){
-                                    driverAcceptedFragment = new FragmentDriverAccepted();
-                                    startAcceptedRide(driverAcceptedFragment, request);
-                                    showButton();
-                                }
-
+                            // if the drive request is 1, that means that the ride has been accepted
+                            // so from create ride, we need to show the driver name and username
+                            if (request.getStatus() == 0){
+                                TextView rideStatus = findViewById(R.id.rideStatus);
+                                rideStatus.setVisibility(View.VISIBLE);
+                                rideStatus.setText("PENDING");
                             }
 
-                            else if (request.getStatus() ==3) {
+                            else if (request.getStatus() == 1) {
+                                rideStatus.setText("ACCEPTED BY DRIVER");
+                                createRideFragment.DriverAcceptedPhase(request);
+                            }
+                            else if (request.getStatus() == 2){
+                                rideStatus.setText("WAITING FOR DRIVER");
+                                createRideFragment.confirmRidePhase(request);
+                            }
+
+                            else if (request.getStatus() == 3) {
                                 rideStatus.setText("RIDE IN PROGRESS");
-                                driverAcceptedFragment.phaseThree();
                             }
                         }
 
@@ -148,10 +150,9 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         rideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentCreateRide createRideFragment = new FragmentCreateRide();
+                createRideFragment = new FragmentCreateRide();
                 startCreateRide(createRideFragment);
                 showButton();
-
 
             }
         });
@@ -249,11 +250,7 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
     public void startCreateRide(FragmentCreateRide fragment){
 
         Bundle b = new Bundle();
-        Log.d("Lon", Double.toString(mLocation.getDepart().longitude));
-        Log.d("Lat", Double.toString(mLocation.getDepart().latitude));
-        Log.d("Lon", Double.toString(mLocation.getDestination().longitude));
-        Log.d("Lat", Double.toString(mLocation.getDestination().latitude));
-        Log.d("price", Double.toString(getPrice(5.00, 0.5)));
+
         b.putDouble("desLat", mLocation.getDestination().latitude);
         b.putDouble("desLon", mLocation.getDestination().longitude);
         b.putDouble("depLat", mLocation.getDepart().latitude);
@@ -365,33 +362,5 @@ public class RiderHomeActivity extends FragmentActivity implements OnMapReadyCal
         return value * Math.PI / 180;
     }
 
-
-    /**
-     * Called when user wants to create a ride
-     * Will open up a fragment to deal with creating a ride request
-     * */
-    public void openRideCreation() {
-
-        Bundle b = new Bundle();
-        Log.d("Lon", Double.toString(mLocation.getDepart().longitude));
-        Log.d("Lat", Double.toString(mLocation.getDepart().latitude));
-        Log.d("Lon", Double.toString(mLocation.getDestination().longitude));
-        Log.d("Lat", Double.toString(mLocation.getDestination().latitude));
-        Log.d("price", Double.toString(getPrice(5.00, 0.5)));
-        b.putDouble("desLat", mLocation.getDestination().latitude);
-        b.putDouble("desLon", mLocation.getDestination().longitude);
-        b.putDouble("depLat", mLocation.getDepart().latitude);
-        b.putDouble("depLon", mLocation.getDepart().longitude);
-        b.putDouble("price", getPrice(5.00, 0.5));
-        b.putString("userID", riderEmail);
-
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        final FragmentCreateRide createRideFragment = new FragmentCreateRide();
-
-        createRideFragment.setArguments(b);
-        createRideFragment.show(getSupportFragmentManager(), createRideFragment.getTag());
-    }
 
 }

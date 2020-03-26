@@ -1,19 +1,42 @@
 
 package com.example.zoomwroom;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.zoomwroom.Entities.Location;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -24,29 +47,45 @@ import java.math.RoundingMode;
  * Author : Henry Lin
  * Creates a google map fragment where markers can be placed
  *
- * @see com.example.zoomwroom.Location
+ * @see Location
  * @see com.google.android.gms.maps.GoogleMap
  *
  * Modified source from: https://developers.google.com/maps/documentation/android-sdk/start
  * Under the Apache 2.0 license
  */
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public abstract class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
-    private GoogleMap mMap;
+    protected GoogleMap mMap;
     protected Location mLocation;
-    private boolean f;
-    private Marker departureMarker;
-    private Marker destinationMarker;
+
+    protected Marker departureMarker;
+    protected Marker destinationMarker;
+    protected LatLng userLocation;
+    protected String token;
+
+    // Required for current driver location
+    int PERMISSION_ID = 44; // used for driver's current location permissions
+    FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+
+        // This gets device's token. Used for notification
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                token = instanceIdResult.getToken();
+                Log.d("newToken-----", token);
+            }
+        });
+        //setContentView(R.layout.activity_maps);
         mLocation = new Location();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        Log.d("MAP FRAGMENT", "ABOUT TO GET SUPPORT FRAGMENT MANAGER");
+
+        // This gets the user's current location. Currently display California as the emulator does not use current location.
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
 
@@ -62,20 +101,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng edmonton = new LatLng(53.5232, -113.5263);
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(edmonton));
+
+        Log.d("LOCATION SERVICES", "GETTING LOCATION");
+        getLastLocation();
 
         mMap.setOnMapClickListener(this);
-        f = true; // Set departure flag as true
+
 
         departureMarker = mMap.addMarker(new MarkerOptions()
-                .position(edmonton)
+                .position(new LatLng(53.5232, -113.5263))
                 .title("Departure")
                 .icon(BitmapDescriptorFactory.defaultMarker(244))
                 .alpha(0.71f));
         destinationMarker = mMap.addMarker(new MarkerOptions()
-                .position(edmonton)
+                .position(new LatLng(53.5232, -113.5263))
                 .title("Destination")
                 .icon(BitmapDescriptorFactory.defaultMarker(244))
                 .alpha(0.71f));
@@ -85,23 +124,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    /**
-     * Moves the destination and departure markers when user clicks on a point on the map
-     * flag f - true = set departure
-     *          false = set destination
-     * @param point
-     */
+
     @Override
-    public void onMapClick(LatLng point) {
-        if(f){
-            mLocation.setDepart(point);
-            f = false;
-        } else {
-            mLocation.setDestination(point);
-            f = true;
-        }
-        updateMarkers();
-    }
+    public abstract void onMapClick(LatLng point);
 
     /**
      * Moves markers to the current latlng position and updates the estimated fare
@@ -109,79 +134,154 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void updateMarkers() {
         LatLng depart = mLocation.getDepart();
         LatLng destination = mLocation.getDestination();
-        if(!depart.equals(departureMarker.getPosition())) {
+        if (!depart.equals(departureMarker.getPosition())) {
             departureMarker.setPosition(depart);
             departureMarker.setVisible(true);
         }
-        if(!destination.equals(destinationMarker.getPosition())) {
+        if (!destination.equals(destinationMarker.getPosition())) {
             destinationMarker.setPosition(destination);
             destinationMarker.setVisible(true);
         }
-        double price = getPrice(5.00, 0.5);
-        Log.d("Price", Double.toString(price));
+
+        if (destinationMarker.isVisible() && departureMarker.isVisible()) {
+            double price = FareCalculation.getPrice(5.00, 0.5, departureMarker, destinationMarker);
+            Log.d("Price", Double.toString(price));
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(depart).include(destination);
+
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 150, 200, 10);
+            mMap.moveCamera(cameraUpdate);
+        }
     }
 
+
+
     /**
-     * gets the recommended fare price using formula baseprice + multiplier * distance between points
-     *
-     * @param basePrice
-     * @param multiplier
-     * @return price
+     * Uses to get the user's last location.
      */
-    public double getPrice(double basePrice, double multiplier) {
-        if(departureMarker.isVisible() && destinationMarker.isVisible()) {
-            double price = basePrice + multiplier *
-                    getDistance(departureMarker.getPosition().latitude,
-                            destinationMarker.getPosition().latitude,
-                            departureMarker.getPosition().longitude,
-                            destinationMarker.getPosition().longitude);
-            return round(price, 2);
+    protected void getLastLocation(){
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                mFusedLocationClient.getLastLocation().addOnCompleteListener(
+                        new OnCompleteListener<android.location.Location>() {
+                            @Override
+                            public void onComplete(@NonNull Task<android.location.Location> task) {
+                                android.location.Location location = task.getResult();
+                                if (location == null) {
+                                    requestNewLocationData();
+                                } else {
+                                    userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+                                }
+                            }
+                        }
+                );
+            } else {
+                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
         } else {
-            return 0;
+            requestPermissions();
         }
     }
 
     /**
-     * gets distance in kilometers from two latitude/longitude points
-     * by using the haversine formula : https://www.movable-type.co.uk/scripts/latlong.html
+     * This function is called if the lastlocation value is null.
+     */
+    private void requestNewLocationData(){
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(0);
+        mLocationRequest.setFastestInterval(0);
+        mLocationRequest.setNumUpdates(1);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient.requestLocationUpdates(
+                mLocationRequest, mLocationCallback,
+                Looper.myLooper()
+        );
+
+    }
+
+    /**
+     * Updates the camera location based on user's current location.
+     */
+    protected LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            android.location.Location mLastLocation = locationResult.getLastLocation();
+            userLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+        }
+    };
+
+    /**
+     * Checks if the user has given location permissions to the app to avoid exceptions related
+     * to that issue.
      *
-     * Adapted from javascript code
-     * @return distance
+     * @return      boolean value indicating the status of location permission by user.
      */
-    protected double getDistance(double lat1, double lat2, double long1, double long2) {
-        final int R = 6371; // Radius of the earth in Km
-        Double latDistance = toRad(lat1 - lat2);
-        Double lonDistance = toRad(long1
-                - long2);
-        Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
-                Math.cos(toRad(lat1)) *
-                        Math.cos(toRad(lat2)) *
-                        Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return R * c;
+    protected boolean checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Rounds a double value to int places
-     * Source: https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
-     * @param value
-     * @param places
-     * @return roundedNum
+     * Requests user permission for location access
      */
-    protected static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSION_ID
+        );
     }
 
     /**
-     * Converts a degree to a radian value
-     * @param value
-     * @return radian
+     * Checks if the user's location has been enabled in the settings.
+     *
+     * @return      boolean indicating status of location setting (phone location setting)
      */
-    static Double toRad(Double value) {
-        return value * Math.PI / 180;
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+        );
+    }
+
+    /**
+     * Checks if user has given permission, check if location is enabled in settings and then calls
+     * the getLastLocation function to get the user's location if the above conditions are satisfied
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation();
+            }
+        }
+    }
+
+    /**
+     * If the activity is resumed, it updates the user's location if required.
+     */
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (checkPermissions()) {
+            getLastLocation();
+        }
     }
 }
+
+

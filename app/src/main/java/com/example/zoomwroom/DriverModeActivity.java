@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class DriverModeActivity extends AppCompatActivity {
     // Variables required for activity
+    Button testBtn;
     Button riderModeBtn;
     Button driverSignUpBtn;
     Button loginBtn;
@@ -63,6 +64,15 @@ public class DriverModeActivity extends AppCompatActivity {
                 OpenActivityRiderMode();
             }
         });
+
+        //test email and call
+//        testBtn = findViewById(R.id.testemailbtn);
+//        testBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openDriverInfosActivity();
+//            }
+//        });
 
     }
     /**
@@ -119,4 +129,10 @@ public class DriverModeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DriverHomeActivity.class);
         startActivity(intent);
     }
+
+    public void openDriverInfosActivity(){
+        Intent intent = new Intent(this ,DriverInfosForContactActivitys.class);
+        startActivity(intent);
+    }
+
 }

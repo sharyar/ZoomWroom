@@ -67,12 +67,10 @@
             android:id="@+id/driver_name"
             android:layout_width="239dp"
             android:layout_height="45dp"
-            android:textColor="@color/colorLightGray"
-            android:textSize="30sp"
-            android:layout_marginTop="15dp"
             android:layout_gravity="center"
-            >
-        </TextView>
+            android:layout_marginTop="15dp"
+            android:textColor="@color/colorLightGray"
+            android:textSize="30sp"></TextView>
 
         <TextView
             android:id="@+id/driver_username"

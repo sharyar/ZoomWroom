@@ -26,7 +26,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityDriveRequestDetails"></activity>
+        <activity android:name=".DriverInfosForContactActivitys" />
+        <activity android:name=".ActivityDriveRequestDetails" />
         <activity
             android:name=".AcceptedRequestActivity"
             android:label="Accepted Requests" />

@@ -78,6 +78,7 @@
             android:id="@+id/driver_username"
             android:layout_width="239dp"
             android:layout_height="45dp"
+            android:clickable="true"
             android:textColor="@color/colorLightGray"
             android:textSize="20sp"
             android:layout_gravity="center">

@@ -10,6 +10,7 @@
         android:layout_height="220dp"
         android:orientation="vertical">
 
+
         <TextView
             android:id="@+id/destination_text"
             android:layout_width="352dp"

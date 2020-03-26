@@ -73,7 +73,7 @@ public class RiderSignUpActivity extends AppCompatActivity {
                     lastNameText.isEmpty() || userName.isEmpty() || phoneNumber.isEmpty()) {
                 Toast.makeText(RiderSignUpActivity.this, "Please ensure you have " +
                         "filled out all the fields.", Toast.LENGTH_SHORT).show();
-            } else if (MyDataBase.isUserNameUnique(userName)) {
+            } else if (!MyDataBase.isUserNameUnique(userName)) {
                 Toast.makeText(this, "This username is already taken, please use a new one", Toast.LENGTH_SHORT).show();
             } else {
                 mAuth.createUserWithEmailAndPassword(email, passWord)

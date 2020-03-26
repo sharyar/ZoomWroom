@@ -233,4 +233,36 @@ public class DriveRequest implements Serializable {
         pickupLocation = new LatLng(pickupLocationLat, pickupLocationLng);
         destination = new LatLng(destinationLat, destinationLng);
     }
+
+    public static String giveStatus(int status) {
+        String strStatus;
+
+        switch (status) {
+            case 1:
+                strStatus = "Accepted";
+                break;
+            case 2:
+                strStatus = "Confirmed";
+                break;
+            case 3:
+                strStatus = "Ongoing";
+                break;
+            case 4:
+                strStatus = "Completed";
+                break;
+            case 5:
+                strStatus = "Cancelled";
+                break;
+            case 6:
+                strStatus = "Declined";
+                break;
+            case 7:
+                strStatus = "Aborted";
+                break;
+            default:
+                strStatus = "Unknown";
+        }
+
+        return strStatus;
+    }
 }

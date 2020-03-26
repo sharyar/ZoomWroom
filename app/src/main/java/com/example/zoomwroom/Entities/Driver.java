@@ -14,7 +14,7 @@ package com.example.zoomwroom.Entities;
  */
 public class Driver extends User {
     // Declare variables required for class
-    private Rating rating;
+    private Rating rating; // stores ratings for drivers
 
     /**
      * Constructor for class. Returns an instance of Driver

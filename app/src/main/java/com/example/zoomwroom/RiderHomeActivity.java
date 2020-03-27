@@ -46,13 +46,12 @@ import java.util.ArrayList;
  *
  * Author : Henry Lin, Amanda Nguyen
  * Creates a google map fragment where markers can be placed
- * Allows the user to create a ride and see their profile from fragments
- *
+ * Allows the user to create a ride and see their profile from an additional fragment
  *
  * @see Location
  * @see com.google.android.gms.maps.GoogleMap
  *
- * March 12, 2020
+ * March 27, 2020
  *
  * Modified source from: https://developers.google.com/maps/documentation/android-sdk/start
  * Under the Apache 2.0 license
@@ -64,7 +63,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
     private FloatingActionButton profileButton;
     private Button rideButton;
     private String riderEmail;
-
     private TextView rideStatus;
     private FragmentCreateRide createRideFragment;
 
@@ -86,7 +84,10 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         assert user != null;
         riderEmail = user.getEmail();
 
+        // rideStatus will always be invisible at the start of the activity
         rideStatus = findViewById(R.id.rideStatus);
+        rideStatus.setVisibility(View.INVISIBLE);
+
         FirebaseFirestore.getInstance().collection("DriverRequest")
                 .whereEqualTo("riderID", user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -94,15 +95,25 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         ArrayList<DriveRequest> requests =  MyDataBase.getRiderRequest(riderEmail);
                         for (DriveRequest request :requests) {
-                            // if the drive request is 1, that means that the ride has been accepted
-                            // so from create ride, we need to show the driver name and username
-                            if (request.getStatus() == 0){
-                                TextView rideStatus = findViewById(R.id.rideStatus);
-                                rideStatus.setVisibility(View.VISIBLE);
-                                rideStatus.setText("PENDING");
+
+                            // this code is required when the user has logged out and logs back in
+                            // recreates the fragment so the appropriate fragment will be shown
+                            // the only time we won't create a ride fragment is if ride is complete or cancelled
+                            if (request.getStatus() != 5 || request.getStatus() != 4){
+                                if (createRideFragment == null){
+                                    createRideFragment = new FragmentCreateRide();
+                                    startCreateRide(createRideFragment);
+                                    rideButton.setVisibility(View.INVISIBLE);
+                                }
                             }
 
-                            if (request.getStatus() == 1) {
+                            if (request.getStatus() == 0){
+                                rideStatus.setVisibility(View.VISIBLE);
+                                rideStatus.setText("PENDING");
+                                createRideFragment.pendingPhase(request);
+                            }
+
+                            else if (request.getStatus() == 1) {
                                 Log.d("newToken", token);
                                 Driver driver = MyDataBase.getDriver(request.getDriverID());
                                 if (driver != null) {
@@ -115,6 +126,7 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                                 createRideFragment.DriverAcceptedPhase(request);
                             }
 
+                            // fragment does not change here, only need to update rideStatus
                             else if (request.getStatus() == 2){
                                 rideStatus.setText("WAITING FOR DRIVER");
                             }
@@ -150,14 +162,14 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         });
 
         // Create a ride button
+        // Create the ride fragment and hide the create a ride button
         rideButton = findViewById(R.id.create_ride_button);
         rideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createRideFragment = new FragmentCreateRide();
                 startCreateRide(createRideFragment);
-                showButton();
-
+                rideButton.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -190,31 +202,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
     }
 
     /**
-     * Function is called when the drive request has been accepted
-     * @param fragment
-     *      the fragment where we will be switching activities
-     * @param driveRequest
-     *      pass in the driveRequest object so we can switch the status if the rider cancels
-     *  Note: this function is only called for FragmentAcceptedRide
-     *
-     * Two separate functions are made since accepted ride fragment will always be displayed "on top"
-     * of the create ride fragment
-     * In this case, we use replace and not add!
-     * */
-    public void startAcceptedRide(FragmentDriverAccepted fragment, DriveRequest driveRequest) {
-        Bundle b = new Bundle();
-        b.putSerializable("driveRequest", driveRequest);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment.setArguments(b);
-        fragmentTransaction.replace(R.id.rider_fragment, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-        getSupportFragmentManager().executePendingTransactions();
-    }
-
-    /**
      * Function is called when the user wants to create a ride
      * @param fragment
      *  represents which fragment it will go to
@@ -239,23 +226,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         getSupportFragmentManager().executePendingTransactions();
 
     }
-    /**
-     * Checks to see if there is a fragment in the current FrameLayout
-     * if there isn't, display the create a ride button
-     *
-     * */
-    public void showButton(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment checkCreate = fragmentManager.findFragmentById(R.id.rider_fragment);
-        if (checkCreate == null){
-            rideButton.setVisibility(View.VISIBLE);
-        }
-        else{
-            rideButton.setVisibility(View.GONE);
-        }
-    }
-
-
 
     /**
      * Rounds a double value to int places
@@ -271,5 +241,21 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+
+     /* DON'T ERASE THIS!!! I'm probably going to reuse this for the final fragment
+
+
+     public void startAcceptedRide(FragmentDriverAccepted fragment, DriveRequest driveRequest) {
+        Bundle b = new Bundle();
+        b.putSerializable("driveRequest", driveRequest);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment.setArguments(b);
+        fragmentTransaction.replace(R.id.rider_fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+    }*/
 
 }

@@ -20,9 +20,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
  * Create a ride Fragment
  *
  * Author : Amanda Nguyen
- * Creates a ride fragment where destination and pickup markers will be replaced to where the user wants to go
+ * Fragment that changes dynamically depending on the status of the drive request
+ * Functions are created to be called in RiderHomeActivity to hide or show certain buttons/text
  *
- * March 12, 2020
+ * March 27, 2020
  *
  * Under the Apache 2.0 license
  */
@@ -30,6 +31,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
     public FragmentCreateRide(){};
+
     private DriveRequest newRequest;
     private TextView driverName;
     private TextView driverUserName;
@@ -38,11 +40,6 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     private Button complete;
     private EditText fare;
     private double price;
-    private double desLat;
-    private double desLon;
-    private double depLat;
-    private double depLon;
-    private String userID;
 
 
     @Override
@@ -55,25 +52,29 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_ride, container, false);
 
-        Bundle bundle = getArguments();
+        // ****** Setting up information ********
 
+        // finding views in the XML file
         driverName = view.findViewById(R.id.driver_name);
         driverUserName = view.findViewById(R.id.driver_username);
+        TextView destination = view.findViewById(R.id.destination_text);
+        TextView pickup = view.findViewById(R.id.pickup_text);
+        fare = view.findViewById(R.id.fare_text);
+        cancel = view.findViewById(R.id.cancel_button);
+        confirm = view.findViewById(R.id.confirm_button);
+        complete = view.findViewById(R.id.complete_button);
 
-        // ****** Setting up information ********
+        // grabbing info needed from bundle passed into the fragment
+        Bundle bundle = getArguments();
         double desLat = bundle.getDouble("desLat");
         double desLon = bundle.getDouble("desLon");
         double depLat = bundle.getDouble("depLat");
         double depLon = bundle.getDouble("depLon");
-        double oldPrice = bundle.getDouble("price");
-        price = RiderHomeActivity.round(oldPrice, 2);
         String userID = bundle.getString("userID");
+        price = bundle.getDouble("price");
+        price = RiderHomeActivity.round(price, 2);
 
-        TextView destination = view.findViewById(R.id.destination_text);
-        TextView pickup= view.findViewById(R.id.pickup_text);
-        fare = view.findViewById(R.id.fare_text);
-
-
+        // Setting the textviews
         String des = "Lon: " + RiderHomeActivity.round(desLon,12) + " Lat: " + RiderHomeActivity.round(desLat,12);
         String dep = "Lon: " + RiderHomeActivity.round(depLon,12) + " Lat: " + RiderHomeActivity.round(depLat,12);
         String fa = Double.toString(price);
@@ -84,18 +85,12 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         // ****** Setting up information ********
 
 
-        cancel = view.findViewById(R.id.cancel_button);
-        confirm = view.findViewById(R.id.confirm_button);
-        complete = view.findViewById(R.id.complete_button);
-
-
-
         // Confirm button in order to send new DriveRequest to Firebase
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (newRequest == null){
-                    double offeredFare = Float.valueOf(fare.getText().toString());
+                    double offeredFare = Double.valueOf(fare.getText().toString());
                     price = RiderHomeActivity.round(price,2);
                     // Do not accept ride requests where the offer is lower than the suggested price
                     if (offeredFare < price){
@@ -109,7 +104,8 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                         // grabbing the fare offered by the user
                         newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
                         fare.setEnabled(false);
-                        pendingPhase();
+                        MyDataBase.addRequest(newRequest);
+                        Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -118,9 +114,8 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         });
 
         // Cancel button
-        // First check if user has created a ride request or not
-        // If so, set the status to 5 and update the database
-        // restart the activity all together
+        // if a ride request exists, set the status to null
+        // restart the activity
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,53 +135,38 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         return view;
     }
 
-    // PROBLEM:
-    // the confirm button needs to do 2 different things depending on two things:
-    //  1. create a ride
-    //  2. set the status as accepted and let the driver know to drive over
 
-    public void createRide(){
-        Float offeredFare = Float.valueOf(fare.getText().toString());
-        // Do not accept ride requests where the offer is lower than the suggested price
-        if (offeredFare < price){
-            Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();
-        }
-        else{
-            LatLng departure = new LatLng(depLat, depLon);
-            LatLng destination = new LatLng(desLat, desLon);
-            newRequest = new DriveRequest(userID, departure, destination);
-
-            // grabbing the fare offered by the user
-            newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
-            fare.setEnabled(false);
-            pendingPhase();
-        }
-
-    }
-
-    // phase 0
-    // make the confirm button disappear since they don't need to confirm another ride
-    public void pendingPhase(){
-        confirm.setVisibility(View.GONE);
-        MyDataBase.addRequest(newRequest);
-        Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
-    }
-
-    // phase 1
-    // have the driver name and username show up
-    // change the fragment to accepted
-    // see the confirm button again so they can accept the ride
-    public void DriverAcceptedPhase(DriveRequest driveRequest){
+   /**
+    * When the ride request is pending, the confirm button is hidden
+    * */
+    public void pendingPhase(DriveRequest driveRequest){
         newRequest = driveRequest;
+        confirm.setVisibility(View.GONE);
+    }
+
+    /**
+     *
+     * Have the driver's name, username and confirm button appear
+     * Override confirm button to update the drive request
+     * Driver's username is also now clickable to view
+     *
+     * @param driveRequest
+     *  needed to access the driver's name and username
+     *
+     * */
+    public void DriverAcceptedPhase(DriveRequest driveRequest){
         confirm.setVisibility(View.VISIBLE);
+        driverName.setVisibility(View.VISIBLE);
+        driverUserName.setVisibility(View.VISIBLE);
+
+
         String stringName = MyDataBase.getDriver(driveRequest.getDriverID()).getName();
         driverName.setText(stringName);
-        driverName.setVisibility(View.VISIBLE);
 
         String stringUsername = MyDataBase.getDriver(driveRequest.getDriverID()).getUserName();
         driverUserName.setText(stringUsername);
-        driverUserName.setVisibility(View.VISIBLE);
 
+        // overriding confirm button
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,22 +174,33 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             }
         });
 
-
+        // activate function to show driver profile
+        showDriverProfile(driveRequest);
 
     }
 
-    // phase 2
-    // rider has confirmed that they want to take the ride
-    // hide the confirm button
+    /**
+     *
+     * Called when user wants to accept the ride from driver
+     * Confirm button is invisible again
+     * @param driveRequest
+     *  driveRequest to update
+     *
+     * */
     public void confirmRidePhase(DriveRequest driveRequest){
         driveRequest.setStatus(2);
         MyDataBase.updateRequest(driveRequest);
         confirm.setVisibility(View.GONE);
     }
 
-    // phase 3
-    // waiting for the driver?
-    // do nothing for now
+    /**
+     * Ride is now in progress
+     * User is no longer able to cancel the ride
+     * Complete the ride button is now active
+     *
+     * @param driveRequest
+     *     driveRequest to update
+     * */
     public void ridingPhase(DriveRequest driveRequest){
         cancel.setVisibility(View.GONE);
         complete.setVisibility(View.VISIBLE);
@@ -223,9 +214,23 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
     }
 
-
-
-
+    /**
+     * Allows the user to click on the username and look at driver's profile
+     *
+     * @param driveRequest
+     *    needed to access the driver's name and username
+     * */
+    public void showDriverProfile(DriveRequest driveRequest){
+        String driverId = driveRequest.getDriverID();
+        driverUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DriverInfosForContactActivitys.class);
+                intent.putExtra("DRIVER_ID",driverId);
+                startActivity(intent);
+            }
+        });
+    }
 
 
 }

@@ -27,6 +27,7 @@ public class FragmentRideProgress extends FragmentCreateRide {
 
         // ******************** Setting textview to the appropriate values ***************
 
+
         View view = inflater.inflate(R.layout.fragment_ride_progress, container, false);
         Bundle bundle = getArguments();
         DriveRequest driveRequest = (DriveRequest) bundle.getSerializable("driveRequest");
@@ -51,6 +52,8 @@ public class FragmentRideProgress extends FragmentCreateRide {
         String stringFare = Float.toString(driveRequest.getSuggestedFare());
         fare.setText("Fare: " + stringFare);
 
+
+
         // ******************** Setting textview to the appropriate values ***************
 
 
@@ -65,9 +68,25 @@ public class FragmentRideProgress extends FragmentCreateRide {
             }
         });
 
+        // to show the profile of driver for contact with them
+
+        String driverId = driveRequest.getDriverID();
+        driverUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DriverInfosForContactActivitys.class);
+                intent.putExtra("DRIVER_ID",driverId);
+                startActivity(intent);
+
+
+            }
+        });
+
+
 
 
         return view;
     }
+
 
 }

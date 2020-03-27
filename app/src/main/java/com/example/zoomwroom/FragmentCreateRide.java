@@ -155,6 +155,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      *
      * */
     public void DriverAcceptedPhase(DriveRequest driveRequest){
+        newRequest = driveRequest;
         confirm.setVisibility(View.VISIBLE);
         driverName.setVisibility(View.VISIBLE);
         driverUserName.setVisibility(View.VISIBLE);
@@ -188,6 +189,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      *
      * */
     public void confirmRidePhase(DriveRequest driveRequest){
+        newRequest = driveRequest;
         driveRequest.setStatus(2);
         MyDataBase.updateRequest(driveRequest);
         confirm.setVisibility(View.GONE);
@@ -202,6 +204,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      *     driveRequest to update
      * */
     public void ridingPhase(DriveRequest driveRequest){
+        newRequest = driveRequest;
         cancel.setVisibility(View.GONE);
         complete.setVisibility(View.VISIBLE);
         complete.setOnClickListener(new View.OnClickListener() {

@@ -11,9 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.model.LatLng;
@@ -92,6 +89,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         complete = view.findViewById(R.id.complete_button);
 
 
+
         // Confirm button in order to send new DriveRequest to Firebase
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +135,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
             }
         });
+
 
         return view;
     }
@@ -223,6 +222,8 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         });
 
     }
+
+
 
 
 

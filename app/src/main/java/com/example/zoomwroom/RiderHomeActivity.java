@@ -37,6 +37,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 /**
@@ -108,12 +110,11 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                                     String message = name + " just accepted your request!";
                                     new Notify(token, message).execute();
                                 }
-                            }
 
-                            else if (request.getStatus() == 1) {
                                 rideStatus.setText("ACCEPTED BY DRIVER");
                                 createRideFragment.DriverAcceptedPhase(request);
                             }
+
                             else if (request.getStatus() == 2){
                                 rideStatus.setText("WAITING FOR DRIVER");
                             }
@@ -254,31 +255,21 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         }
     }
 
+
+
     /**
-     * Called when user wants to create a ride
-     * Will open up a fragment to deal with creating a ride request
-     * */
-    public void openRideCreation() {
+     * Rounds a double value to int places
+     * Source: https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
+     * @param value
+     * @param places
+     * @return roundedNum
+     */
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
 
-        Bundle b = new Bundle();
-        Log.d("Lon", Double.toString(mLocation.getDepart().longitude));
-        Log.d("Lat", Double.toString(mLocation.getDepart().latitude));
-        Log.d("Lon", Double.toString(mLocation.getDestination().longitude));
-        Log.d("Lat", Double.toString(mLocation.getDestination().latitude));
-        Log.d("price", Double.toString(FareCalculation.getPrice(5.00, 0.5, departureMarker, destinationMarker)));
-        b.putDouble("desLat", mLocation.getDestination().latitude);
-        b.putDouble("desLon", mLocation.getDestination().longitude);
-        b.putDouble("depLat", mLocation.getDepart().latitude);
-        b.putDouble("depLon", mLocation.getDepart().longitude);
-        b.putDouble("price", FareCalculation.getPrice(5.00, 0.5, departureMarker, destinationMarker));
-        b.putString("userID", riderEmail);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        final FragmentCreateRide createRideFragment = new FragmentCreateRide();
-
-        createRideFragment.setArguments(b);
-        createRideFragment.show(getSupportFragmentManager(), createRideFragment.getTag());
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
 }

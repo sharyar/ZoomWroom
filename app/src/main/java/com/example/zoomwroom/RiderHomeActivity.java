@@ -1,4 +1,3 @@
-
 package com.example.zoomwroom;
 
 import android.content.Intent;
@@ -38,6 +37,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 /**
@@ -45,13 +46,12 @@ import java.util.ArrayList;
  *
  * Author : Henry Lin, Amanda Nguyen
  * Creates a google map fragment where markers can be placed
- * Allows the user to create a ride and see their profile from fragments
- *
+ * Allows the user to create a ride and see their profile from an additional fragment
  *
  * @see Location
  * @see com.google.android.gms.maps.GoogleMap
  *
- * March 12, 2020
+ * March 27, 2020
  *
  * Modified source from: https://developers.google.com/maps/documentation/android-sdk/start
  * Under the Apache 2.0 license
@@ -63,21 +63,30 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
     private FloatingActionButton profileButton;
     private Button rideButton;
     private String riderEmail;
-
     private TextView rideStatus;
-
+    private FragmentCreateRide createRideFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_home);
 
-
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                token = instanceIdResult.getToken();
+                Log.d("newToken-----", token);
+            }
+        });
 
         //get current user;
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
         riderEmail = user.getEmail();
+
+        // rideStatus will always be invisible at the start of the activity
+        rideStatus = findViewById(R.id.rideStatus);
+        rideStatus.setVisibility(View.INVISIBLE);
 
         FirebaseFirestore.getInstance().collection("DriverRequest")
                 .whereEqualTo("riderID", user.getEmail())
@@ -86,7 +95,25 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         ArrayList<DriveRequest> requests =  MyDataBase.getRiderRequest(riderEmail);
                         for (DriveRequest request :requests) {
-                            if (request.getStatus() == 1) {
+
+                            // this code is required when the user has logged out and logs back in
+                            // recreates the fragment so the appropriate fragment will be shown
+                            // the only time we won't create a ride fragment is if ride is complete or cancelled
+                            if (request.getStatus() != 5 || request.getStatus() != 4){
+                                if (createRideFragment == null){
+                                    createRideFragment = new FragmentCreateRide();
+                                    startCreateRide(createRideFragment);
+                                    rideButton.setVisibility(View.INVISIBLE);
+                                }
+                            }
+
+                            if (request.getStatus() == 0){
+                                rideStatus.setVisibility(View.VISIBLE);
+                                rideStatus.setText("PENDING");
+                                createRideFragment.pendingPhase(request);
+                            }
+
+                            else if (request.getStatus() == 1) {
                                 Log.d("newToken", token);
                                 Driver driver = MyDataBase.getDriver(request.getDriverID());
                                 if (driver != null) {
@@ -95,16 +122,24 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                                     new Notify(token, message).execute();
                                 }
 
-                                FragmentDriverAccepted driverAcceptedFragment = new FragmentDriverAccepted();
-                                startAcceptedRide(driverAcceptedFragment, request);
-                                showButton();
+                                rideStatus.setText("ACCEPTED BY DRIVER");
+                                createRideFragment.DriverAcceptedPhase(request);
+                            }
 
-                            }
+                            // fragment does not change here, only need to update rideStatus
                             else if (request.getStatus() == 2){
-                                FragmentDriverAccepted driverAcceptedFragment = new FragmentDriverAccepted();
-                                startAcceptedRide(driverAcceptedFragment, request);
-                                showButton();
+                                rideStatus.setText("WAITING FOR DRIVER");
                             }
+
+                            else if (request.getStatus() == 3) {
+                                rideStatus.setText("RIDE IN PROGRESS");
+                                createRideFragment.ridingPhase(request);
+                            }
+
+                            else if (request.getStatus() == 4){
+                                rideStatus.setText("RIDE COMPLETED");
+                            }
+
                         }
 
                     }
@@ -127,15 +162,14 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         });
 
         // Create a ride button
+        // Create the ride fragment and hide the create a ride button
         rideButton = findViewById(R.id.create_ride_button);
         rideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentCreateRide createRideFragment = new FragmentCreateRide();
+                createRideFragment = new FragmentCreateRide();
                 startCreateRide(createRideFragment);
-                showButton();
-
-
+                rideButton.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -168,31 +202,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
     }
 
     /**
-     * Function is called when the drive request has been accepted
-     * @param fragment
-     *      the fragment where we will be switching activities
-     * @param driveRequest
-     *      pass in the driveRequest object so we can switch the status if the rider cancels
-     *  Note: this function is only called for FragmentAcceptedRide
-     *
-     * Two separate functions are made since accepted ride fragment will always be displayed "on top"
-     * of the create ride fragment
-     * In this case, we use replace and not add!
-     * */
-    public void startAcceptedRide(FragmentDriverAccepted fragment, DriveRequest driveRequest) {
-        Bundle b = new Bundle();
-        b.putSerializable("driveRequest", driveRequest);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment.setArguments(b);
-        fragmentTransaction.replace(R.id.rider_fragment, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-        getSupportFragmentManager().executePendingTransactions();
-    }
-
-    /**
      * Function is called when the user wants to create a ride
      * @param fragment
      *  represents which fragment it will go to
@@ -201,11 +210,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
     public void startCreateRide(FragmentCreateRide fragment){
 
         Bundle b = new Bundle();
-        Log.d("Lon", Double.toString(mLocation.getDepart().longitude));
-        Log.d("Lat", Double.toString(mLocation.getDepart().latitude));
-        Log.d("Lon", Double.toString(mLocation.getDestination().longitude));
-        Log.d("Lat", Double.toString(mLocation.getDestination().latitude));
-        Log.d("price", Double.toString(FareCalculation.getPrice(5.00, 0.5, departureMarker, destinationMarker)));
         b.putDouble("desLat", mLocation.getDestination().latitude);
         b.putDouble("desLon", mLocation.getDestination().longitude);
         b.putDouble("depLat", mLocation.getDepart().latitude);
@@ -222,48 +226,36 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         getSupportFragmentManager().executePendingTransactions();
 
     }
+
     /**
-     * Checks to see if there is a fragment in the current FrameLayout
-     * if there isn't, display the create a ride button
-     *
-     * */
-    public void showButton(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment checkCreate = fragmentManager.findFragmentById(R.id.rider_fragment);
-        if (checkCreate == null){
-            rideButton.setVisibility(View.VISIBLE);
-        }
-        else{
-            rideButton.setVisibility(View.GONE);
-        }
+     * Rounds a double value to int places
+     * Source: https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
+     * @param value
+     * @param places
+     * @return roundedNum
+     */
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
+     /* DON'T ERASE THIS!!! I'm probably going to reuse this for the final fragment
 
-    /**
-     * Called when user wants to create a ride
-     * Will open up a fragment to deal with creating a ride request
-     * */
-    public void openRideCreation() {
 
+     public void startAcceptedRide(FragmentDriverAccepted fragment, DriveRequest driveRequest) {
         Bundle b = new Bundle();
-        Log.d("Lon", Double.toString(mLocation.getDepart().longitude));
-        Log.d("Lat", Double.toString(mLocation.getDepart().latitude));
-        Log.d("Lon", Double.toString(mLocation.getDestination().longitude));
-        Log.d("Lat", Double.toString(mLocation.getDestination().latitude));
-        Log.d("price", Double.toString(FareCalculation.getPrice(5.00, 0.5, departureMarker, destinationMarker)));
-        b.putDouble("desLat", mLocation.getDestination().latitude);
-        b.putDouble("desLon", mLocation.getDestination().longitude);
-        b.putDouble("depLat", mLocation.getDepart().latitude);
-        b.putDouble("depLon", mLocation.getDepart().longitude);
-        b.putDouble("price", FareCalculation.getPrice(5.00, 0.5, departureMarker, destinationMarker));
-        b.putString("userID", riderEmail);
+        b.putSerializable("driveRequest", driveRequest);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        final FragmentCreateRide createRideFragment = new FragmentCreateRide();
-
-        createRideFragment.setArguments(b);
-        createRideFragment.show(getSupportFragmentManager(), createRideFragment.getTag());
-    }
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment.setArguments(b);
+        fragmentTransaction.replace(R.id.rider_fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+    }*/
 
 }

@@ -1,4 +1,4 @@
-package com.example.zoomwroom;
+package com.example.zoomwroom.Entities;
 
 import com.google.android.gms.maps.model.LatLng;
 

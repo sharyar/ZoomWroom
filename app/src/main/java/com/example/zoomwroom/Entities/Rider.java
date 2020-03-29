@@ -20,11 +20,6 @@ import java.util.ArrayList;
 public class Rider extends User {
 
     /**
-     * Stores a list of drives requested by the user
-     */
-    ArrayList<DriveRequest> ridesRequested;
-
-    /**
      * Empty constructor for class
      */
     public Rider(){}
@@ -40,15 +35,6 @@ public class Rider extends User {
      */
     public Rider(String name, String userName, String userID) {
         super(name, userName, userID);
-    }
-
-    /**
-     * Returns an array list of DriveRequests that the user has initiated
-     *
-     * @return      Arraylist of DriveRequest rider has created
-     */
-    public ArrayList<DriveRequest> getRidesRequested() {
-        return ridesRequested;
     }
 
 }

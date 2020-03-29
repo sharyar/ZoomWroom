@@ -17,7 +17,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class DriverModeActivity extends AppCompatActivity {
+public class DriverLoginActivity extends AppCompatActivity {
     // Variables required for activity
     Button testBtn;
     Button riderModeBtn;
@@ -78,8 +78,6 @@ public class DriverModeActivity extends AppCompatActivity {
     /**
      * change to driver signup page for driver to signup
      */
-
-
     public void OpenDriverSignUpActivity(){
         Intent intent = new Intent(this,DriverSignUpActivity.class);
         startActivity(intent);
@@ -90,9 +88,8 @@ public class DriverModeActivity extends AppCompatActivity {
     /**
      * switch mode between driver and rider
      */
-
     public void OpenActivityRiderMode() {
-        Intent intent = new Intent(this,RiderModeActivity.class);
+        Intent intent = new Intent(this, RiderLoginActivity.class);
         startActivity(intent);
 
     }
@@ -102,7 +99,7 @@ public class DriverModeActivity extends AppCompatActivity {
         String driverEmail = driverEmailEditText.getText().toString();
         String driverPassword = driverPasswordEditText.getText().toString();
         if (driverEmail.isEmpty() || driverPassword.isEmpty()) {
-            Toast.makeText(DriverModeActivity.this, "Please ensure you have " +
+            Toast.makeText(DriverLoginActivity.this, "Please ensure you have " +
                     "filled out all the fields.", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -113,12 +110,12 @@ public class DriverModeActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                Toast.makeText(DriverModeActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DriverLoginActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
                                 openDriverHome();
 
                             } else {
                                 Log.w(TAG, "signInWithEmail: failure", task.getException());
-                                Toast.makeText(DriverModeActivity.this, "Login failed. Please check your info and try again.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DriverLoginActivity.this, "Login failed. Please check your info and try again.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

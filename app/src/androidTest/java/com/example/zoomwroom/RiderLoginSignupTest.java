@@ -35,7 +35,7 @@ public class RiderLoginSignupTest {
     @Test
     public void emptyRiderSignUp(){
         solo.clickOnButton("Rider");
-        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", RiderLoginActivity.class);
         solo.clickOnButton("Sign Up");
         solo.assertCurrentActivity("Wrong Activity", RiderSignUpActivity.class);
     }
@@ -47,7 +47,7 @@ public class RiderLoginSignupTest {
     @Test
     public void successfulSignup(){
         solo.clickOnButton("Rider");
-        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", RiderLoginActivity.class);
         solo.clickOnButton("Sign Up");
         solo.assertCurrentActivity("Wrong Activity", RiderSignUpActivity.class);
         solo.enterText((EditText) solo.getView(R.id.riderSignupFName), "Sarah");
@@ -80,9 +80,9 @@ public class RiderLoginSignupTest {
     @Test
     public void emptyRiderLogin(){
         solo.clickOnButton("Rider");
-        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", RiderLoginActivity.class);
         solo.clickOnButton("Log in");
-        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", RiderLoginActivity.class);
     }
 
     /**
@@ -91,10 +91,10 @@ public class RiderLoginSignupTest {
     @Test
     public void unsuccessfulRiderUsername(){
         solo.clickOnButton("Rider");
-        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", RiderLoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.rider_email_login), "anguyen@gmail.com");
         solo.clickOnButton("Log in");
-        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", RiderLoginActivity.class);
 
     }
 
@@ -104,10 +104,10 @@ public class RiderLoginSignupTest {
     @Test
     public void unsuccessfulRiderPassword(){
         solo.clickOnButton("Rider");
-        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", RiderLoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.rider_password_login), "anguyen");
         solo.clickOnButton("Log in");
-        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", RiderLoginActivity.class);
     }
 
     /**
@@ -116,11 +116,11 @@ public class RiderLoginSignupTest {
     @Test
     public void incorrectUserPassword(){
         solo.clickOnButton("Rider");
-        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", RiderLoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.rider_email_login), "anguyen@gmail.com");
         solo.enterText((EditText) solo.getView(R.id.rider_password_login), "anguyen");
         solo.clickOnButton("Log in");
-        solo.assertCurrentActivity("Wrong Activity", RiderModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", RiderLoginActivity.class);
     }
 
     /**

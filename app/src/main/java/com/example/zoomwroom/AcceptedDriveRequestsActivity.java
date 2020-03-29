@@ -16,7 +16,7 @@ import java.util.ArrayList;
  *
  * Source: https://developer.android.com/guide/topics/ui/layout/recyclerview#java
  */
-public class AcceptedRequestActivity extends AppCompatActivity implements RequestAdapter.OnRequestClickListener {
+public class AcceptedDriveRequestsActivity extends AppCompatActivity implements RequestAdapter.OnRequestClickListener {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -45,7 +45,7 @@ public class AcceptedRequestActivity extends AppCompatActivity implements Reques
 
     @Override
     public void onRequestClick(int position) {
-        Intent intent = new Intent(this, ActivityDriveRequestDetails.class);
+        Intent intent = new Intent(this, DriveRequestDetailsActivity.class);
         intent.putExtra("requestID", currentRequests.get(position).getRequestID());
         startActivity(intent);
     }

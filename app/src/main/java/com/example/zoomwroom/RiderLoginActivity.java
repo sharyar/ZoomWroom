@@ -17,7 +17,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class RiderModeActivity extends AppCompatActivity {
+public class RiderLoginActivity extends AppCompatActivity {
     // Variables required for class
     Button driverModBtn;
     Button riderSignUpBtn;
@@ -71,7 +71,7 @@ public class RiderModeActivity extends AppCompatActivity {
 
 
     public void OpenActivityDriverMode() {
-        Intent intent = new Intent(this,DriverModeActivity.class);
+        Intent intent = new Intent(this, DriverLoginActivity.class);
         startActivity(intent);
     }
 
@@ -91,7 +91,7 @@ public class RiderModeActivity extends AppCompatActivity {
         String riderEmail = riderEmailEditText.getText().toString();
         String riderPassword = riderPasswordEditText.getText().toString();
         if (riderEmail.isEmpty() || riderPassword.isEmpty()) {
-            Toast.makeText(RiderModeActivity.this, "Please ensure you have " +
+            Toast.makeText(RiderLoginActivity.this, "Please ensure you have " +
                     "filled out all the fields.", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -103,12 +103,12 @@ public class RiderModeActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                Toast.makeText(RiderModeActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RiderLoginActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
                                 OpenRiderHomeActivity();
 
                             } else {
                                 Log.w(TAG, "signInWithEmail: failure", task.getException());
-                                Toast.makeText(RiderModeActivity.this, "Login failed. Please check your info and try again.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RiderLoginActivity.this, "Login failed. Please check your info and try again.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

@@ -147,7 +147,7 @@ public class DriverSignUpActivity extends AppCompatActivity {
 
     }
     public void OpenDriverModeActivity(){
-        Intent intent = new Intent(this,DriverModeActivity.class);
+        Intent intent = new Intent(this, DriverLoginActivity.class);
         startActivity(intent);
     }
 

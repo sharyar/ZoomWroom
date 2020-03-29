@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 // call new Notify().execute() to run
-public class Notify extends AsyncTask<Void,Void,Void>
+public class  Notify extends AsyncTask<Void,Void,Void>
 {
     final private String serverKey = "key=" + "AIzaSyCzF5PRcdDADRymHeRF2piC4TOUDIflvZM";
     final private String contentType = "application/json";

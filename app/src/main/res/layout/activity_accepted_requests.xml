@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AcceptedRequestActivity">
+    tools:context=".AcceptedDriveRequestsActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/accepted_requests_recycler_view"

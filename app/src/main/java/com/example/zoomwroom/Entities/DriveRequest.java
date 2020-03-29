@@ -34,7 +34,7 @@ public class DriveRequest implements Serializable {
      *
      * @see <a href="https://github.com/CMPUT301W20T29-H03/ZoomWroom/wiki/App-Terminologies#status">Status Description</a>
      */
-    private static final class Status {
+    public static final class Status {
         public static final int PENDING     = 0;
         public static final int ACCEPTED    = 1;
         public static final int CONFIRMED   = 2;

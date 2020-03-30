@@ -33,4 +33,13 @@ public class UserDataValidation {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+    public static boolean isFullNameValid(String fullName) {
+        if (fullName.length() <2) {
+            return false;
+        }
+
+        Pattern p = Pattern.compile("[a-z]+[ ]?[a-z]+$");
+        return p.matcher(fullName).find();
+    }
+
 }

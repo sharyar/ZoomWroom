@@ -93,7 +93,6 @@ public class RiderSignUpActivity extends AppCompatActivity {
 
             // this if condition checks if all fields are valid and only allows the registration if they are.
             if (areFieldsValid()) {
-
                 mAuth.createUserWithEmailAndPassword(email, passWord)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -153,6 +152,8 @@ public class RiderSignUpActivity extends AppCompatActivity {
                                 }
                             }
                         });
+            } else {
+                bar.setVisibility(View.INVISIBLE);
             }
         });
 

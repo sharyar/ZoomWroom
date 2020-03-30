@@ -10,6 +10,7 @@
     <string name="profile_title">Profile</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="back">Back</string>
+
     <string name="title_activity_menu">menu</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -23,4 +24,7 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <string name="home_second">Home Second</string>
+  
+    <string name="complete_request_title">Thanks for riding with</string>
+    <string name="generate_qr_bucks_code">Generate QR Bucks Code</string>
 </resources>

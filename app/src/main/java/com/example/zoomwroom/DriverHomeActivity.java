@@ -13,6 +13,7 @@ import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -246,7 +247,10 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
             for (DriveRequest request : requests) {
                 LatLng requestLocationStart = request.getPickupLocation();
                 String riderName = MyDataBase.getRider(request.getRiderID()).getName();
-                Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
+                Marker m = mMap.addMarker(new MarkerOptions()
+                                                .position(requestLocationStart)
+                                                .title(riderName)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ride_request_marker)));
                 m.setTag(request);
                 markers.add(m);
             }

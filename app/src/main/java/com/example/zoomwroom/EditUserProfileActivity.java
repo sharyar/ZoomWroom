@@ -46,6 +46,9 @@ public class EditUserProfileActivity extends AppCompatActivity {
         if (user == null) {
             user = MyDataBase.getRider(firebaseUser.getEmail());
             if (user == null) {
+                Toast.makeText(EditUserProfileActivity.this,
+                        "Something went wrong", Toast.LENGTH_SHORT).show();
+                finish();
                 return;
             }
         }

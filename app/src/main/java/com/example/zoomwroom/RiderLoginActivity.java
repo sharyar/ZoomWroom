@@ -17,60 +17,24 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class RiderLoginActivity extends AppCompatActivity {
-    // Variables required for class
-    Button driverModBtn;
-    Button riderSignUpBtn;
-    Button loginBtn;
-    EditText riderEmailEditText;
-    EditText riderPasswordEditText;
-    private FirebaseAuth mAuth;
-    private static final String TAG = "RiderLoginActivity";
+public class RiderLoginActivity extends LoginActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_mode);
-
-        mAuth = FirebaseAuth.getInstance();
-
-        riderEmailEditText = findViewById(R.id.rider_email_login);
-        riderPasswordEditText = findViewById(R.id.rider_password_login);
-
         loginBtn = findViewById(R.id.rider_LoginBT);
+        signUpBtn = findViewById(R.id.rider_SignupBT);
+        modeBtn = findViewById(R.id.rider_chagentodrivermodeBT);
+        super.onCreate(savedInstanceState);
 
+        emailEditText = findViewById(R.id.rider_email_login);
+        passwordEditText = findViewById(R.id.rider_password_login);
 
-        //Login Button
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logIn();
-            }
-        });
-
-        // change to driver Mode
-        driverModBtn = findViewById(R.id.rider_chagentodrivermodeBT);
-        driverModBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OpenActivityDriverMode();
-            }
-        });
-        //rider mode sign up button
-        riderSignUpBtn = findViewById(R.id.rider_SignupBT);
-        riderSignUpBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OpenRiderSignUpActivity();
-            }
-        });
     }
     /**
      * switch mode between driver and rider
      */
-
-
-    public void OpenActivityDriverMode() {
+    public void ChangeMode() {
         Intent intent = new Intent(this, DriverLoginActivity.class);
         startActivity(intent);
     }
@@ -78,46 +42,17 @@ public class RiderLoginActivity extends AppCompatActivity {
     /**
      * change activity to rider signup page for driver to sign up
      */
-
-
-    public void OpenRiderSignUpActivity() {
+    public void OpenSignUpActivity() {
         Intent intent = new Intent(this,RiderSignUpActivity.class);
         startActivity(intent);
 
 
     }
 
-    public void logIn() {
-        String riderEmail = riderEmailEditText.getText().toString();
-        String riderPassword = riderPasswordEditText.getText().toString();
-        if (riderEmail.isEmpty() || riderPassword.isEmpty()) {
-            Toast.makeText(RiderLoginActivity.this, "Please ensure you have " +
-                    "filled out all the fields.", Toast.LENGTH_SHORT).show();
-        }
-        else {
-
-            mAuth.signInWithEmailAndPassword(riderEmail, riderPassword)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Toast.makeText(RiderLoginActivity.this, "Login Successful.", Toast.LENGTH_SHORT).show();
-                                OpenRiderHomeActivity();
-
-                            } else {
-                                Log.w(TAG, "signInWithEmail: failure", task.getException());
-                                Toast.makeText(RiderLoginActivity.this, "Login failed. Please check your info and try again.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        }
-    }
     /**
      * Opens into the Rider's main page if login is successful
      * */
-    public void OpenRiderHomeActivity() {
+    public void OpenHomeActivity() {
         Intent intent = new Intent(this,RiderHomeActivity.class);
         startActivity(intent);
     }

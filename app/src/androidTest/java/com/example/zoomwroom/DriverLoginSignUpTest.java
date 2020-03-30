@@ -34,7 +34,7 @@ public class DriverLoginSignUpTest {
     @Test
     public void emptyDriverSignUp(){
         solo.clickOnButton("Driver");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
         solo.clickOnButton("Sign Up");
         solo.assertCurrentActivity("Wrong Activity", DriverSignUpActivity.class);
     }
@@ -46,7 +46,7 @@ public class DriverLoginSignUpTest {
     @Test
     public void successfulSignup(){
         solo.clickOnButton("Driver");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
         solo.clickOnButton("Sign Up");
         solo.assertCurrentActivity("Wrong Activity", DriverSignUpActivity.class);
         solo.enterText((EditText) solo.getView(R.id.driverSignupFName), "Johnny");
@@ -65,7 +65,7 @@ public class DriverLoginSignUpTest {
     @Test
     public void successfulDriverLogin(){
         solo.clickOnButton("Driver");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.driver_email_login), "johnnyle2@gmail.com");
         solo.enterText((EditText) solo.getView(R.id.driver_password), "abcd1234");
         solo.clickOnButton("Log in");
@@ -78,9 +78,9 @@ public class DriverLoginSignUpTest {
     @Test
     public void emptyDriverLogin(){
         solo.clickOnButton("Driver");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
         solo.clickOnButton("Log in");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
     }
 
     /**
@@ -89,10 +89,10 @@ public class DriverLoginSignUpTest {
     @Test
     public void unsuccessfulDriverUsername(){
         solo.clickOnButton("Driver");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.driver_email_login), "anguyen@gmail.com");
         solo.clickOnButton("Log in");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
 
     }
 
@@ -102,10 +102,10 @@ public class DriverLoginSignUpTest {
     @Test
     public void unsuccessfulDriverPassword(){
         solo.clickOnButton("Driver");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.driver_password), "anguyen");
         solo.clickOnButton("Log in");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
     }
 
     /**
@@ -114,11 +114,11 @@ public class DriverLoginSignUpTest {
     @Test
     public void incorrectUserPassword(){
         solo.clickOnButton("Driver");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.driver_email_login), "anguyen@gmail.com");
         solo.enterText((EditText) solo.getView(R.id.driver_password), "anguyen");
         solo.clickOnButton("Log in");
-        solo.assertCurrentActivity("Wrong Activity", DriverModeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DriverLoginActivity.class);
     }
 
 

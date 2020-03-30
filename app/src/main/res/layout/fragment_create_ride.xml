@@ -1,89 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/create_ride_fragment"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="330dp"
-    android:background="@color/colorWhite">
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="272dp"
         android:orientation="vertical">
 
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="352dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
             android:text="Where are you going?"
-            android:textColor="@color/colorLightGray" />
+            android:textColor="@color/colorLightGray"
+            android:textSize="15dp" />
 
-
-        <EditText
+        <TextView
             android:id="@+id/destination_text"
-            android:layout_width="257dp"
+            android:layout_width="352dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
             android:textColor="@color/colorLightGray"
-            android:textSize="20dp"
-            android:inputType="text"/>
+            android:textSize="15dp" />
 
         <View
             android:layout_width="350dp"
             android:layout_height="1dp"
-            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
             android:background="@color/colorLightGray" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="352dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:text="From Where?"
-            android:textColor="@color/colorLightGray" />
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="From where?"
+            android:textColor="@color/colorLightGray"
+            android:textSize="15dp" />
 
-        <EditText
+        <TextView
             android:id="@+id/pickup_text"
-            android:layout_width="257dp"
+            android:layout_width="352dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
             android:textColor="@color/colorLightGray"
-            android:textSize="20dp"
-            android:inputType="text"/>
+            android:textSize="15sp" />
 
         <View
             android:layout_width="350dp"
             android:layout_height="1dp"
-            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
             android:background="@color/colorLightGray" />
 
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:text="Fare Estimate"
-            android:textColor="@color/colorLightGray" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="Fare offered: "
+            android:textColor="@color/colorLightGray"
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/fare_text"
-            android:layout_width="257dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:hint="Offered fare: "
+            android:layout_gravity="center"
             android:textColor="@color/colorLightGray"
-            android:textColorHint="@color/followingBg"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
 
         <View
-            android:layout_width="350dp"
+            android:layout_width="352dp"
             android:layout_height="1dp"
-            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
             android:background="@color/colorLightGray" />
+
+        <TextView
+            android:id="@+id/driver_name"
+            android:layout_width="239dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:textColor="@color/colorLightGray"
+            android:textSize="25sp"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/driver_username"
+            android:layout_width="239dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:textColor="@color/colorLightGray"
+            android:textSize="15sp"
+            android:visibility="invisible"
+            android:clickable="true"/>
 
 
     </LinearLayout>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -91,34 +116,44 @@
 
         <Button
             android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CANCEL"
-            android:layout_marginLeft="20dp"
             style="@style/PrimaryButtonRegisterRider"
-            android:textColorHint="@color/colorWhite"
-            android:backgroundTint="@color/colorAccentPurple">
-
-        </Button>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccentPurple"
+            android:text="CANCEL"
+            android:textColorHint="@color/colorWhite" />
 
         <Button
             android:id="@+id/confirm_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorAccentPurple"
-            android:layout_marginLeft="130dp"
-            android:layout_marginRight="20dp"
             style="@style/PrimaryButtonRegisterRider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccentPurple"
             android:text="CONFIRM"
-            android:textColorHint="@color/colorWhite">
+            android:textColorHint="@color/colorWhite" />
 
-        </Button>
+        <Button
+            android:id="@+id/complete_button"
+            style="@style/PrimaryButtonRegisterRider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccentPurple"
+            android:text="RIDE COMPLETED"
+            android:textColorHint="@color/colorWhite"
+            android:visibility="gone" />
 
 
     </LinearLayout>
-
-
-
 
 
 </LinearLayout>

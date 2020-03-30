@@ -90,6 +90,36 @@ public class MyDataBase {
     }
 
     /**
+     * This function returns the current active request of a user
+     * @param userID user ID
+     * @param dataType user type(riderID or driverID)
+     * @return return the current request
+     */
+    public static DriveRequest getCurrentRequest(String userID, String dataType){
+        final CollectionReference collectionReference = db.collection("DriverRequest");
+        ArrayList<DriveRequest> driveRequests = new ArrayList<>();
+
+        Task<QuerySnapshot> task = collectionReference
+                .whereEqualTo(dataType, userID)
+                .get();
+        while (!task.isSuccessful()) {}
+        for (QueryDocumentSnapshot doc: Objects.requireNonNull(task.getResult())) {
+            DriveRequest request = doc.toObject(DriveRequest.class);
+            request.toLocalMode();
+            if (request.getStatus() == 1 || request.getStatus() == 2 || request.getStatus() == 3) {
+                driveRequests.add(request);
+            }
+        }
+        if (driveRequests.size() == 0){
+            return null;
+        }
+        if (driveRequests.size() > 1){
+            Log.d("Note", "Multiple requests!!!!!!!!!!!!!");
+        }
+        return driveRequests.get(0);
+    }
+
+    /**
      * This function is to update a rider
      * @param rider
      */

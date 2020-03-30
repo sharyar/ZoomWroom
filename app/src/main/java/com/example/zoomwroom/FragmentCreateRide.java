@@ -2,7 +2,6 @@ package com.example.zoomwroom;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
@@ -23,9 +19,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
  * Create a ride Fragment
  *
  * Author : Amanda Nguyen
- * Creates a ride fragment where destination and pickup markers will be replaced to where the user wants to go
+ * Fragment that changes dynamically depending on the status of the drive request
+ * Functions are created to be called in RiderHomeActivity to hide or show certain buttons/text
  *
- * March 12, 2020
+ * March 27, 2020
  *
  * Under the Apache 2.0 license
  */
@@ -33,7 +30,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
     public FragmentCreateRide(){};
+
     private DriveRequest newRequest;
+    private TextView driverName;
+    private TextView driverUserName;
+    private Button confirm;
+    private Button cancel;
+    private Button complete;
+    private EditText fare;
+    private double price;
 
 
     @Override
@@ -46,62 +51,70 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_ride, container, false);
 
-        Bundle bundle = getArguments();
+        // ****** Setting up information ********
 
+        // finding views in the XML file
+        driverName = view.findViewById(R.id.driver_name);
+        driverUserName = view.findViewById(R.id.driver_username);
+        TextView destination = view.findViewById(R.id.destination_text);
+        TextView pickup = view.findViewById(R.id.pickup_text);
+        fare = view.findViewById(R.id.fare_text);
+        cancel = view.findViewById(R.id.cancel_button);
+        confirm = view.findViewById(R.id.confirm_button);
+        complete = view.findViewById(R.id.complete_button);
+
+        // grabbing info needed from bundle passed into the fragment
+        Bundle bundle = getArguments();
         double desLat = bundle.getDouble("desLat");
         double desLon = bundle.getDouble("desLon");
         double depLat = bundle.getDouble("depLat");
         double depLon = bundle.getDouble("depLon");
-        double price = bundle.getDouble("price");
         String userID = bundle.getString("userID");
+        price = bundle.getDouble("price");
+        price = RiderHomeActivity.round(price, 2);
 
-        EditText destination = view.findViewById(R.id.destination_text);
-        EditText pickup= view.findViewById(R.id.pickup_text);
-        EditText fare = view.findViewById(R.id.fare_text);
-
-        String des = "Lon: " + desLon + " Lat: " + desLat;
-        String dep = "Lon: " + depLon + " Lat: " + depLat;
+        // Setting the textviews
+        String des = "Lon: " + RiderHomeActivity.round(desLon,12) + " Lat: " + RiderHomeActivity.round(desLat,12);
+        String dep = "Lon: " + RiderHomeActivity.round(depLon,12) + " Lat: " + RiderHomeActivity.round(depLat,12);
         String fa = Double.toString(price);
         destination.setText(des);
         pickup.setText(dep);
         fare.setText(fa);
 
-
-        Button cancel = view.findViewById(R.id.cancel_button);
-        Button confirm = view.findViewById(R.id.confirm_button);
+        // ****** Setting up information ********
 
 
         // Confirm button in order to send new DriveRequest to Firebase
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LatLng departure = new LatLng(depLat, depLon);
-                LatLng destination = new LatLng(desLat, desLon);
-                newRequest = new DriveRequest(userID, departure, destination);
+                if (newRequest == null){
+                    double offeredFare = Double.valueOf(fare.getText().toString());
+                    price = RiderHomeActivity.round(price,2);
+                    // Do not accept ride requests where the offer is lower than the suggested price
+                    if (offeredFare < price){
+                        Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        LatLng departure = new LatLng(depLat, depLon);
+                        LatLng destination = new LatLng(desLat, desLon);
+                        newRequest = new DriveRequest(userID, departure, destination);
 
-                // grabbing the fare offered by the user
-                newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
-                Float offeredFare = Float.valueOf(fare.getText().toString());
+                        // grabbing the fare offered by the user
+                        newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
+                        fare.setEnabled(false);
+                        MyDataBase.addRequest(newRequest);
+                        Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
+                    }
 
-                // Do not accept ride requests where the offer is lower than the suggested price
-                if (offeredFare < price){
-                    Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    MyDataBase.addRequest(newRequest);
-                    Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
-                    TextView rideStatus = ((RiderHomeActivity) getActivity()).findViewById(R.id.rideStatus);
-                    rideStatus.setVisibility(View.VISIBLE);
-                    rideStatus.setText("PENDING");
                 }
 
             }
         });
 
         // Cancel button
-        // First check if user has created a ride request or not
-        // If so, set the status to 5 and update the database
-        // restart the activity all together
+        // if a ride request exists, set the status to null
+        // restart the activity
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +122,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                     newRequest.setStatus(5);
                     MyDataBase.updateRequest(newRequest);
                 }
+
                 Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -116,6 +130,109 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             }
         });
 
+
         return view;
     }
+
+
+   /**
+    * When the ride request is pending, the confirm button is hidden
+    * */
+    public void pendingPhase(DriveRequest driveRequest){
+        newRequest = driveRequest;
+        confirm.setVisibility(View.GONE);
+    }
+
+    /**
+     *
+     * Have the driver's name, username and confirm button appear
+     * Override confirm button to update the drive request
+     * Driver's username is also now clickable to view
+     *
+     * @param driveRequest
+     *  needed to access the driver's name and username
+     *
+     * */
+    public void DriverAcceptedPhase(DriveRequest driveRequest){
+        newRequest = driveRequest;
+        confirm.setVisibility(View.VISIBLE);
+        driverName.setVisibility(View.VISIBLE);
+        driverUserName.setVisibility(View.VISIBLE);
+
+
+        String stringName = MyDataBase.getDriver(driveRequest.getDriverID()).getName();
+        driverName.setText(stringName);
+
+        String stringUsername = MyDataBase.getDriver(driveRequest.getDriverID()).getUserName();
+        driverUserName.setText(stringUsername);
+
+        // overriding confirm button
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmRidePhase(driveRequest);
+            }
+        });
+
+        // activate function to show driver profile
+        showDriverProfile(driveRequest);
+
+    }
+
+    /**
+     *
+     * Called when user wants to accept the ride from driver
+     * Confirm button is invisible again
+     * @param driveRequest
+     *  driveRequest to update
+     *
+     * */
+    public void confirmRidePhase(DriveRequest driveRequest){
+        newRequest = driveRequest;
+        driveRequest.setStatus(2);
+        MyDataBase.updateRequest(driveRequest);
+        confirm.setVisibility(View.GONE);
+    }
+
+    /**
+     * Ride is now in progress
+     * User is no longer able to cancel the ride
+     * Complete the ride button is now active
+     *
+     * @param driveRequest
+     *     driveRequest to update
+     * */
+    public void ridingPhase(DriveRequest driveRequest){
+        newRequest = driveRequest;
+        cancel.setVisibility(View.GONE);
+        complete.setVisibility(View.VISIBLE);
+        complete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                driveRequest.setStatus(4);
+                MyDataBase.updateRequest(driveRequest);
+            }
+        });
+
+    }
+
+    /**
+     * Allows the user to click on the username and look at driver's profile
+     *
+     * @param driveRequest
+     *    needed to access the driver's name and username
+     * */
+    public void showDriverProfile(DriveRequest driveRequest){
+        String driverId = driveRequest.getDriverID();
+        driverUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DriverInfoForContactActivity.class);
+                intent.putExtra("DRIVER_ID",driverId);
+                startActivity(intent);
+            }
+        });
+    }
+
+
 }

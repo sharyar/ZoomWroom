@@ -140,7 +140,7 @@ public class RiderSignUpActivity extends AppCompatActivity {
      */
 
     public void OpenRiderModeActivity() {
-        Intent intent = new Intent(this,RiderModeActivity.class);
+        Intent intent = new Intent(this, RiderLoginActivity.class);
         startActivity(intent);
     }
 

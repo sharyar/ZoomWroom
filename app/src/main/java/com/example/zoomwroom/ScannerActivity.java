@@ -9,6 +9,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -98,6 +99,13 @@ public class ScannerActivity extends AppCompatActivity {
                     Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                     vibrator.vibrate(500);
                     Log.d("QR", qrCodes.valueAt(0).displayValue);
+                    Context context = getApplicationContext();
+                    CharSequence text = qrCodes.valueAt(0).displayValue;
+                    int duration = Toast.LENGTH_LONG;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
                     finish();
                 }
             }

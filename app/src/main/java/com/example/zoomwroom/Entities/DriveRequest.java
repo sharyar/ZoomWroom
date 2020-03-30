@@ -34,7 +34,7 @@ public class DriveRequest implements Serializable {
      *
      * @see <a href="https://github.com/CMPUT301W20T29-H03/ZoomWroom/wiki/App-Terminologies#status">Status Description</a>
      */
-    public final class Status {
+    public static final class Status {
         public static final int PENDING     = 0;
         public static final int ACCEPTED    = 1;
         public static final int CONFIRMED   = 2;
@@ -234,10 +234,27 @@ public class DriveRequest implements Serializable {
         destination = new LatLng(destinationLat, destinationLng);
     }
 
+    /**
+     * Converts the int status to a string for display throughout the application.
+     * Status 0 returns Accepted
+     * Status 1 returns Accepted
+     * Status 2 returns Confirmed
+     * Status 3 returns Ongoing
+     * Status 4 returns Completed
+     * Status 5 returns Cancelled
+     * Status 6 returns Declined
+     * Status 7 returns Aborted
+     *
+     * @param status    int representing current status of the DriveRequest
+     * @return          String representing the status in a readable format
+     */
     public static String giveStatus(int status) {
         String strStatus;
 
         switch (status) {
+            case 0:
+                strStatus = "Pending";
+                break;
             case 1:
                 strStatus = "Accepted";
                 break;

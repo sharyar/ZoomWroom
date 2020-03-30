@@ -11,7 +11,7 @@ import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class ActivityDriveRequestDetails extends AppCompatActivity {
+public class DriveRequestDetailsActivity extends AppCompatActivity {
 
     private DriveRequest currentRequest;
     private String driveRequestId;

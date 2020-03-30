@@ -26,9 +26,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityDriveRequestDetails"></activity>
+        <activity android:name=".DriverInfoForContactActivity" />
+        <activity android:name=".DriveRequestDetailsActivity" />
         <activity
-            android:name=".AcceptedRequestActivity"
+            android:name=".AcceptedDriveRequestsActivity"
             android:label="Accepted Requests" />
         <activity android:name=".EditUserProfileActivity" />
         <!--
@@ -47,10 +48,10 @@
             android:name=".DriverHomeActivity"
             android:exported="true"
             android:label="@string/title_activity_driver_home" />
-        <activity android:name=".DriverModeActivity" />
+        <activity android:name=".DriverLoginActivity" />
         <activity android:name=".RiderSignUpActivity" />
         <activity android:name=".DriverSignUpActivity" />
-        <activity android:name=".RiderModeActivity" />
+        <activity android:name=".RiderLoginActivity" />
         <activity android:name=".ScannerActivity" />
 
         <meta-data

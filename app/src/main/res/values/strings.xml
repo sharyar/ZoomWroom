@@ -10,4 +10,6 @@
     <string name="profile_title">Profile</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="back">Back</string>
+    <string name="complete_request_title">Thanks for riding with</string>
+    <string name="generate_qr_bucks_code">Generate QR Bucks Code</string>
 </resources>

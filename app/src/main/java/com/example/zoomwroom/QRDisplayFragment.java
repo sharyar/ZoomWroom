@@ -16,14 +16,20 @@ import com.example.zoomwroom.Entities.QRCode;
 
 public class QRDisplayFragment extends DialogFragment {
 
+    private String message;
+
+    public QRDisplayFragment(String message) {
+        this.message = message;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.qr_display_fragment, null);
         ImageView qrImageView = view.findViewById(R.id.qr_display);
-        String message = "test message";//LocalData.instance.getCurrentRequest().toQRBucksString();
-        QRCode.setQRCodeToImageView(message, qrImageView);
         Button completeButton = view.findViewById(R.id.qr_display_button);
+
+        QRCode.setQRCodeToImageView(message, qrImageView);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(view);

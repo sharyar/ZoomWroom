@@ -127,8 +127,8 @@ public class DriverLoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void openDriverInfosActivity(){
-        Intent intent = new Intent(this ,DriverInfosForContactActivitys.class);
+    public void openDriverInfoActivity(){
+        Intent intent = new Intent(this , DriverInfoForContactActivity.class);
         startActivity(intent);
     }
 

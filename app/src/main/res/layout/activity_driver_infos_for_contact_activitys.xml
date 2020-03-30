@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4D5C68"
-    tools:context=".DriverInfosForContactActivitys">
+    tools:context=".DriverInfoForContactActivity">
 
     <RelativeLayout
         android:background="#A7A5C6"

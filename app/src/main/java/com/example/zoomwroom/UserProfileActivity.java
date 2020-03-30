@@ -107,5 +107,5 @@ public class UserProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, EditUserProfileActivity.class);
         startActivity(intent);
     }
-
+    
 }

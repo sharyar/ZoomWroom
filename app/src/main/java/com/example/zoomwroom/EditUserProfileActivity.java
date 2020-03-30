@@ -99,6 +99,13 @@ public class EditUserProfileActivity extends AppCompatActivity {
                             MyDataBase.updateRider(rider);
 
                             Toast.makeText(EditUserProfileActivity.this, "Your info has been updated.", Toast.LENGTH_SHORT).show();
+
+                            try {
+                                Thread.sleep(200);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
                             finish();
 
                         } else {
@@ -111,6 +118,13 @@ public class EditUserProfileActivity extends AppCompatActivity {
                                 MyDataBase.updateRider(rider);
 
                                 Toast.makeText(EditUserProfileActivity.this, "Your info has been updated.", Toast.LENGTH_SHORT).show();
+
+                                try {
+                                    Thread.sleep(200);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
                                 finish();
 
                             } else {

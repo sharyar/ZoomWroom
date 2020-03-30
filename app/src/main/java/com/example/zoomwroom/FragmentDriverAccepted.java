@@ -77,7 +77,7 @@ public class FragmentDriverAccepted extends FragmentCreateRide {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                driveRequest.setStatus(2);
+                driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
                 MyDataBase.updateRequest(driveRequest);
                 confirm.setVisibility(View.GONE);
 

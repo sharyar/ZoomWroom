@@ -50,7 +50,7 @@
     <style name="TextViewAcceptRequest2" parent="TextViewAcceptRequest">
         <item name="android:textColor">@color/CyanBlueGreen</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="TextInputUserEditProfile" parent="">
@@ -78,6 +78,13 @@
         <item name="android:layout_width">200dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="RiderFragmentButton">
+        <item name="android:backgroundTint">@color/colorAccentPurple</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
 </resources>

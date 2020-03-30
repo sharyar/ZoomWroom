@@ -22,12 +22,11 @@ public class UserDataValidation {
         if (number.length() < 10) {
             return false;
         }
-        return Patterns.PHONE.matcher(number).matches();
+        return number.chars().allMatch(Character::isDigit);
     }
 
     public static boolean isAlpha(String name) {
-        Pattern p = Pattern.compile("^[a-zA-Z]");
-        return p.matcher(name).find();
+        return name.chars().allMatch(Character::isLetter);
     }
 
     public static boolean isEmailValid(String email) {

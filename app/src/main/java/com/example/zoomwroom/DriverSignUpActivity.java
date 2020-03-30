@@ -80,18 +80,17 @@ public class DriverSignUpActivity extends AppCompatActivity {
         //Uses the email address and password fields to create a new user within the database.
         signUpDriver.setOnClickListener((View v) -> {
             bar.setVisibility(View.VISIBLE);
+
             email = emailAddressEditText.getText().toString().trim();
             passWord = passWordEditText.getText().toString();
             firstNameText = firstNameEditText.getText().toString().trim();
             lastNameText = lastNameEditText.getText().toString().trim();
             userName = userNameEditText.getText().toString().trim();
-            phoneNumber = PhoneNumberUtils.normalizeNumber(phoneNumberEditText.getText().toString().trim());
-            
-            
-            // add validation check here:
-            
+            phoneNumber = PhoneNumberUtils.normalizeNumber(phoneNumberEditText.getText().toString());
+
 
             if (areFieldsValid()) {
+
                 mAuth.createUserWithEmailAndPassword(email, passWord)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -116,6 +115,8 @@ public class DriverSignUpActivity extends AppCompatActivity {
                                                 public void onSuccess(Void aVoid) {
                                                     Toast.makeText(DriverSignUpActivity.this, "You are now signed up!",
                                                             Toast.LENGTH_SHORT).show();
+                                                    // opens the driver home page
+                                                    openDriverHomeActivity();
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -124,9 +125,6 @@ public class DriverSignUpActivity extends AppCompatActivity {
                                                     Log.w(TAG, "Error, something went wrong with storing your info to the database.", e);
                                                 }
                                             });
-
-                                    // opens the driver home page
-                                    openDriverHomeActivity();
 
                                 } else {
 
@@ -190,13 +188,15 @@ public class DriverSignUpActivity extends AppCompatActivity {
 
             return false;
 
-        } else if (!UserDataValidation.isEmailValid(email)) {
-            Toast.makeText(this, "Email address is invalid. Please input a valid email", Toast.LENGTH_SHORT).show();
 
-            return false;
         } else if (!UserDataValidation.isAlpha(firstNameText) || !UserDataValidation.isAlpha(lastNameText)) {
             Toast.makeText(this, "First & Last Name can only be alphabetic.",
                     Toast.LENGTH_SHORT).show();
+
+            return false;
+
+        } else if (!UserDataValidation.isEmailValid(email)) {
+            Toast.makeText(this, "Email address is invalid. Please input a valid email", Toast.LENGTH_SHORT).show();
 
             return false;
 

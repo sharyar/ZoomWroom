@@ -4,6 +4,7 @@ package com.example.zoomwroom;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.zoomwroom.Entities.ContactInformation;
 import com.example.zoomwroom.Entities.Rider;
+import com.example.zoomwroom.Entities.UserDataValidation;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,6 +25,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -37,6 +41,25 @@ public class RiderSignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
 
+    // Declare variables required for class
+
+    EditText firstNameEditText;
+    EditText lastNameEditText;
+    EditText emailAddressEditText;
+    EditText passWordEditText;
+    EditText userNameEditText;
+    EditText phoneNumberEditText;
+
+
+    String email;
+    String passWord;
+    String firstNameText;
+    String lastNameText;
+    String userName;
+    String phoneNumber;
+
+    Button signUpRider;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,33 +72,28 @@ public class RiderSignUpActivity extends AppCompatActivity {
         ProgressBar bar = findViewById(R.id.rider_signup_progress_bar);
         bar.setVisibility(View.INVISIBLE);
 
-        EditText firstNameEditText = findViewById(R.id.riderSignupFName);
-        EditText lastNameEditText = findViewById(R.id.riderSignupLName);
-        EditText emailAddressEditText = findViewById(R.id.riderSignupEmailAddress);
-        EditText passWordEditText = findViewById(R.id.riderSignupPassWord);
-        EditText userNameEditText = findViewById(R.id.riderSignupUserName);
-        EditText phoneNumberEditText = findViewById(R.id.riderSignupPhoneNumber);
-        Button signUpRider = findViewById(R.id.riderSignupSignupBtn);
+        firstNameEditText = findViewById(R.id.riderSignupFName);
+        lastNameEditText = findViewById(R.id.riderSignupLName);
+        emailAddressEditText = findViewById(R.id.riderSignupEmailAddress);
+        passWordEditText = findViewById(R.id.riderSignupPassWord);
+        userNameEditText = findViewById(R.id.riderSignupUserName);
+        phoneNumberEditText = findViewById(R.id.riderSignupPhoneNumber);
+        signUpRider = findViewById(R.id.riderSignupSignupBtn);
 
 
         signUpRider.setOnClickListener((View v) -> {
             bar.setVisibility(View.VISIBLE);
-            String email = emailAddressEditText.getText().toString().trim();
-            String passWord = passWordEditText.getText().toString();
-            String firstNameText = firstNameEditText.getText().toString().trim();
-            String lastNameText = lastNameEditText.getText().toString().trim();
-            String userName = userNameEditText.getText().toString().trim();
-            String phoneNumber = phoneNumberEditText.getText().toString().trim();
+            email = emailAddressEditText.getText().toString().trim();
+            passWord = passWordEditText.getText().toString();
+            firstNameText = firstNameEditText.getText().toString().trim();
+            lastNameText = lastNameEditText.getText().toString().trim();
+            userName = userNameEditText.getText().toString().trim();
+            phoneNumber = PhoneNumberUtils.normalizeNumber(phoneNumberEditText.getText().toString());
 
 
-            // If conditions checks to make sure that the fields have been filled out and are not null. Prevents a crash.
-            if (email.isEmpty() || passWord.isEmpty() || firstNameText.isEmpty() ||
-                    lastNameText.isEmpty() || userName.isEmpty() || phoneNumber.isEmpty()) {
-                Toast.makeText(RiderSignUpActivity.this, "Please ensure you have " +
-                        "filled out all the fields.", Toast.LENGTH_SHORT).show();
-            } else if (!MyDataBase.isUserNameUnique(userName)) {
-                Toast.makeText(this, "This username is already taken, please use a new one", Toast.LENGTH_SHORT).show();
-            } else {
+            // this if condition checks if all fields are valid and only allows the registration if they are.
+            if (areFieldsValid()) {
+
                 mAuth.createUserWithEmailAndPassword(email, passWord)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -90,7 +108,6 @@ public class RiderSignUpActivity extends AppCompatActivity {
                                     // Add data from other fields only if registration is successful.
 
                                     //First create a new rider instance, new contact info instance and then add them to the database
-
                                     Rider newRider = new Rider(firstNameText + " "+lastNameText, userName, email);
                                     ContactInformation cInformation = new ContactInformation(phoneNumber, email);
                                     newRider.setContactDetails(cInformation);
@@ -114,10 +131,24 @@ public class RiderSignUpActivity extends AppCompatActivity {
                                                 }
                                             });
 
-
                                 } else {
+
+                                    bar.setVisibility(View.INVISIBLE);
+
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(RiderSignUpActivity.this, "Signup Failed, please check the fields",
+
+                                    if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
+                                        Toast.makeText(RiderSignUpActivity.this,
+                                                "Please use a stronger password", Toast.LENGTH_SHORT).show();
+
+                                    } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                        Toast.makeText(RiderSignUpActivity.this,
+                                                "This email is already registered, please login or contact support.",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    Toast.makeText(RiderSignUpActivity.this, "Sign up " +
+                                                    "Failed, please ensure you are using a correct email address.",
                                             Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -152,6 +183,47 @@ public class RiderSignUpActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Checks if the user's input is valid based on preset conditions.
+     *
+     * @return      boolean value indicating if the fields input by the user are valid or not
+     */
+    boolean areFieldsValid() {
+        if (email.isEmpty() || passWord.isEmpty() || firstNameText.isEmpty() ||
+                lastNameText.isEmpty() || userName.isEmpty() || phoneNumber.isEmpty()) {
+            Toast.makeText(RiderSignUpActivity.this, "Please ensure you have " +
+                    "filled out all the fields.", Toast.LENGTH_SHORT).show();
+
+            return false;
 
 
+        } else if (!UserDataValidation.isAlpha(firstNameText) || !UserDataValidation.isAlpha(lastNameText)) {
+            Toast.makeText(this, "First & Last Name can only be alphabetic.",
+                    Toast.LENGTH_SHORT).show();
+
+            return false;
+
+        } else if (!UserDataValidation.isEmailValid(email)) {
+            Toast.makeText(this, "Email address is invalid. Please input a valid email", Toast.LENGTH_SHORT).show();
+
+            return false;
+
+        } else if (!UserDataValidation.isAlphaNumeric(userName)) {
+            Toast.makeText(this, "Username must be a combination of numbers and letters."
+                    , Toast.LENGTH_SHORT).show();
+
+            return false;
+        } else if (!MyDataBase.isUserNameUnique(userName)) {
+            Toast.makeText(this, "This username is already taken, please use a different one",
+                    Toast.LENGTH_SHORT).show();
+
+            return false;
+        } else if (!UserDataValidation.isPhoneNumberValid(phoneNumber)) {
+            Toast.makeText(this, "Please enter a valid phone number." , Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 }

@@ -50,12 +50,16 @@ public class EditUserProfileActivity extends AppCompatActivity {
             }
         }
 
+        fullNameEditText.setText(user.getName());
+        userNameEditText.setText(user.getUserName());
+        phoneNumberEditText.setText(user.getContactDetails().getPhoneNumber());
+
         confirmChangesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String newUserName = userNameEditText.getText().toString();
                 if (!(newUserName.equalsIgnoreCase(user.getUserName()))) {
-                    user.setName(newUserName);
+                    user.setUserName(newUserName);
                     if (!(MyDataBase.isUserNameUnique(userNameEditText.getText().toString()))) {
                         // not unique username
                         Toast.makeText(EditUserProfileActivity.this,
@@ -68,6 +72,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
                 user.setName(fullNameEditText.getText().toString());
                 user.getContactDetails().setPhoneNumber(phoneNumberEditText.getText().toString());
 
+                // update user profile
                 if (user instanceof Driver) {
                     MyDataBase.updateDriver((Driver) user);
                 } else if (user instanceof Rider) {

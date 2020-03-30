@@ -11,6 +11,11 @@ import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+/**
+ * @author: Dulong Sang
+ * Mar 29, 2020
+ */
+
 public class CompleteRequestFragment extends BottomSheetDialogFragment
         implements RateDriverFragment.OnFragmentInteractionListener {
 

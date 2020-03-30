@@ -50,6 +50,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
 
     FloatingActionButton profileBtn; // Used to open the user's profile
     FloatingActionButton driveRequestListBtn;
+    FloatingActionButton currentRequest;
 
 
     private String driverID;
@@ -109,6 +110,23 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
             public void onClick(View v) {
                 Intent myIntent = new Intent(v.getContext(), AcceptedDriveRequestsActivity.class);
                 startActivityForResult(myIntent, 0);
+            }
+        });
+
+        // Current request button
+        currentRequest = findViewById(R.id.current_request);
+
+        currentRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle b = new Bundle();
+                b.putString("userID", driverID);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                final FragmentDriverCurrentRequest currentRequestFragment = new FragmentDriverCurrentRequest();
+                currentRequestFragment.setArguments(b);
+                currentRequestFragment.show(getSupportFragmentManager(), currentRequestFragment.getTag());
             }
         });
 

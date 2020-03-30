@@ -6,19 +6,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
-import com.example.zoomwroom.Entities.User;
 import com.example.zoomwroom.database.MyDataBase;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-public class DriverInfosForContactActivitys extends AppCompatActivity {
+public class DriverInfoForContactActivity extends AppCompatActivity {
     TextView driverphonenumber;
     TextView driveremailaddress;
     private Driver currentUser;
@@ -102,7 +96,7 @@ public class DriverInfosForContactActivitys extends AppCompatActivity {
         try {
             startActivity(i);
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(DriverInfosForContactActivitys.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DriverInfoForContactActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
     }
 

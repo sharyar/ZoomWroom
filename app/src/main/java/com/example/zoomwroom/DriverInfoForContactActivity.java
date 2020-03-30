@@ -13,8 +13,8 @@ import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.database.MyDataBase;
 
 public class DriverInfoForContactActivity extends AppCompatActivity {
-    TextView driverphonenumber;
-    TextView driveremailaddress;
+    TextView driverPhoneNumber;
+    TextView driverEmailAddress;
     private Driver currentUser;
     private TextView usernameTextView;
     private TextView nameTextView;
@@ -30,8 +30,8 @@ public class DriverInfoForContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_infos_for_contact_activitys);
 
-        driverphonenumber = findViewById(R.id.driver_info_phonenumber_content);
-        driveremailaddress = findViewById(R.id.driver_info_email_content);
+        driverPhoneNumber = findViewById(R.id.driver_info_phonenumber_content);
+        driverEmailAddress = findViewById(R.id.driver_info_email_content);
 
     }
     @Override
@@ -81,7 +81,7 @@ public class DriverInfoForContactActivity extends AppCompatActivity {
     }
 
     public void makecalltodriver(View view){
-        String phone = driverphonenumber.getText().toString();
+        String phone = driverPhoneNumber.getText().toString();
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
         startActivity(intent);
 
@@ -90,8 +90,8 @@ public class DriverInfoForContactActivity extends AppCompatActivity {
     public void sendemailtodriver(View view){
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
-        System.out.println(driveremailaddress.getText().toString());
-        i.putExtra(Intent.EXTRA_EMAIL  ,new String[]{driveremailaddress.getText().toString()});
+        System.out.println(driverEmailAddress.getText().toString());
+        i.putExtra(Intent.EXTRA_EMAIL  ,new String[]{driverEmailAddress.getText().toString()});
 
         try {
             startActivity(i);

@@ -216,7 +216,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                 MyDataBase.updateRequest(driveRequest);
 
                 // show rider complete request fragment
-                RiderCompleteRequestFragment fragment = new RiderCompleteRequestFragment(request);
+                RiderCompleteRequestFragment fragment = new RiderCompleteRequestFragment(driveRequest);
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(fragment, "Complete_fragment")

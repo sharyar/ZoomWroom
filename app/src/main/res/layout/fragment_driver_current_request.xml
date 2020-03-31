@@ -39,6 +39,7 @@
             android:layout_width="191dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:text="John Doe"
             android:textColor="@color/colorLightGray"
             android:textSize="20dp" />
 

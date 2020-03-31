@@ -13,6 +13,7 @@ import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -49,6 +50,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
 
     FloatingActionButton profileBtn; // Used to open the user's profile
     FloatingActionButton driveRequestListBtn;
+    FloatingActionButton currentRequest;
 
 
     private String driverID;
@@ -108,6 +110,23 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
             public void onClick(View v) {
                 Intent myIntent = new Intent(v.getContext(), AcceptedDriveRequestsActivity.class);
                 startActivityForResult(myIntent, 0);
+            }
+        });
+
+        // Current request button
+        currentRequest = findViewById(R.id.current_request);
+
+        currentRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle b = new Bundle();
+                b.putString("userID", driverID);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                final FragmentDriverCurrentRequest currentRequestFragment = new FragmentDriverCurrentRequest();
+                currentRequestFragment.setArguments(b);
+                currentRequestFragment.show(getSupportFragmentManager(), currentRequestFragment.getTag());
             }
         });
 
@@ -228,7 +247,10 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
             for (DriveRequest request : requests) {
                 LatLng requestLocationStart = request.getPickupLocation();
                 String riderName = MyDataBase.getRider(request.getRiderID()).getName();
-                Marker m = mMap.addMarker(new MarkerOptions().position(requestLocationStart).title(riderName));
+                Marker m = mMap.addMarker(new MarkerOptions()
+                                                .position(requestLocationStart)
+                                                .title(riderName)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ride_request_marker)));
                 m.setTag(request);
                 markers.add(m);
             }

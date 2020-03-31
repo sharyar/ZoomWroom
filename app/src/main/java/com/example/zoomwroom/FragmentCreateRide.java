@@ -2,7 +2,6 @@ package com.example.zoomwroom;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -228,7 +227,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         driverUserName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DriverInfosForContactActivitys.class);
+                Intent intent = new Intent(getActivity(), DriverInfo.class);
                 intent.putExtra("DRIVER_ID",driverId);
                 startActivity(intent);
             }

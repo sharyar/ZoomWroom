@@ -6,6 +6,7 @@ package com.example.zoomwroom;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,10 +19,10 @@ import com.example.zoomwroom.Entities.User;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 public class UserProfileActivity extends AppCompatActivity {
 
     private User currentUser;
-    private boolean isDriver;
     private TextView usernameTextView;
     private TextView nameTextView;
     private TextView emailTextView;
@@ -64,12 +65,12 @@ public class UserProfileActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             currentUser = MyDataBase.getDriver(user.getEmail());
-            isDriver = true;
             if (currentUser == null) {
                 currentUser = MyDataBase.getRider(user.getEmail());
-                isDriver = false;
             }
-        } else {
+        }
+        if (currentUser == null) {
+            Log.e("Profile", "User not found");
             return;
         }
 
@@ -79,7 +80,7 @@ public class UserProfileActivity extends AppCompatActivity {
         phoneTextView.setText(currentUser.getContactDetails().getPhoneNumber());
 
         // display the number of thumbs up and down if the user is a driver.
-        if (isDriver) {
+        if (currentUser instanceof Driver) {
             numThumbsUpTextView.setText(String.valueOf(((Driver) currentUser).getRating().getThumbsUp()));
             numThumbsDownTextView.setText(String.valueOf(((Driver) currentUser).getRating().getThumbsDown()));
         } else {
@@ -106,5 +107,5 @@ public class UserProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, EditUserProfileActivity.class);
         startActivity(intent);
     }
-
+    
 }

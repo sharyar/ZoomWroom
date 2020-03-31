@@ -35,6 +35,15 @@
             android:layout_margin="10dp"
             android:clickable="true"
             android:src="@drawable/ic_list_black_24dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/current_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:clickable="true"
+            android:src="@drawable/ic_check"
+            android:layout_margin="10dp"/>
     </LinearLayout>
 
 </FrameLayout>

@@ -111,12 +111,12 @@ public abstract class MapsActivity extends FragmentActivity implements OnMapRead
         departureMarker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(53.5232, -113.5263))
                 .title("Departure")
-                .icon(BitmapDescriptorFactory.defaultMarker(244))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.purple_marker_a))
                 .alpha(0.71f));
         destinationMarker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(53.5232, -113.5263))
                 .title("Destination")
-                .icon(BitmapDescriptorFactory.defaultMarker(244))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.purple_marker_b))
                 .alpha(0.71f));
 
         departureMarker.setVisible(false);
@@ -171,7 +171,7 @@ public abstract class MapsActivity extends FragmentActivity implements OnMapRead
                                     requestNewLocationData();
                                 } else {
                                     userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 14.0f));
                                 }
                             }
                         }

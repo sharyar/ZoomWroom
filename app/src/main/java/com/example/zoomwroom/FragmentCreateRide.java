@@ -194,7 +194,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         newRequest = driveRequest;
         driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
         MyDataBase.updateRequest(driveRequest);
-        confirm.setVisibility(View.GONE);
+        //confirm.setVisibility(View.GONE);
     }
 
     /**
@@ -208,21 +208,13 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     public void ridingPhase(DriveRequest driveRequest){
         newRequest = driveRequest;
         cancel.setVisibility(View.GONE);
+        confirm.setVisibility(View.GONE);
         complete.setVisibility(View.VISIBLE);
         complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                driveRequest.setStatus(DriveRequest.Status.COMPLETED1);
+                driveRequest.setStatus(DriveRequest.Status.COMPLETED);
                 MyDataBase.updateRequest(driveRequest);
-
-                // show rider complete request fragment
-                RiderCompleteRequestFragment fragment = new RiderCompleteRequestFragment(driveRequest);
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(fragment, "Complete_fragment")
-                        .addToBackStack(null)
-                        .commit();
-                fragmentManager.executePendingTransactions();
             }
         });
 

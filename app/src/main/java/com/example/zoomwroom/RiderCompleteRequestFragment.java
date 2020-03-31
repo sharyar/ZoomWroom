@@ -25,6 +25,8 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment
 
     public RiderCompleteRequestFragment(DriveRequest driveRequest) {
         this.driveRequest = driveRequest;
+        this.driver = MyDataBase.getDriver(driveRequest.getDriverID());
+        System.out.println("DRIVER: " + driveRequest.getDriverID());
     }
 
     @Override
@@ -55,6 +57,10 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment
             RateDriverFragment rateDriverFragment = new RateDriverFragment(driver);
             rateDriverFragment.show(getFragmentManager(), "Rate_Driver");
         });
+
+        System.out.println(driveRequest);
+        System.out.println(driver);
+        System.out.println("HELLLO" + driver.getName());
 
         completeButton.setText(String.format("Rate %s", driver.getName()));
         completeButton.setOnClickListener(v -> {

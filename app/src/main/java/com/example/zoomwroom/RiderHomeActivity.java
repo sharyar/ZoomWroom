@@ -99,16 +99,16 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                             // this code is required when the user has logged out and logs back in
                             // recreates the fragment so the appropriate fragment will be shown
                             // the only time we won't create a ride fragment is if ride is complete or cancelled
-                            if (request.getStatus() != 5 || request.getStatus() != 4){
+                            if (request.getStatus() != 5 && request.getStatus() != 4){
                                 if (createRideFragment == null){
                                     createRideFragment = new FragmentCreateRide();
                                     startCreateRide(createRideFragment);
                                     rideButton.setVisibility(View.INVISIBLE);
                                 }
                             }
+                            rideStatus.setVisibility(View.VISIBLE);
 
                             if (request.getStatus() == 0){
-                                rideStatus.setVisibility(View.VISIBLE);
                                 rideStatus.setText("PENDING");
                                 createRideFragment.pendingPhase(request);
                             }
@@ -138,6 +138,8 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
 
                             else if (request.getStatus() == 4){
                                 rideStatus.setText("RIDE COMPLETED");
+                                RiderCompleteRequestFragment completeRequest = new RiderCompleteRequestFragment(request);
+                                completeRideFragment(completeRequest, request);
                             }
 
                         }
@@ -224,6 +226,20 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         getSupportFragmentManager().executePendingTransactions();
+
+    }
+
+    public void completeRideFragment(RiderCompleteRequestFragment fragment, DriveRequest request){
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.rider_fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+
+        QRDisplayFragment qrDisplayFragment = new QRDisplayFragment(request.toQRBucksString());
+        qrDisplayFragment.show(fragmentManager, "QR_Display");
 
     }
 

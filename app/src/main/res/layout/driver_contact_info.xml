@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4D5C68"
-    tools:context=".DriverInfoForContactActivity">
+    tools:context=".DriverInfo">
 
     <RelativeLayout
         android:background="#A7A5C6"
@@ -136,7 +136,7 @@
                 android:textSize="29dp"
                 android:text="7808852269"
                 android:clickable="true"
-                android:onClick="makecalltodriver"
+                android:onClick="CallNumber"
                 android:textColor="@color/CyanBlueGreen"
                 >
 
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="29dp"
                 android:clickable="true"
-                android:onClick="sendemailtodriver"
+                android:onClick="SendEmail"
                 android:text="275475610@qq.com"
                 android:textColor="@color/CyanBlueGreen"
                 >

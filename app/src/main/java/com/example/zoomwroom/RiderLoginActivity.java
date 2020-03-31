@@ -19,18 +19,16 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class RiderLoginActivity extends LoginActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+
+    protected void getViewContent() {
         setContentView(R.layout.activity_rider_mode);
         loginBtn = findViewById(R.id.rider_LoginBT);
         signUpBtn = findViewById(R.id.rider_SignupBT);
         modeBtn = findViewById(R.id.rider_chagentodrivermodeBT);
-        super.onCreate(savedInstanceState);
-
         emailEditText = findViewById(R.id.rider_email_login);
         passwordEditText = findViewById(R.id.rider_password_login);
-
     }
+
     /**
      * switch mode between driver and rider
      */

@@ -19,16 +19,14 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class DriverLoginActivity extends LoginActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+
+    protected void getViewContent() {
         setContentView(R.layout.activity_driver_mode);
         emailEditText = findViewById(R.id.driver_email_login);
         passwordEditText = findViewById(R.id.driver_password);
-
         loginBtn = findViewById(R.id.driver_LoginBT);
         signUpBtn = findViewById(R.id.driver_SignupBT);
         modeBtn = findViewById(R.id.driver_chagentoRidermodeBT);
-        super.onCreate(savedInstanceState);
     }
     /**
      * change to driver signup page for driver to signup

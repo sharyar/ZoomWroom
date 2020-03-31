@@ -74,11 +74,11 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         double depLon = bundle.getDouble("depLon");
         String userID = bundle.getString("userID");
         price = bundle.getDouble("price");
-        price = RiderHomeActivity.round(price, 2);
+        price = FareCalculation.round(price, 2);
 
         // Setting the textviews
-        String des = "Lon: " + RiderHomeActivity.round(desLon,12) + " Lat: " + RiderHomeActivity.round(desLat,12);
-        String dep = "Lon: " + RiderHomeActivity.round(depLon,12) + " Lat: " + RiderHomeActivity.round(depLat,12);
+        String des = "Lon: " + FareCalculation.round(desLon, 12) + " Lat: " + FareCalculation.round(desLat, 12);
+        String dep = "Lon: " + FareCalculation.round(depLon, 12) + " Lat: " + FareCalculation.round(depLat, 12);
         String fa = Double.toString(price);
         destination.setText(des);
         pickup.setText(dep);
@@ -93,7 +93,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 if (newRequest == null){
                     double offeredFare = Double.valueOf(fare.getText().toString());
-                    price = RiderHomeActivity.round(price,2);
+                    price = FareCalculation.round(price, 2);
                     // Do not accept ride requests where the offer is lower than the suggested price
                     if (offeredFare < price){
                         Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();

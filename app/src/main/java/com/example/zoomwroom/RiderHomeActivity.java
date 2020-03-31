@@ -227,20 +227,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
 
     }
 
-    /**
-     * Rounds a double value to int places
-     * Source: https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
-     * @param value
-     * @param places
-     * @return roundedNum
-     */
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
 
      /* DON'T ERASE THIS!!! I'm probably going to reuse this for the final fragment
 

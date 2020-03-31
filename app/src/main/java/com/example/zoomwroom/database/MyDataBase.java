@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
+import com.example.zoomwroom.Entities.QRBucks;
 import com.example.zoomwroom.Entities.Rider;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -78,9 +79,26 @@ public class MyDataBase {
     }
 
     /**
+     * Returns an arraylist of DriveRequests for a specific driverID and status of the request
+     * @param driverID      Driver's unique id (their email address)
+     * @param status        status of the DriveRequests to be provided
+     * @return              Arraylist of DriveRequests with the specific status for that Driver
+     */
+    public static ArrayList<DriveRequest> getDriveRequestsByDriverIDAndStatus(String driverID, int status) {
+        ArrayList<DriveRequest> unfilteredList = getDriverRequest(driverID);
+        ArrayList<DriveRequest> filteredList = new ArrayList<>();
+
+        for (DriveRequest driveRequest: unfilteredList) {
+            if (driveRequest.getStatus() == status) {
+                filteredList.add(driveRequest);
+            }
+        }
+        return filteredList;
+    }
+
+    /**
      * This function adds the request to data base
      * @param driveRequest a request object
-     * @return requestID return the id of request
      */
     public static void updateRequest(DriveRequest driveRequest) {
         final CollectionReference collectionReference = db.collection("DriverRequest");
@@ -314,8 +332,13 @@ public class MyDataBase {
         return drivers.get(0);
     }
 
-    // checks if the username is unique. If it is unique and no other user with that username exists
-    // returns true, otherwise returns false.
+    /**
+     * checks if the username is unique. If it is unique and no other user with that username exists
+     * returns true, otherwise returns false.
+     *
+     * @param userName username to check for uniqueness
+     * @return boolean value indicating if the username is unique or not
+     */
     public static Boolean isUserNameUnique(String userName) {
         final CollectionReference driverCollectionReference = db.collection("Drivers");
         final CollectionReference riderCollectionReference = db.collection("Riders");
@@ -348,4 +371,78 @@ public class MyDataBase {
         return (riders.isEmpty() && drivers.isEmpty());
     }
 
+    /**
+     * Add QRBucks instance to firestore database. This should be called when scanning the QRCode.
+     *
+     * @param buck    instance of QRBucks to add to the database.
+     */
+    public static void addQRBucks(QRBucks buck) {
+        final CollectionReference collectionReference = db.collection("QRBucks");
+
+        collectionReference
+                .document()
+                .set(buck)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("QR Bucks", "QRBucks saved to database successfully");
+                    }
+
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("QR Bucks", "data addition failed");
+                    }
+                });
+    }
+
+    /**
+     * Returns a single QRBuck by the driveID it is associated to.
+     *
+     * @param driveRequestID    driveRequestID to look up the associated QRBuck instance for
+     * @return                  QRBuck instance associated to the DriveRequest
+     */
+    public static QRBucks getQRBuckByDriveID(String driveRequestID) {
+        final CollectionReference collectionReference = db.collection("QRBucks");
+        ArrayList<QRBucks> qrBucks = new ArrayList<>();
+        Task<QuerySnapshot> task = collectionReference
+                .whereEqualTo("driveRequestID", driveRequestID)
+                .get();
+        while (!task.isSuccessful()) {
+        }
+        for (QueryDocumentSnapshot doc : task.getResult()) {
+            QRBucks qrBuck = doc.toObject(QRBucks.class);
+            qrBucks.add(qrBuck);
+        }
+        if (qrBucks.size() == 0) {
+            Log.d("QRBucks", "no bucks is found");
+            return null;
+        }
+        if (qrBucks.size() > 1) {
+            Log.d("QRBucks", "DriveRequestID is not unique");
+            return null;
+        }
+        return qrBucks.get(0);
+    }
+
+    /**
+     * May need to change status to Concluded once that is implemented.
+     * @param driverID
+     * @return
+     */
+    public static ArrayList<QRBucks> getQRBucksByDriverID(String driverID) {
+        ArrayList<QRBucks> qrBucks = new ArrayList<>();
+        QRBucks buck;
+        ArrayList<DriveRequest> driveRequests =
+                getDriveRequestsByDriverIDAndStatus(driverID, DriveRequest.Status.COMPLETED);
+
+        for (DriveRequest d: driveRequests) {
+            buck = getQRBuckByDriveID(d.getRequestID());
+            if (buck != null ) {
+                qrBucks.add(buck);
+            }
+        }
+        return qrBucks;
+    }
 }

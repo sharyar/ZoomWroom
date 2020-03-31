@@ -27,44 +27,13 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class DriverSignUpActivity extends AppCompatActivity {
-    // You declare this in every activity that needs access to the database
-    FirebaseFirestore database = FirebaseFirestore.getInstance();
+public class DriverSignUpActivity extends SignupActivity {
 
-    //Used for user authentication and sign up
-    private FirebaseAuth mAuth;
 
-    private static final String TAG = "EmailPassword";
-
-    // Declare variables required for activity
-    EditText firstNameEditText;
-    EditText lastNameEditText;
-    EditText emailAddressEditText;
-    EditText passWordEditText;
-    EditText userNameEditText;
-    EditText phoneNumberEditText;
-    
-    
-    String email;
-    String passWord;
-    String firstNameText;
-    String lastNameText; 
-    String userName;
-    String phoneNumber;
-
-    Button signUpDriver;
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void getViewContent() {
         setContentView(R.layout.activity_driver_sign_up);
+        bar = findViewById(R.id.driver_signup_progress_bar);
 
-        //Get Auth instance from Firebase
-        mAuth = FirebaseAuth.getInstance();
-
-        ProgressBar bar = findViewById(R.id.driver_signup_progress_bar);
-        bar.setVisibility(View.INVISIBLE);
-        
         // Set fields to views
         firstNameEditText = findViewById(R.id.driverSignupFName);
         lastNameEditText = findViewById(R.id.driverSignupLName);
@@ -72,105 +41,44 @@ public class DriverSignUpActivity extends AppCompatActivity {
         passWordEditText = findViewById(R.id.driverSignupPassWord);
         userNameEditText = findViewById(R.id.driverSignupUserName);
         phoneNumberEditText = findViewById(R.id.driverSignupPhoneNumber);
-        
+
         // Set Button to view
-        signUpDriver = findViewById(R.id.driverSignupSignupBtn);
-
-
-        //Uses the email address and password fields to create a new user within the database.
-        signUpDriver.setOnClickListener((View v) -> {
-            bar.setVisibility(View.VISIBLE);
-
-            email = emailAddressEditText.getText().toString().trim();
-            passWord = passWordEditText.getText().toString();
-            firstNameText = firstNameEditText.getText().toString().trim();
-            lastNameText = lastNameEditText.getText().toString().trim();
-            userName = userNameEditText.getText().toString().trim();
-            phoneNumber = PhoneNumberUtils.normalizeNumber(phoneNumberEditText.getText().toString());
-
-
-            if (areFieldsValid()) {
-
-                mAuth.createUserWithEmailAndPassword(email, passWord)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "createUserWithEmail:Success");
-                                    //Get the newly created user. We can use this to actually build the contact info page.
-                                    FirebaseUser user = mAuth.getCurrentUser();
-
-                                    //Add data from other fields if registration was successful:
-
-                                    //First create a new driver and contact info instance. Then add them to the database.
-                                    Driver newDriver = new Driver(firstNameText + " " + lastNameText, userName, email);
-                                    ContactInformation cInformation = new ContactInformation(phoneNumber, email);
-                                    newDriver.setContactDetails(cInformation);
-
-                                    assert user != null;
-
-                                    database.collection("Drivers").document(user.getUid()).set(newDriver)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(DriverSignUpActivity.this, "You are now signed up!",
-                                                            Toast.LENGTH_SHORT).show();
-                                                    // opens the driver home page
-                                                    openDriverHomeActivity();
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.w(TAG, "Error, something went wrong with storing your info to the database.", e);
-                                                }
-                                            });
-
-                                } else {
-
-                                    bar.setVisibility(View.INVISIBLE);
-
-                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-
-                                    if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
-                                        Toast.makeText(DriverSignUpActivity.this,
-                                                "Please use a stronger password", Toast.LENGTH_SHORT).show();
-
-                                    } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                        Toast.makeText(DriverSignUpActivity.this,
-                                                "This email is already registered, please login or contact support.",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    Toast.makeText(DriverSignUpActivity.this, "Sign up " +
-                                                    "Failed, please ensure you are using a correct email address.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    });
-
-                // Disables loading bar
-            } else {
-                bar.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        Button BackBtn = findViewById(R.id.driverSignupBackBtn);
-        BackBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OpenDriverModeActivity();
-            }
-        });
-
+        signUpUser = findViewById(R.id.driverSignupSignupBtn);
+        BackBtn = findViewById(R.id.driverSignupBackBtn);
     }
 
-    public void OpenDriverModeActivity(){
+    public void CreateUser(FirebaseUser user) {
+        //First create a new driver and contact info instance. Then add them to the database.
+        Driver newDriver = new Driver(firstNameText + " " + lastNameText, userName, email);
+        ContactInformation cInformation = new ContactInformation(phoneNumber, email);
+        newDriver.setContactDetails(cInformation);
+
+        assert user != null;
+
+        database.collection("Drivers").document(user.getUid()).set(newDriver)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(DriverSignUpActivity.this, "You are now signed up!",
+                                Toast.LENGTH_SHORT).show();
+                        // opens the home page
+                        OpenHomeActivity();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error, something went wrong with storing your info to the database.", e);
+                    }
+                });
+    }
+
+    public void ReturnToLogin(){
         Intent intent = new Intent(this, DriverLoginActivity.class);
         startActivity(intent);
     }
 
-    public void openDriverHomeActivity() {
+    public void OpenHomeActivity() {
         Intent intent = new Intent(this, DriverHomeActivity.class);
         startActivity(intent);
     }

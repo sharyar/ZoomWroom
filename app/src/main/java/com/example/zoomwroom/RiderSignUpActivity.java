@@ -14,6 +14,7 @@ import com.example.zoomwroom.Entities.Rider;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.auth.FirebaseUser;
 
 public class RiderSignUpActivity extends SignupActivity {
@@ -47,7 +48,6 @@ public class RiderSignUpActivity extends SignupActivity {
     protected void getViewContent() {
         setContentView(R.layout.activity_rider_sign_up);
         bar = findViewById(R.id.rider_signup_progress_bar);
-
 
         firstNameEditText = findViewById(R.id.riderSignupFName);
         lastNameEditText = findViewById(R.id.riderSignupLName);

@@ -5,17 +5,16 @@ import android.os.Bundle;
 
 public class RiderLoginActivity extends LoginActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+
+    protected void getViewContent() {
         setContentView(R.layout.activity_rider_mode);
         loginBtn = findViewById(R.id.rider_LoginBT);
         signUpBtn = findViewById(R.id.rider_SignupBT);
         modeBtn = findViewById(R.id.rider_chagentodrivermodeBT);
         emailEditText = findViewById(R.id.rider_email_login);
         passwordEditText = findViewById(R.id.rider_password_login);
-        // Initialize Login Activity
-        super.onCreate(savedInstanceState);
     }
+
     /**
      * switch mode between driver and rider
      */

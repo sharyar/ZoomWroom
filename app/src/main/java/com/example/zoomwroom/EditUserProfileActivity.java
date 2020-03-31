@@ -1,6 +1,7 @@
 package com.example.zoomwroom;
 
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.Entities.Rider;
 import com.example.zoomwroom.Entities.User;
+import com.example.zoomwroom.Entities.UserDataValidation;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +22,17 @@ public class EditUserProfileActivity extends AppCompatActivity {
 
     // Variables required for class
     User user;
+    String fullName;
+    String userName;
+    String phoneNumber;
+    String newUserName;
+
+    TextInputEditText fullNameEditText;
+    TextInputEditText userNameEditText;
+    TextInputEditText phoneNumberEditText;
+
+    Button confirmChangesBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +42,10 @@ public class EditUserProfileActivity extends AppCompatActivity {
         actionBar.setTitle("Edit Profile");
 
         // Text Fields used within the activity
-        TextInputEditText fullNameEditText = findViewById(R.id.edit_user_full_name_editText);
-        TextInputEditText userNameEditText = findViewById(R.id.edit_user_name_editText);
-        TextInputEditText phoneNumberEditText = findViewById(R.id.edit_user_phone_editText);
-        Button confirmChangesBtn = findViewById(R.id.edit_user_profile_confirm_btn);
+        fullNameEditText = findViewById(R.id.edit_user_full_name_editText);
+        userNameEditText = findViewById(R.id.edit_user_name_editText);
+        phoneNumberEditText = findViewById(R.id.edit_user_phone_editText);
+        confirmChangesBtn = findViewById(R.id.edit_user_profile_confirm_btn);
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
@@ -60,44 +73,68 @@ public class EditUserProfileActivity extends AppCompatActivity {
         confirmChangesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newUserName = userNameEditText.getText().toString();
-                if (!(newUserName.equalsIgnoreCase(user.getUserName()))) {
-                    user.setUserName(newUserName);
-                    if (!(MyDataBase.isUserNameUnique(userNameEditText.getText().toString()))) {
-                        // not unique username
+
+                newUserName = userNameEditText.getText().toString().trim();
+                fullName = fullNameEditText.getText().toString().trim();
+                phoneNumber = PhoneNumberUtils.normalizeNumber(phoneNumberEditText.getText().toString());
+                // validate data before committing to database and updating info
+
+                if (isInfoValid()) {
+                    user.setName(fullNameEditText.getText().toString());
+                    user.getContactDetails().setPhoneNumber(phoneNumberEditText.getText().toString());
+
+                    // update user profile
+                    if (user instanceof Driver) {
+                        MyDataBase.updateDriver((Driver) user);
+                    } else if (user instanceof Rider) {
+                        MyDataBase.updateRider((Rider) user);
+                    } else {
                         Toast.makeText(EditUserProfileActivity.this,
-                                "This username is already taken, please use a different username",
-                                Toast.LENGTH_SHORT).show();
+                                "Something went wrong", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                }
 
-                user.setName(fullNameEditText.getText().toString());
-                user.getContactDetails().setPhoneNumber(phoneNumberEditText.getText().toString());
-
-                // update user profile
-                if (user instanceof Driver) {
-                    MyDataBase.updateDriver((Driver) user);
-                } else if (user instanceof Rider) {
-                    MyDataBase.updateRider((Rider) user);
-                } else {
                     Toast.makeText(EditUserProfileActivity.this,
-                            "Something went wrong", Toast.LENGTH_SHORT).show();
-                    return;
+                            "Your info has been updated.", Toast.LENGTH_SHORT).show();
+
+                    // wait firebase to update
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    finish();
+
                 }
 
-                Toast.makeText(EditUserProfileActivity.this,
-                        "Your info has been updated.", Toast.LENGTH_SHORT).show();
 
-                // wait firebase to update
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                finish();
             }
         });
+    }
+
+    boolean isInfoValid() {
+        if (!UserDataValidation.isFullNameValid(fullName)){
+            Toast.makeText(this, "Please enter a valid name. A name can only contain alphabets & spaces.", Toast.LENGTH_SHORT).show();
+
+            return false;
+
+        } else if (!UserDataValidation.isAlphaNumeric(newUserName)) {
+            Toast.makeText(this, "Username can only have alphabets or numbers.", Toast.LENGTH_SHORT).show();
+
+            return false;
+
+        } else if (!(newUserName.equals(user.getUserName()))) {
+            if (MyDataBase.isUserNameUnique(newUserName)) {
+                Toast.makeText(this, "Please use a unique username, this username is already taken.", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+
+        } else if (!UserDataValidation.isPhoneNumberValid(phoneNumber)) {
+            Toast.makeText(this, "Please enter a valid phone number.", Toast.LENGTH_SHORT).show();
+            return false;
+
+        } else
+            return true;
     }
 }

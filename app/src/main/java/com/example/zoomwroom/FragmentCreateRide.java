@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.model.LatLng;
@@ -119,7 +122,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if (newRequest != null){
-                    newRequest.setStatus(5);
+                    newRequest.setStatus(DriveRequest.Status.CANCELLED);
                     MyDataBase.updateRequest(newRequest);
                 }
 
@@ -189,7 +192,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      * */
     public void confirmRidePhase(DriveRequest driveRequest){
         newRequest = driveRequest;
-        driveRequest.setStatus(2);
+        driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
         MyDataBase.updateRequest(driveRequest);
         confirm.setVisibility(View.GONE);
     }
@@ -209,8 +212,17 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                driveRequest.setStatus(4);
+                driveRequest.setStatus(DriveRequest.Status.COMPLETED1);
                 MyDataBase.updateRequest(driveRequest);
+
+                // show rider complete request fragment
+                RiderCompleteRequestFragment fragment = new RiderCompleteRequestFragment(request);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(fragment, "Complete_fragment")
+                        .addToBackStack(null)
+                        .commit();
+                fragmentManager.executePendingTransactions();
             }
         });
 

@@ -99,7 +99,7 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                             // this code is required when the user has logged out and logs back in
                             // recreates the fragment so the appropriate fragment will be shown
                             // the only time we won't create a ride fragment is if ride is complete or cancelled
-                            if (request.getStatus() != 5 || request.getStatus() != 4){
+                            if (request.getStatus() != 5 && request.getStatus() != 4){
                                 if (createRideFragment == null){
                                     createRideFragment = new FragmentCreateRide();
                                     startCreateRide(createRideFragment);

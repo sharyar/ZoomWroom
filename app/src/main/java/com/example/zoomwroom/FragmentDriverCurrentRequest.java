@@ -1,5 +1,6 @@
 package com.example.zoomwroom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
 
+    protected TextView rider_name;
     public FragmentDriverCurrentRequest(){};
 
 
@@ -82,6 +84,20 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
             }
         });
 
+        // SETUP CLICKABLE RIDER NAME
+        showRiderProfile(request);
         return view;
+    }
+
+    public void showRiderProfile(DriveRequest driveRequest){
+        String riderId = driveRequest.getRiderID();
+        rider_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RiderInfo.class);
+                intent.putExtra("RIDER_ID",riderId);
+                startActivity(intent);
+            }
+        });
     }
 }

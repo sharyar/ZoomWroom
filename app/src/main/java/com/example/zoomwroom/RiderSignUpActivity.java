@@ -3,155 +3,77 @@
 package com.example.zoomwroom;
 
 import android.content.Intent;
-import android.os.Bundle;
+
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.zoomwroom.Entities.ContactInformation;
 import com.example.zoomwroom.Entities.Rider;
-import com.example.zoomwroom.database.MyDataBase;
-import com.google.android.gms.tasks.OnCompleteListener;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-public class RiderSignUpActivity extends AppCompatActivity {
-    Rider test;
+public class RiderSignUpActivity extends SignupActivity {
 
-    // Write this to get access to the database! NEED!
-    FirebaseFirestore database = FirebaseFirestore.getInstance();
+    protected void CreateUser(FirebaseUser user) {
+        //First create a new rider instance, new contact info instance and then add them to the database
+        Rider newRider = new Rider(firstNameText + " " + lastNameText, userName, email);
+        ContactInformation cInformation = new ContactInformation(phoneNumber, email);
+        newRider.setContactDetails(cInformation);
 
-    //Used for user authentication and sign up
-    private FirebaseAuth mAuth;
+        assert user != null;
 
-    private static final String TAG = "EmailPassword";
+        database.collection("Riders").document(user.getUid()).set(newRider)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(RiderSignUpActivity.this, "You are now signed up!",
+                                Toast.LENGTH_SHORT).show();
+                        OpenHomeActivity();
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rider_sign_up);
-
-        //Get Auth instance from Firebase
-        mAuth = FirebaseAuth.getInstance();
-
-        ProgressBar bar = findViewById(R.id.rider_signup_progress_bar);
-        bar.setVisibility(View.INVISIBLE);
-
-        EditText firstNameEditText = findViewById(R.id.riderSignupFName);
-        EditText lastNameEditText = findViewById(R.id.riderSignupLName);
-        EditText emailAddressEditText = findViewById(R.id.riderSignupEmailAddress);
-        EditText passWordEditText = findViewById(R.id.riderSignupPassWord);
-        EditText userNameEditText = findViewById(R.id.riderSignupUserName);
-        EditText phoneNumberEditText = findViewById(R.id.riderSignupPhoneNumber);
-        Button signUpRider = findViewById(R.id.riderSignupSignupBtn);
-
-
-        signUpRider.setOnClickListener((View v) -> {
-            bar.setVisibility(View.VISIBLE);
-            String email = emailAddressEditText.getText().toString().trim();
-            String passWord = passWordEditText.getText().toString();
-            String firstNameText = firstNameEditText.getText().toString().trim();
-            String lastNameText = lastNameEditText.getText().toString().trim();
-            String userName = userNameEditText.getText().toString().trim();
-            String phoneNumber = phoneNumberEditText.getText().toString().trim();
-
-
-            // If conditions checks to make sure that the fields have been filled out and are not null. Prevents a crash.
-            if (email.isEmpty() || passWord.isEmpty() || firstNameText.isEmpty() ||
-                    lastNameText.isEmpty() || userName.isEmpty() || phoneNumber.isEmpty()) {
-                Toast.makeText(RiderSignUpActivity.this, "Please ensure you have " +
-                        "filled out all the fields.", Toast.LENGTH_SHORT).show();
-            } else if (!MyDataBase.isUserNameUnique(userName)) {
-                Toast.makeText(this, "This username is already taken, please use a new one", Toast.LENGTH_SHORT).show();
-            } else {
-                mAuth.createUserWithEmailAndPassword(email, passWord)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "createUserWithEmail:Success");
-                                    //Get the newly created user. We can use this to actually build the contact info page.
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    Toast.makeText(RiderSignUpActivity.this, "You are now signed up!",
-                                            Toast.LENGTH_SHORT).show();
-
-                                    // Add data from other fields only if registration is successful.
-
-                                    //First create a new rider instance, new contact info instance and then add them to the database
-
-                                    Rider newRider = new Rider(firstNameText + " "+lastNameText, userName, email);
-                                    ContactInformation cInformation = new ContactInformation(phoneNumber, email);
-                                    newRider.setContactDetails(cInformation);
-
-                                    assert user != null;
-
-                                    database.collection("Riders").document(user.getUid()).set(newRider)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(RiderSignUpActivity.this, "You are now signed up!",
-                                                            Toast.LENGTH_SHORT).show();
-                                                    OpenRiderHomeActivity();
-
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.w(TAG, "Error adding document", e);
-                                                }
-                                            });
-
-
-                                } else {
-                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(RiderSignUpActivity.this, "Signup Failed, please check the fields",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-            }
-        });
-
-        // Back button functionality
-        Button rider_backBT = findViewById(R.id.riderSignupBackBtn);
-        rider_backBT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OpenRiderModeActivity();
-            }
-        });
-
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
     }
+
+    protected void getViewContent() {
+        setContentView(R.layout.activity_rider_sign_up);
+        bar = findViewById(R.id.rider_signup_progress_bar);
+
+
+        firstNameEditText = findViewById(R.id.riderSignupFName);
+        lastNameEditText = findViewById(R.id.riderSignupLName);
+        emailAddressEditText = findViewById(R.id.riderSignupEmailAddress);
+        passWordEditText = findViewById(R.id.riderSignupPassWord);
+        userNameEditText = findViewById(R.id.riderSignupUserName);
+        phoneNumberEditText = findViewById(R.id.riderSignupPhoneNumber);
+
+        signUpUser = findViewById(R.id.riderSignupSignupBtn);
+        BackBtn = findViewById(R.id.riderSignupBackBtn);
+    }
+
     /**
      * switch mode between driver and rider
      */
 
-    public void OpenRiderModeActivity() {
+    public void ReturnToLogin() {
         Intent intent = new Intent(this, RiderLoginActivity.class);
         startActivity(intent);
     }
 
     /**
      * Opens into the Rider's main page if login is successful
-     * */
-    public void OpenRiderHomeActivity() {
-        Intent intent = new Intent(this,RiderHomeActivity.class);
+     */
+    public void OpenHomeActivity() {
+        Intent intent = new Intent(this, RiderHomeActivity.class);
         startActivity(intent);
     }
-
-
-
 }

@@ -1,5 +1,6 @@
 package com.example.zoomwroom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,7 @@ public class FragmentDisplayDriveRequestInfo extends BottomSheetDialogFragment {
             }
         });
 
+        showRiderProfile(request);
         return view;
     }
 
@@ -66,6 +68,16 @@ public class FragmentDisplayDriveRequestInfo extends BottomSheetDialogFragment {
        super.onDestroy();
     }
 
-
+    public void showRiderProfile(DriveRequest driveRequest){
+        String riderId = driveRequest.getRiderID();
+        riderNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RiderInfo.class);
+                intent.putExtra("RIDER_ID",riderId);
+                startActivity(intent);
+            }
+        });
+    }
 
 }

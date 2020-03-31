@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4D5C68"
-    tools:context=".DriverInfoForContactActivity">
+    tools:context=".RiderInfo">
 
     <RelativeLayout
         android:background="#A7A5C6"
@@ -71,7 +71,7 @@
 
                     <TextView
                         android:layout_marginTop="20dp"
-                        android:id="@+id/driver_info_profile_name"
+                        android:id="@+id/rider_info_profile_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Full Name"
@@ -79,7 +79,7 @@
                         android:textColor="@color/white"
                         android:textSize="45sp" />
                     <TextView
-                        android:id="@+id/driver_info_profile_username"
+                        android:id="@+id/rider_info_profile_username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -93,20 +93,20 @@
         </LinearLayout>
     </RelativeLayout>
     <LinearLayout
-        android:id="@+id/driver_infolayout"
+        android:id="@+id/rider_infolayout"
         android:layout_width="match_parent"
         android:background="@color/white"
         android:layout_below="@+id/editpage_grad_layout"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <LinearLayout
-            android:id="@+id/driver_info_phonenumber_layout"
+            android:id="@+id/rider_info_phonenumber_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@color/white">
             <TextView
-                android:id="@+id/driver_info_phonenumber"
+                android:id="@+id/rider_info_phonenumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="25dp"
@@ -123,20 +123,20 @@
 
         <LinearLayout
 
-            android:id="@+id/driver_info_phonenumber_button"
+            android:id="@+id/rider_info_phonenumber_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
                 android:layout_marginTop="9dp"
                 android:layout_marginLeft="5dp"
-                android:id="@+id/driver_info_phonenumber_content"
+                android:id="@+id/rider_info_phonenumber_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="29dp"
                 android:text="7808852269"
                 android:clickable="true"
-                android:onClick="makecalltodriver"
+                android:onClick="CallNumber"
                 android:textColor="@color/CyanBlueGreen"
                 >
 
@@ -154,7 +154,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/driver_info_email"
+                android:id="@+id/rider_info_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="34dp"
@@ -171,12 +171,12 @@
             <TextView
                 android:layout_marginTop="9dp"
                 android:layout_marginLeft="5dp"
-                android:id="@+id/driver_info_email_content"
+                android:id="@+id/rider_info_email_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="29dp"
                 android:clickable="true"
-                android:onClick="sendemailtodriver"
+                android:onClick="SendEmail"
                 android:text="275475610@qq.com"
                 android:textColor="@color/CyanBlueGreen"
                 >
@@ -208,7 +208,7 @@
     <LinearLayout
 
         android:background="@color/white"
-        android:layout_below="@+id/driver_infolayout"
+        android:layout_below="@+id/rider_infolayout"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent">

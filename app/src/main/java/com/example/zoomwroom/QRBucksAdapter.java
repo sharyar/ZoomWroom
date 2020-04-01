@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.zoomwroom.Entities.QRBucks;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class QRBucksAdapter extends RecyclerView.Adapter<QRBucksAdapter.QRBucksViewHolder> {
     private ArrayList<QRBucks> qrBucks;
@@ -37,7 +38,7 @@ public class QRBucksAdapter extends RecyclerView.Adapter<QRBucksAdapter.QRBucksV
         if (qrBucks != null) {
             QRBucks currentBuck = qrBucks.get(position);
             holder.riderNameTextView.setText(currentBuck.getRiderName());
-            holder.offeredFareTextView.setText("$ " + Double.toString(currentBuck.getAmountOfMoneyOwed()));
+            holder.offeredFareTextView.setText(String.format(Locale.CANADA,"$ %2.1f", currentBuck.getAmountOfMoneyOwed()));
             holder.statusTextView.setText(QRBucks.giveStatus(currentBuck.getStatus()));
 
             if (currentBuck.getStatus() == 1) {

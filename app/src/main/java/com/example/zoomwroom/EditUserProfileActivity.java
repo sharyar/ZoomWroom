@@ -78,6 +78,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
             if (isInfoValid()) {
                 user.setName(fullNameEditText.getText().toString());
                 user.getContactDetails().setPhoneNumber(phoneNumberEditText.getText().toString());
+                user.setUserName(newUserName);
 
                 // update user profile in firebase
                 if (user instanceof Driver) {

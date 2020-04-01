@@ -73,8 +73,8 @@ public class FragmentDisplayDriveRequestInfo extends BottomSheetDialogFragment {
         riderNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RiderInfo.class);
-                intent.putExtra("RIDER_ID",riderId);
+                Intent intent = new Intent(getActivity(), UserContactActivity.class);
+                intent.putExtra("USER_ID", riderId);
                 startActivity(intent);
             }
         });

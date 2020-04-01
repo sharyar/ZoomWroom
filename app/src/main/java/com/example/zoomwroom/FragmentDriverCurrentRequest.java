@@ -98,13 +98,10 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
 
             String riderID = request.getRiderID();
             // SETUP CLICKABLE RIDER NAME
-            rider_name.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), RiderInfo.class);
-                    intent.putExtra("USER_ID", riderID);
-                    startActivity(intent);
-                }
+            rider_name.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), UserContactActivity.class);
+                intent.putExtra("USER_ID", riderID);
+                startActivity(intent);
             });
 
             complete.setOnClickListener(new View.OnClickListener() {

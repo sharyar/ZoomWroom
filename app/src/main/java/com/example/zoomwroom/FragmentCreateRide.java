@@ -2,6 +2,7 @@ package com.example.zoomwroom;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +94,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if (newRequest == null){
-                    double offeredFare = Double.valueOf(fare.getText().toString());
+                    double offeredFare = Double.parseDouble(fare.getText().toString());
                     price = FareCalculation.round(price, 2);
                     // Do not accept ride requests where the offer is lower than the suggested price
                     if (offeredFare < price){
@@ -105,7 +106,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                         newRequest = new DriveRequest(userID, departure, destination);
 
                         // grabbing the fare offered by the user
-                        newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
+                        newRequest.setOfferedFare(Float.parseFloat(fare.getText().toString()));
                         fare.setEnabled(false);
                         MyDataBase.getInstance().addRequest(newRequest);
                         Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
@@ -226,14 +227,11 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      *    needed to access the driver's name and username
      * */
     public void showDriverProfile(DriveRequest driveRequest){
-        String driverId = driveRequest.getDriverID();
-        driverUserName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DriverInfo.class);
-                intent.putExtra("DRIVER_ID",driverId);
-                startActivity(intent);
-            }
+        final String driverId = driveRequest.getDriverID();
+        driverName.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), UserContactActivity.class);
+            intent.putExtra("USER_ID", driverId);
+            startActivity(intent);
         });
     }
 

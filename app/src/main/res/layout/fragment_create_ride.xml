@@ -92,7 +92,8 @@
             android:layout_weight="1"
             android:textColor="@color/colorLightGray"
             android:textSize="25sp"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:clickable="true" />
 
         <TextView
             android:id="@+id/driver_username"
@@ -102,8 +103,7 @@
             android:layout_weight="1"
             android:textColor="@color/colorLightGray"
             android:textSize="15sp"
-            android:visibility="invisible"
-            android:clickable="true"/>
+            android:visibility="invisible" />
 
 
     </LinearLayout>

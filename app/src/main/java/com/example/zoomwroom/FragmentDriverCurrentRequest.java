@@ -107,6 +107,13 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
                 }
             });
 
+            complete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    request.setStatus(DriveRequest.Status.ONGOING);
+                    MyDataBase.updateRequest(request);
+                }
+            });
         }
 
         complete.setOnClickListener(new View.OnClickListener() {

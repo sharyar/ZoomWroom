@@ -28,7 +28,7 @@
             android:id="@+id/rate_driver_positive"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            app:srcCompat="@drawable/thumbs_up_unsel"
+            android:src="@drawable/thumbs_up_unsel"
             android:scaleType="fitXY"
             android:layout_marginEnd="30dp"/>
 
@@ -36,7 +36,7 @@
             android:id="@+id/rate_driver_negative"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            app:srcCompat="@drawable/thumbs_down_unsel"
+            android:src="@drawable/thumbs_down_unsel"
             android:scaleType="fitXY" />
     </LinearLayout>
 

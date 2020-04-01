@@ -121,6 +121,7 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                             // fragment does not change here, only need to update rideStatus
                             else if (request.getStatus() == 2){
                                 rideStatus.setText("WAITING FOR DRIVER");
+                                createRideFragment.DriverAcceptedPhase(request);
                             }
 
                             else if (request.getStatus() == 3) {

@@ -1,5 +1,6 @@
 package com.example.zoomwroom;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.math.BigDecimal;
@@ -7,8 +8,11 @@ import java.math.RoundingMode;
 
 public final class FareCalculation {
 
+    public static double basePrice = 5;
+    public static double multiplier = 0.5;
+
     /**
-     * gets the recommended fare price using formula baseprice + multiplier * distance between points
+     * gets the recommended fare price using formula basePrice + multiplier * distance between points
      *
      * @param basePrice
      * @param multiplier
@@ -30,6 +34,20 @@ public final class FareCalculation {
     }
 
     /**
+     * gets the recommended fare price using formula basePrice + multiplier * distance between points
+     *
+     * @param basePrice
+     * @param multiplier
+     * @param pickup
+     * @param destination
+     * @return price
+     */
+    public static double getPrice(double basePrice, double multiplier, LatLng pickup, LatLng destination) {
+        double price = basePrice + multiplier * getDistance(pickup, destination);
+        return price;
+    }
+
+    /**
      * gets distance in kilometers from two latitude/longitude points
      * by using the haversine formula : https://www.movable-type.co.uk/scripts/latlong.html
      *
@@ -47,6 +65,10 @@ public final class FareCalculation {
                         Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         return R * c;
+    }
+
+    public static double getDistance(LatLng location1, LatLng location2) {
+        return getDistance(location1.latitude, location2.latitude, location1.longitude, location2. longitude);
     }
 
     /**

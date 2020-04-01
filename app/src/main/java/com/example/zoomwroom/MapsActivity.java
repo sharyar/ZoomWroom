@@ -136,18 +136,22 @@ public abstract class MapsActivity extends FragmentActivity implements OnMapRead
     public void updateMarkers() {
         LatLng depart = mLocation.getDepart();
         LatLng destination = mLocation.getDestination();
-        if (!depart.equals(departureMarker.getPosition())) {
+
+        if (depart != null && !depart.equals(departureMarker.getPosition())) {
             departureMarker.setPosition(depart);
             departureMarker.setVisible(true);
         }
-        if (!destination.equals(destinationMarker.getPosition())) {
+
+        if (destination != null && !destination.equals(destinationMarker.getPosition())) {
             destinationMarker.setPosition(destination);
             destinationMarker.setVisible(true);
         }
 
+        if (depart == null || destination == null) {
+            return;
+        }
+
         if (destinationMarker.isVisible() && departureMarker.isVisible()) {
-            double price = FareCalculation.getPrice(5.00, 0.5, departureMarker, destinationMarker);
-            Log.d("Price", Double.toString(price));
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             builder.include(depart).include(destination);
 

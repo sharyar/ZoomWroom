@@ -34,6 +34,7 @@ public class DriveRequest implements Serializable {
      * @see <a href="https://github.com/CMPUT301W20T29-H03/ZoomWroom/wiki/App-Terminologies#status">Status Description</a>
      */
     public static final class Status {
+        public static final int CREATE      = -1;   // temporary status only use locally
         public static final int PENDING     = 0;
         public static final int ACCEPTED    = 1;
         public static final int CONFIRMED   = 2;
@@ -74,12 +75,19 @@ public class DriveRequest implements Serializable {
 
     /**
      * @param riderID
+     */
+    public DriveRequest(String riderID) {
+        this();
+        this.riderID = riderID;
+    }
+
+    /**
+     * @param riderID
      * @param pickupLocation
      * @param destination
      */
     public DriveRequest(String riderID, LatLng pickupLocation, LatLng destination) {
-        this();
-        this.riderID = riderID;
+        this(riderID);
         this.pickupLocation = pickupLocation;
         this.destination = destination;
     }
@@ -158,10 +166,7 @@ public class DriveRequest implements Serializable {
      * @throws IllegalArgumentException if pass invalid status value
      * @see DriveRequest.Status
      */
-    public void setStatus(int status) throws IllegalArgumentException {
-        if (status < 0 || status > 8) {
-            throw new IllegalArgumentException("status value out of range!");
-        }
+    public void setStatus(int status) {
         this.status = status;
     }
 

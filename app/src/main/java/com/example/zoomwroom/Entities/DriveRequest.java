@@ -42,6 +42,7 @@ public class DriveRequest implements Serializable {
         public static final int CANCELLED   = 5;
         public static final int DECLINED    = 6;
         public static final int ABORTED     = 7;
+        public static final int FINALIZED = 8;
     }
     //</editor-fold>
 
@@ -156,7 +157,7 @@ public class DriveRequest implements Serializable {
      * @see DriveRequest.Status
      */
     public void setStatus(int status) throws IllegalArgumentException {
-        if (status < 0 || status > 7) {
+        if (status < 0 || status > 8) {
             throw new IllegalArgumentException("status value out of range!");
         }
         this.status = status;

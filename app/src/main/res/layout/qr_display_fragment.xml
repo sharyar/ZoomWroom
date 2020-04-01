@@ -7,11 +7,12 @@
     style="@style/DialogFragmentStyle">
 
     <ImageView
-        android:layout_width="247dp"
-        android:layout_height="150dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
         android:layout_gravity="center_horizontal"
-        app:srcCompat="@drawable/riderlogo"
-        android:layout_margin="10dp"/>
+        android:src="@drawable/zoom_wroom_logo"
+        android:layout_margin="20dp"/>
 
     <TextView
         android:layout_width="wrap_content"

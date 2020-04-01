@@ -32,13 +32,6 @@ public class RiderInfo extends AppCompatActivity {
         phoneNumber = findViewById(R.id.rider_info_phonenumber_content);
         emailAddress = findViewById(R.id.rider_info_email_content);
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        //retrieve username
         Intent intent = getIntent();
         String userID = intent.getStringExtra("USER_ID");
 

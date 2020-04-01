@@ -2,6 +2,7 @@ package com.example.zoomwroom;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
 
     protected TextView rider_name;
+    private String riderId;
     public FragmentDriverCurrentRequest(){};
 
 
@@ -46,11 +48,18 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
         TextView pickup = view.findViewById(R.id.departure);
         TextView status = view.findViewById(R.id.status);
         TextView rider_name = view.findViewById(R.id.rider_name);
+        Button complete = view.findViewById(R.id.complete_button);
 
         DriveRequest request = MyDataBase.getCurrentRequest(userID, "driverID");
         if (request == null) {
             String message = "You currently have no request!";
             rider_name.setText(message);
+            complete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
         }
         else{
             String message = "Lat: " + Double.toString(request.getDestinationLat()).substring(0, 8);
@@ -73,31 +82,35 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
             Rider rider = MyDataBase.getRider(request.getRiderID());
             message = rider.getName();
             rider_name.setText(message);
+
+            // SETUP CLICKABLE RIDER NAME
+            riderId = rider.getUserID();
+            Log.d("RIDERID", riderId);
+            rider_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("RIDERID", FragmentDriverCurrentRequest.this.riderId);
+                    Intent intent = new Intent(getActivity(), RiderInfo.class);
+                    intent.putExtra("RIDER_ID", FragmentDriverCurrentRequest.this.riderId);
+                    startActivity(intent);
+                }
+            });
+
+            complete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    request.setStatus(DriveRequest.Status.ONGOING);
+                }
+            });
         }
 
-        Button complete = view.findViewById(R.id.complete_button);
 
-        complete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
 
-        // SETUP CLICKABLE RIDER NAME
-        showRiderProfile(request);
+
+
+
+
         return view;
     }
 
-    public void showRiderProfile(DriveRequest driveRequest){
-        String riderId = driveRequest.getRiderID();
-        rider_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RiderInfo.class);
-                intent.putExtra("RIDER_ID",riderId);
-                startActivity(intent);
-            }
-        });
-    }
 }

@@ -30,7 +30,7 @@ public abstract class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
-
+        getViewContent();
 
         //LOGIN BUTTON
         loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +56,8 @@ public abstract class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    protected abstract void getViewContent();
 
 
     public void logIn() {

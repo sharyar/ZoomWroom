@@ -53,6 +53,7 @@
         <activity android:name=".DriverSignUpActivity" />
         <activity android:name=".RiderLoginActivity" />
         <activity android:name=".ScannerActivity" />
+        <activity android:name=".RiderInfo"/>
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"

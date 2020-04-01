@@ -30,7 +30,7 @@
         android:background="@color/colorWhite" >
 
         <ImageView
-            app:srcCompat="@drawable/zoom_wroom_logo"
+            android:src="@drawable/zoom_wroom_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -44,7 +44,8 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:text="@string/generate_qr_bucks_code" />
+            android:text="@string/generate_qr_bucks_code"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/complete_request_rate_driver_button"

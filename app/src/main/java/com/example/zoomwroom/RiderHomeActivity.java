@@ -106,9 +106,9 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                                     rideButton.setVisibility(View.INVISIBLE);
                                 }
                             }
+                            rideStatus.setVisibility(View.VISIBLE);
 
                             if (request.getStatus() == 0){
-                                rideStatus.setVisibility(View.VISIBLE);
                                 rideStatus.setText("PENDING");
                                 createRideFragment.pendingPhase(request);
                             }
@@ -138,6 +138,8 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
 
                             else if (request.getStatus() == 4){
                                 rideStatus.setText("RIDE COMPLETED");
+                                RiderCompleteRequestFragment completeRequest = new RiderCompleteRequestFragment(request);
+                                completeRideFragment(completeRequest, request);
                             }
 
                         }
@@ -224,6 +226,20 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         getSupportFragmentManager().executePendingTransactions();
+
+    }
+
+    public void completeRideFragment(RiderCompleteRequestFragment fragment, DriveRequest request){
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.rider_fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+
+        QRDisplayFragment qrDisplayFragment = new QRDisplayFragment(request.toQRBucksString());
+        qrDisplayFragment.show(fragmentManager, "QR_Display");
 
     }
 

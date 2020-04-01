@@ -53,6 +53,11 @@
                 android:textColor="@color/common_google_signin_btn_text_dark"
                 android:textSize="24sp"
                 style="@style/Widget.MaterialComponents.Button"/>
+<!--            <Button-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Test"-->
+<!--                android:id="@+id/TESTBT"></Button>-->
 
         </LinearLayout>
 

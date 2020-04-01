@@ -48,6 +48,9 @@ public class ScannerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
 
+        //test
+        Log.d("TAG","Scanner success!");
+
         // Initialize
         surfaceView = findViewById(R.id.cameraPreview);
         barcodeDetector = new BarcodeDetector.Builder(this)

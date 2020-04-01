@@ -81,6 +81,10 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
                                 String message = "Your offer has been accepted!";
                                 new Notify(token, message).execute();
                             }
+                            else if (request.getStatus() == DriveRequest.Status.COMPLETED){
+                                DriverCompleteRequestFragment completeRequestForDiverFragment = new DriverCompleteRequestFragment();
+                                completeRequestForDiverFragment.show(getSupportFragmentManager(),"hello");
+                            }
                         }
 
                     }

@@ -171,7 +171,7 @@ public abstract class MapsActivity extends FragmentActivity implements OnMapRead
                                     requestNewLocationData();
                                 } else {
                                     userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 14.0f));
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
                                 }
                             }
                         }

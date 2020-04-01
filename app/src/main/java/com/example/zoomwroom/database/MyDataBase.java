@@ -421,7 +421,7 @@ public class MyDataBase {
             qrBucks.add(qrBuck);
         }
         if (qrBucks.size() == 0) {
-            Log.d("QRBucks", "no bucks is found");
+            Log.d("QRBucks", "no bucks found");
             return null;
         }
         if (qrBucks.size() > 1) {
@@ -440,7 +440,7 @@ public class MyDataBase {
         ArrayList<QRBucks> qrBucks = new ArrayList<>();
         QRBucks buck;
         ArrayList<DriveRequest> driveRequests =
-                getDriveRequestsByDriverIDAndStatus(driverID, DriveRequest.Status.COMPLETED);
+                getDriveRequestsByDriverIDAndStatus(driverID, DriveRequest.Status.FINALIZED);
 
         for (DriveRequest d: driveRequests) {
             buck = getQRBuckByDriveID(d.getRequestID());

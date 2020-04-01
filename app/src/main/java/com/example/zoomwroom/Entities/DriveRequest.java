@@ -1,7 +1,6 @@
 package com.example.zoomwroom.Entities;
 
-import android.os.Parcelable;
-
+import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
@@ -43,7 +42,7 @@ public class DriveRequest implements Serializable {
         public static final int CANCELLED   = 5;
         public static final int DECLINED    = 6;
         public static final int ABORTED     = 7;
-        public static final int COMPLETED1  = 8;
+        public static final int FINALIZED = 8;
     }
     //</editor-fold>
 
@@ -201,7 +200,7 @@ public class DriveRequest implements Serializable {
      * @return a String that contains rider and driver's userID, and the final fare
      */
     public String toQRBucksString() {
-        return String.format("%s, %s, %f", riderID, driverID, offeredFare);
+        return String.format("%s-%s-%f", MyDataBase.getRider(riderID).getName(), requestID, offeredFare);
     }
 
     /**

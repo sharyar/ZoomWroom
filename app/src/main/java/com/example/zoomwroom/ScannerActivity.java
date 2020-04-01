@@ -91,6 +91,7 @@ public class ScannerActivity extends AppCompatActivity {
 
         // Detect barcode
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+            boolean flag = false;
             @Override
             public void release() {
 
@@ -99,7 +100,8 @@ public class ScannerActivity extends AppCompatActivity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 SparseArray<Barcode> qrCodes = detections.getDetectedItems();
-                if(qrCodes.size() != 0) {
+                if(qrCodes.size() != 0 && !flag) {
+                    flag = true;
                     Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                     vibrator.vibrate(500);
                     Log.d("QR", qrCodes.valueAt(0).displayValue);
@@ -107,7 +109,9 @@ public class ScannerActivity extends AppCompatActivity {
                     QRBucks bucksData = new QRBucks(qrCodes.valueAt(0).displayValue);
                     MyDataBase.getInstance().addQRBucks(bucksData);
                     finish();
-                }
+                }else if(qrCodes.size() == 0) {
+                    flag = false;
+                }else{}
             }
         });
     }

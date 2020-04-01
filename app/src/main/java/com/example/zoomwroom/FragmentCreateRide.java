@@ -2,6 +2,7 @@ package com.example.zoomwroom;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -92,7 +94,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if (newRequest == null){
-                    double offeredFare = Double.valueOf(fare.getText().toString());
+                    double offeredFare = Double.parseDouble(fare.getText().toString());
                     price = FareCalculation.round(price, 2);
                     // Do not accept ride requests where the offer is lower than the suggested price
                     if (offeredFare < price){
@@ -104,9 +106,9 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                         newRequest = new DriveRequest(userID, departure, destination);
 
                         // grabbing the fare offered by the user
-                        newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
+                        newRequest.setOfferedFare(Float.parseFloat(fare.getText().toString()));
                         fare.setEnabled(false);
-                        MyDataBase.addRequest(newRequest);
+                        MyDataBase.getInstance().addRequest(newRequest);
                         Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
                     }
 
@@ -123,7 +125,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 if (newRequest != null){
                     newRequest.setStatus(DriveRequest.Status.CANCELLED);
-                    MyDataBase.updateRequest(newRequest);
+                    MyDataBase.getInstance().updateRequest(newRequest);
                 }
 
                 Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
@@ -162,20 +164,19 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         driverName.setVisibility(View.VISIBLE);
         driverUserName.setVisibility(View.VISIBLE);
 
+        Driver driver = MyDataBase.getInstance().getDriver(driveRequest.getDriverID());
+        assert driver != null;
 
-        String stringName = MyDataBase.getDriver(driveRequest.getDriverID()).getName();
+        String stringName = driver.getName();
         driverName.setText(stringName);
 
-        String stringUsername = MyDataBase.getDriver(driveRequest.getDriverID()).getUserName();
+        String stringUsername = driver.getUserName();
         driverUserName.setText(stringUsername);
 
         // overriding confirm button
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
-                MyDataBase.updateRequest(driveRequest);
-            }
+        confirm.setOnClickListener(v -> {
+            driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
+            MyDataBase.getInstance().updateRequest(driveRequest);
         });
 
         // activate function to show driver profile
@@ -213,7 +214,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 driveRequest.setStatus(DriveRequest.Status.COMPLETED);
-                MyDataBase.updateRequest(driveRequest);
+                MyDataBase.getInstance().updateRequest(driveRequest);
             }
         });
 
@@ -226,14 +227,11 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      *    needed to access the driver's name and username
      * */
     public void showDriverProfile(DriveRequest driveRequest){
-        String driverId = driveRequest.getDriverID();
-        driverUserName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DriverInfo.class);
-                intent.putExtra("DRIVER_ID",driverId);
-                startActivity(intent);
-            }
+        final String driverId = driveRequest.getDriverID();
+        driverName.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), UserContactActivity.class);
+            intent.putExtra("USER_ID", driverId);
+            startActivity(intent);
         });
     }
 

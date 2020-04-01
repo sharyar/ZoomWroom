@@ -28,7 +28,7 @@ public class DriverQRBucksListActivity extends AppCompatActivity implements QRBu
 
         driverID = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-        qrBucks = MyDataBase.getQRBucksByDriverID(driverID);
+        qrBucks = MyDataBase.getInstance().getQRBucksByDriverID(driverID);
 
         recyclerView = findViewById(R.id.qrBucks_recyclerView);
 

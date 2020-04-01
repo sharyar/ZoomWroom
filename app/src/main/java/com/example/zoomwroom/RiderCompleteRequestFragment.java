@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
@@ -21,10 +22,11 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment {
 
     private Driver driver;
     private DriveRequest driveRequest;
+    private boolean isRated = false;
 
     public RiderCompleteRequestFragment(DriveRequest driveRequest) {
         this.driveRequest = driveRequest;
-        this.driver = MyDataBase.getDriver(driveRequest.getDriverID());
+        this.driver = MyDataBase.getInstance().getDriver(driveRequest.getDriverID());
         System.out.println("DRIVER: " + driveRequest.getDriverID());
     }
 
@@ -54,6 +56,12 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment {
 
         rateDriverButton.setText(String.format("Rate %s", driver.getName()));
         rateDriverButton.setOnClickListener(v -> {
+            if (isRated) {
+                Toast.makeText(getContext(), "You have already rated this ride!",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            isRated = true;
             RateDriverFragment rateDriverFragment = new RateDriverFragment(driver.getUserID());
             rateDriverFragment.show(getFragmentManager(), "Rate_Driver");
         });
@@ -61,7 +69,7 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment {
         completeButton.setOnClickListener(v -> {
             // update the request status
             driveRequest.setStatus(DriveRequest.Status.FINALIZED);
-            MyDataBase.updateRequest(driveRequest);
+            MyDataBase.getInstance().updateRequest(driveRequest);
 
             // close this fragment
             Intent intent = new Intent(getActivity(), RiderHomeActivity.class);

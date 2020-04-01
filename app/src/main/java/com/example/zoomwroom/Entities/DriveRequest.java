@@ -200,7 +200,7 @@ public class DriveRequest implements Serializable {
      * @return a String that contains rider and driver's userID, and the final fare
      */
     public String toQRBucksString() {
-        return String.format("%s-%s-%f", MyDataBase.getRider(riderID).getName(), requestID, offeredFare);
+        return String.format("%s-%s-%f", MyDataBase.getInstance().getRider(riderID).getName(), requestID, offeredFare);
     }
 
     /**

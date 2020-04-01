@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
@@ -36,10 +34,10 @@ public class DriveRequestDetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         driveRequestId = intent.getStringExtra("requestID");
-        currentRequest = MyDataBase.getDriveRequestByID(driveRequestId);
+        currentRequest = MyDataBase.getInstance().getDriveRequestByID(driveRequestId);
 
         if (currentRequest!= null) {
-            riderName.setText(MyDataBase.getRider(currentRequest.getRiderID()).getName());
+            riderName.setText(MyDataBase.getInstance().getRider(currentRequest.getRiderID()).getName());
             offeredFare.setText("$ " + Double.toString(currentRequest.getOfferedFare()));
             dateOfRequest.setText(currentRequest.getRequestDateTime().toString());
             status.setText(DriveRequest.giveStatus(currentRequest.getStatus()));

@@ -161,7 +161,7 @@ public abstract class SignupActivity extends AppCompatActivity {
                     , Toast.LENGTH_SHORT).show();
 
             return false;
-        } else if (!MyDataBase.isUserNameUnique(userName)) {
+        } else if (!MyDataBase.getInstance().isUserNameUnique(userName)) {
             Toast.makeText(this, "This username is already taken, please use a different one",
                     Toast.LENGTH_SHORT).show();
 

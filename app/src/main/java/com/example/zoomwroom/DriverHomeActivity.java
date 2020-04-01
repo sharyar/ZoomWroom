@@ -11,11 +11,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.Entities.Rider;
 import com.example.zoomwroom.database.MyDataBase;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -46,6 +51,9 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
     //private GoogleMap mMap; // Stores the instance google maps used to display the markers
     private ArrayList<Marker> markers = new ArrayList<>(); // stores a list of markers on the map
 
+    private int status;
+    private DriveRequest ongoingRequest;
+
     ArrayList<DriveRequest> requests = new ArrayList<>();
 
 
@@ -56,6 +64,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
 
 
     private String driverID;
+    private String requestID;
 
 
     @Override
@@ -74,19 +83,74 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        ArrayList<DriveRequest> requests =  MyDataBase.getDriverRequest(driverID);
+                        ArrayList<DriveRequest> requests =  MyDataBase.getInstance().getDriverRequest(driverID);
                         for (DriveRequest request :requests) {
                             if (request.getStatus() == 2) {
                                 Log.d("newToken", token);
                                 String message = "Your offer has been accepted!";
                                 new Notify(token, message).execute();
                             }
+                            else if (request.getStatus() == DriveRequest.Status.ONGOING) {
+                                DriverHomeActivity.this.ongoingRequest = request;
+                            }
+                            else if (request.getStatus() == DriveRequest.Status.COMPLETED){
+                                DriverCompleteRequestFragment completeRequestForDiverFragment = new DriverCompleteRequestFragment();
+                                completeRequestForDiverFragment.show(getSupportFragmentManager(),"hello");
+                            }
                         }
 
                     }
                 });
 
-        requests = MyDataBase.getOpenRequests();
+        FirebaseFirestore.getInstance().collection("DriverRequest")
+                .whereEqualTo("driverID", driverID)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            DriveRequest request = doc.toObject(DriveRequest.class);
+                            request.toLocalMode();
+                            if (request.getStatus() == 1 || request.getStatus() == 2 || request.getStatus() == 3 || request.getStatus() == 4) {
+                                requestID = request.getRequestID();
+                                Log.d("requestIDDDD", requestID);
+                                break;
+                            }
+                        }
+
+                    }
+                });
+
+        DriveRequest request = MyDataBase.getInstance().getCurrentRequest(driverID, "driverID");
+        if (request != null) {
+            requestID = request.getRequestID();
+            Log.d("new request ID: ", requestID);
+        }
+        else{
+            requestID = "null";
+            Log.d("null", requestID);
+        }
+
+        FirebaseFirestore.getInstance().collection("DriverRequest")
+                .whereEqualTo("driverID", driverID)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            DriveRequest request = doc.toObject(DriveRequest.class);
+                            request.toLocalMode();
+                            if (requestID != null) {
+                                if (request.getStatus() == 5 && requestID.equals(request.getRequestID())) {
+                                    String message = "Sorry, Your offer was cancelled";
+                                    Log.d("send message", token);
+                                    new Notify(token, message).execute();
+                                }
+                            }
+                        }
+
+                    }
+                });
+
+        requests = MyDataBase.getInstance().getOpenRequests();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -163,10 +227,33 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
 
         // Sets the markerclicklistener and allows the user to select a marker
         mMap.setOnMarkerClickListener(this);
+        checkOngoing();
     }
 
     @Override
-    public void onMapClick(LatLng point) {updateMap();}
+    public void onMapClick(LatLng point) {checkOngoing();}
+
+    @Override
+    protected void getLastLocation() {
+        super.getLastLocation();
+        checkOngoing();
+    }
+
+    protected void checkOngoing() {
+        if(ongoingRequest != null) {
+            Log.d("Setting Markers", ongoingRequest.getDestination().toString());
+            destinationMarker.setPosition(ongoingRequest.getDestination());
+            departureMarker.setPosition(ongoingRequest.getPickupLocation());
+            destinationMarker.setVisible(true);
+            departureMarker.setVisible(true);
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(ongoingRequest.getDestination()).include(ongoingRequest.getPickupLocation());
+
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 10);
+            Log.d("CameraMove", "Update to ongoingRequest");
+            mMap.moveCamera(cameraUpdate);
+        }
+    }
 
     /**
      * Opens a fragment to show the details of the currently selected request and allows the driver
@@ -201,7 +288,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
         Bundle b = new Bundle();
 
         b.putString("DriverID", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        b.putString("RiderName", MyDataBase.getRider(request.getRiderID()).getName());
+        b.putString("RiderName", MyDataBase.getInstance().getRider(request.getRiderID()).getName());
         b.putFloat("OfferedFare", request.getOfferedFare());
         b.putDouble("Distance", getDistance(request));
         b.putString("DriveRequestID", request.getRequestID());
@@ -211,6 +298,8 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
         final FragmentDisplayDriveRequestInfo driveRequestFragment = new FragmentDisplayDriveRequestInfo();
         driveRequestFragment.setArguments(b);
         driveRequestFragment.show(getSupportFragmentManager(), driveRequestFragment.getTag());
+        departureMarker.setVisible(true);
+        destinationMarker.setVisible(true);
     }
 
     /**
@@ -247,8 +336,9 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
      * places throughout this activity
      */
     public void updateMap() {
+        checkOngoing();
         // stores a list of currently open requests locally
-        requests = MyDataBase.getOpenRequests();
+        requests = MyDataBase.getInstance().getOpenRequests();
 
         if (!requests.isEmpty()) { // Checks to ensure that the ArrayList of requests is not empty
             /*
@@ -256,8 +346,12 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
              * the requests.
              */
             for (DriveRequest request : requests) {
-                LatLng requestLocationStart = request.getPickupLocation();
-                String riderName = MyDataBase.getRider(request.getRiderID()).getName();
+                LatLng requestLocationStart = request.getPickupLocation();                
+                Rider rider = MyDataBase.getInstance().getRider(request.getRiderID());
+                if (rider == null) {
+                    continue;
+                }
+                String riderName = rider.getName();
                 Marker m = mMap.addMarker(new MarkerOptions()
                                                 .position(requestLocationStart)
                                                 .title(riderName)

@@ -1,5 +1,6 @@
 /**
  * @author Dulong Sang
+ * last update: Apr 1, 2020
  */
 
 package com.example.zoomwroom;
@@ -29,8 +30,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView phoneTextView;
     private TextView numThumbsUpTextView;
     private TextView numThumbsDownTextView;
-    private ImageView thumbsUpImageView;
-    private ImageView thumbsDownImageView;
+    private View ratingViews;
 
 
     @Override
@@ -49,31 +49,28 @@ public class UserProfileActivity extends AppCompatActivity {
         });
 
         findViews();
+        findUser();
+        setViews();
     }
 
 
-    /**
-     * This method will be called when the activity is resumed.
-     * It will retrieve the current user from firebase in order to get the up-to-date info, and
-     * display the user info.
-     */
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        // get the current user
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            currentUser = MyDataBase.getDriver(user.getEmail());
-            if (currentUser == null) {
-                currentUser = MyDataBase.getRider(user.getEmail());
-            }
-        }
-        if (currentUser == null) {
-            Log.e("Profile", "User not found");
-            return;
-        }
+        String username = data.getStringExtra("username");
+        String name = data.getStringExtra("name");
+        String phoneNumber = data.getStringExtra("phoneNumber");
 
+        currentUser.setUserName(username);
+        currentUser.setName(name);
+        currentUser.getContactDetails().setPhoneNumber(phoneNumber);
+
+        setViews();
+    }
+
+
+    public void setViews() {
         usernameTextView.setText(currentUser.getUserName());
         nameTextView.setText(currentUser.getName());
         emailTextView.setText(currentUser.getContactDetails().getEmail());
@@ -84,10 +81,23 @@ public class UserProfileActivity extends AppCompatActivity {
             numThumbsUpTextView.setText(String.valueOf(((Driver) currentUser).getRating().getThumbsUp()));
             numThumbsDownTextView.setText(String.valueOf(((Driver) currentUser).getRating().getThumbsDown()));
         } else {
-            thumbsUpImageView.setVisibility(View.INVISIBLE);
-            thumbsDownImageView.setVisibility(View.INVISIBLE);
-            numThumbsUpTextView.setVisibility(View.INVISIBLE);
-            numThumbsDownTextView.setVisibility(View.INVISIBLE);
+            ratingViews.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    private void findUser() {
+        // get the current user
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            currentUser = MyDataBase.getInstance().getDriver(user.getEmail());
+            if (currentUser == null) {
+                currentUser = MyDataBase.getInstance().getRider(user.getEmail());
+            }
+        }
+        if (currentUser == null) {
+            Log.e("Profile", "User not found");
+            finish();
         }
     }
 
@@ -99,13 +109,14 @@ public class UserProfileActivity extends AppCompatActivity {
         phoneTextView = findViewById(R.id.profile_phone);
         numThumbsUpTextView = findViewById(R.id.profile_num_thumbsup);
         numThumbsDownTextView = findViewById(R.id.profile_num_thumbsdown);
-        thumbsUpImageView = findViewById(R.id.profile_thumbs_up_icon);
-        thumbsDownImageView = findViewById(R.id.profile_thumbs_down_icon);
+        ratingViews = findViewById(R.id.profile_rating);
     }
+
 
     private void openEditProfileActivity() {
         Intent intent = new Intent(this, EditUserProfileActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
-    
+
+
 }

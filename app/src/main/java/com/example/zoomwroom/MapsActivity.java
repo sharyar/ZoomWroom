@@ -102,8 +102,7 @@ public abstract class MapsActivity extends FragmentActivity implements OnMapRead
         mMap = googleMap;
 
 
-        Log.d("LOCATION SERVICES", "GETTING LOCATION");
-        getLastLocation();
+
 
         mMap.setOnMapClickListener(this);
 
@@ -121,6 +120,9 @@ public abstract class MapsActivity extends FragmentActivity implements OnMapRead
 
         departureMarker.setVisible(false);
         destinationMarker.setVisible(false);
+
+        Log.d("LOCATION SERVICES", "GETTING LOCATION");
+        getLastLocation();
 
     }
 
@@ -149,7 +151,8 @@ public abstract class MapsActivity extends FragmentActivity implements OnMapRead
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             builder.include(depart).include(destination);
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 150, 200, 10);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(),10);
+            Log.d("CameraMove", "Updating to new markers");
             mMap.moveCamera(cameraUpdate);
         }
     }
@@ -171,6 +174,7 @@ public abstract class MapsActivity extends FragmentActivity implements OnMapRead
                                     requestNewLocationData();
                                 } else {
                                     userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                                    Log.d("Camera Move", "Updating to getLastLocation");
                                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
                                 }
                             }
@@ -213,6 +217,7 @@ public abstract class MapsActivity extends FragmentActivity implements OnMapRead
         public void onLocationResult(LocationResult locationResult) {
             android.location.Location mLastLocation = locationResult.getLastLocation();
             userLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            Log.d("CameraMove", "Update to mLocationCallback");
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12.0f));
         }
     };

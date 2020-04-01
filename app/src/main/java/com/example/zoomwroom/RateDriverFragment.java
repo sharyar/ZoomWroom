@@ -65,7 +65,7 @@ public class RateDriverFragment extends DialogFragment {
         negativeButton = view.findViewById(R.id.rate_driver_negative);
         Button completeButton = view.findViewById(R.id.rate_driver_complete_button);
 
-        driver = MyDataBase.getDriver(driverID);
+        driver = MyDataBase.getInstance().getDriver(driverID);
         assert driver != null;
 
         String driverName = driver.getUserName();
@@ -121,6 +121,6 @@ public class RateDriverFragment extends DialogFragment {
         } else {
             driver.getRating().addRating(false);
         }
-        MyDataBase.updateDriver(driver);
+        MyDataBase.getInstance().updateDriver(driver);
     }
 }

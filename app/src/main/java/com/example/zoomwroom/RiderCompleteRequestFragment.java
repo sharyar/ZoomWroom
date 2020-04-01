@@ -26,7 +26,7 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment {
 
     public RiderCompleteRequestFragment(DriveRequest driveRequest) {
         this.driveRequest = driveRequest;
-        this.driver = MyDataBase.getDriver(driveRequest.getDriverID());
+        this.driver = MyDataBase.getInstance().getDriver(driveRequest.getDriverID());
         System.out.println("DRIVER: " + driveRequest.getDriverID());
     }
 
@@ -69,7 +69,7 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment {
         completeButton.setOnClickListener(v -> {
             // update the request status
             driveRequest.setStatus(DriveRequest.Status.FINALIZED);
-            MyDataBase.updateRequest(driveRequest);
+            MyDataBase.getInstance().updateRequest(driveRequest);
 
             // close this fragment
             Intent intent = new Intent(getActivity(), RiderHomeActivity.class);

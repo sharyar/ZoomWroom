@@ -37,7 +37,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
         if (requests != null) {
             DriveRequest current = requests.get(position);
-            Rider currentRequestRider = MyDataBase.getRider(current.getRiderID());
+            Rider currentRequestRider = MyDataBase.getInstance().getRider(current.getRiderID());
             holder.riderNameTextView.setText(currentRequestRider.getName());
             holder.driveRequestStatusTextView.setText(DriveRequest.giveStatus(current.getStatus()));
 

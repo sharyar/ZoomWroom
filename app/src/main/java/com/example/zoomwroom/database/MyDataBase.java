@@ -22,16 +22,21 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MyDataBase {
-    private static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final MyDataBase instance = new MyDataBase();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public MyDataBase(){ }
+    private MyDataBase(){ }
+
+    public static MyDataBase getInstance() {
+        return instance;
+    }
 
     /**
      * This function adds the request to data base
      * @param driveRequest  a request object
      * @return requestID return the id of request
      */
-    public static String addRequest(DriveRequest driveRequest) {
+    public String addRequest(DriveRequest driveRequest) {
         final CollectionReference collectionReference = db.collection("DriverRequest");
         String requestID = collectionReference.document().getId();
         driveRequest.setRequestID(requestID);
@@ -61,7 +66,7 @@ public class MyDataBase {
      * @param driverID  string of driverID
      * @return driveRequests an array of drive requests related to this driver
      */
-    public static ArrayList<DriveRequest> getDriverRequest(String driverID){
+    public ArrayList<DriveRequest> getDriverRequest(String driverID){
         final CollectionReference collectionReference = db.collection("DriverRequest");
         ArrayList<DriveRequest> driveRequests = new ArrayList<>();
 
@@ -84,7 +89,7 @@ public class MyDataBase {
      * @param status        status of the DriveRequests to be provided
      * @return              Arraylist of DriveRequests with the specific status for that Driver
      */
-    public static ArrayList<DriveRequest> getDriveRequestsByDriverIDAndStatus(String driverID, int status) {
+    public ArrayList<DriveRequest> getDriveRequestsByDriverIDAndStatus(String driverID, int status) {
         ArrayList<DriveRequest> unfilteredList = getDriverRequest(driverID);
         ArrayList<DriveRequest> filteredList = new ArrayList<>();
 
@@ -100,7 +105,7 @@ public class MyDataBase {
      * This function adds the request to data base
      * @param driveRequest a request object
      */
-    public static void updateRequest(DriveRequest driveRequest) {
+    public void updateRequest(DriveRequest driveRequest) {
         final CollectionReference collectionReference = db.collection("DriverRequest");
         String requestID = driveRequest.getRequestID();
         driveRequest.toFirebaseMode();
@@ -113,7 +118,7 @@ public class MyDataBase {
      * @param dataType user type(riderID or driverID)
      * @return return the current request
      */
-    public static DriveRequest getCurrentRequest(String userID, String dataType){
+    public DriveRequest getCurrentRequest(String userID, String dataType){
         final CollectionReference collectionReference = db.collection("DriverRequest");
         ArrayList<DriveRequest> driveRequests = new ArrayList<>();
 
@@ -124,7 +129,7 @@ public class MyDataBase {
         for (QueryDocumentSnapshot doc: Objects.requireNonNull(task.getResult())) {
             DriveRequest request = doc.toObject(DriveRequest.class);
             request.toLocalMode();
-            if (request.getStatus() == 1 || request.getStatus() == 2 || request.getStatus() == 3) {
+            if (request.getStatus() == 1 || request.getStatus() == 2 || request.getStatus() == 3 || request.getStatus() == 4) {
                 driveRequests.add(request);
             }
         }
@@ -141,7 +146,7 @@ public class MyDataBase {
      * This function is to update a rider
      * @param rider
      */
-    public static void updateRider(final Rider rider){
+    public void updateRider(final Rider rider){
         final CollectionReference collectionReference = db.collection("Riders");
         collectionReference.whereEqualTo("userID", rider.getUserID()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -158,7 +163,7 @@ public class MyDataBase {
      * similar to updateRider
      * @param driver
      */
-    public static void updateDriver(final Driver driver){
+    public void updateDriver(final Driver driver){
         final CollectionReference collectionReference = db.collection("Drivers");
         collectionReference.whereEqualTo("userID", driver.getUserID()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -175,7 +180,7 @@ public class MyDataBase {
      * similar to getDriverRequest
      * @param riderID
      */
-    public static ArrayList<DriveRequest> getRiderRequest(String riderID){
+    public ArrayList<DriveRequest> getRiderRequest(String riderID){
         final CollectionReference collectionReference = db.collection("DriverRequest");
         ArrayList<DriveRequest> driveRequests = new ArrayList<>();
 
@@ -197,7 +202,7 @@ public class MyDataBase {
      * @return      Arraylist of drive requests that have status pending and have not been
      *              picked by a driver
      */
-    public static ArrayList<DriveRequest> getOpenRequests() {
+    public ArrayList<DriveRequest> getOpenRequests() {
         final CollectionReference collectionReference = db.collection("DriverRequest");
         ArrayList<DriveRequest> driveRequests = new ArrayList<>();
 
@@ -219,7 +224,7 @@ public class MyDataBase {
      * @param driveID
      * @return
      */
-    public static DriveRequest getDriveRequestByID(String driveID) {
+    public DriveRequest getDriveRequestByID(String driveID) {
         DocumentReference docRef = db.collection("DriverRequest").document(driveID);
 
         Task<DocumentSnapshot> task = docRef
@@ -234,13 +239,13 @@ public class MyDataBase {
      * get target object rider
      * @param userID
      */
-    public static Rider getRider(String userID) {
+    public Rider getRider(String userID) {
         final CollectionReference collectionReference = db.collection("Riders");
         ArrayList<Rider> riders = new ArrayList<Rider>();
         Task<QuerySnapshot> task = collectionReference
                 .whereEqualTo("userID", userID)
                 .get();
-        while (!task.isSuccessful());
+        while (!task.isSuccessful()) {}
         for (QueryDocumentSnapshot doc : task.getResult()) {
             Rider rider = doc.toObject(Rider.class);
             riders.add(rider);
@@ -260,7 +265,7 @@ public class MyDataBase {
      * add the rider to the database
      * @param rider
      */
-    public static void addRider(Rider rider) {
+    public void addRider(Rider rider) {
         final CollectionReference collectionReference = db.collection("Riders");
 
         collectionReference
@@ -285,7 +290,7 @@ public class MyDataBase {
      * add the driver to database
      * @param driver
      */
-    public static void addDriver(Driver driver) {
+    public void addDriver(Driver driver) {
         final CollectionReference collectionReference = db.collection("Drivers");
 
         collectionReference
@@ -310,7 +315,7 @@ public class MyDataBase {
      * get the target object driver
      * @param userID
      */
-    public static Driver getDriver(String userID) {
+    public Driver getDriver(String userID) {
         final CollectionReference collectionReference = db.collection("Drivers");
         ArrayList<Driver> drivers = new ArrayList<Driver>();
         Task<QuerySnapshot> task = collectionReference
@@ -339,7 +344,7 @@ public class MyDataBase {
      * @param userName username to check for uniqueness
      * @return boolean value indicating if the username is unique or not
      */
-    public static Boolean isUserNameUnique(String userName) {
+    public Boolean isUserNameUnique(String userName) {
         final CollectionReference driverCollectionReference = db.collection("Drivers");
         final CollectionReference riderCollectionReference = db.collection("Riders");
 
@@ -376,7 +381,7 @@ public class MyDataBase {
      *
      * @param buck    instance of QRBucks to add to the database.
      */
-    public static void addQRBucks(QRBucks buck) {
+    public void addQRBucks(QRBucks buck) {
         final CollectionReference collectionReference = db.collection("QRBucks");
 
         collectionReference
@@ -403,7 +408,7 @@ public class MyDataBase {
      * @param driveRequestID    driveRequestID to look up the associated QRBuck instance for
      * @return                  QRBuck instance associated to the DriveRequest
      */
-    public static QRBucks getQRBuckByDriveID(String driveRequestID) {
+    public QRBucks getQRBuckByDriveID(String driveRequestID) {
         final CollectionReference collectionReference = db.collection("QRBucks");
         ArrayList<QRBucks> qrBucks = new ArrayList<>();
         Task<QuerySnapshot> task = collectionReference
@@ -431,7 +436,7 @@ public class MyDataBase {
      * @param driverID
      * @return
      */
-    public static ArrayList<QRBucks> getQRBucksByDriverID(String driverID) {
+    public ArrayList<QRBucks> getQRBucksByDriverID(String driverID) {
         ArrayList<QRBucks> qrBucks = new ArrayList<>();
         QRBucks buck;
         ArrayList<DriveRequest> driveRequests =

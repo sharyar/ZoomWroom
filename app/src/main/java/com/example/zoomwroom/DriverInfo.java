@@ -68,7 +68,7 @@ public class DriverInfo extends RiderInfo {
 
     @Override
     protected void getCurrentUser(String userID) {
-        currentUser = MyDataBase.getDriver(userID);
+        currentUser = MyDataBase.getInstance().getDriver(userID);
     }
 
 

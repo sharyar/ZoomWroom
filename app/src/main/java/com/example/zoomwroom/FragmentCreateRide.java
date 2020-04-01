@@ -107,7 +107,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                         // grabbing the fare offered by the user
                         newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
                         fare.setEnabled(false);
-                        MyDataBase.addRequest(newRequest);
+                        MyDataBase.getInstance().addRequest(newRequest);
                         Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
                     }
 
@@ -124,7 +124,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 if (newRequest != null){
                     newRequest.setStatus(DriveRequest.Status.CANCELLED);
-                    MyDataBase.updateRequest(newRequest);
+                    MyDataBase.getInstance().updateRequest(newRequest);
                 }
 
                 Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
@@ -163,7 +163,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         driverName.setVisibility(View.VISIBLE);
         driverUserName.setVisibility(View.VISIBLE);
 
-        Driver driver = MyDataBase.getDriver(driveRequest.getDriverID());
+        Driver driver = MyDataBase.getInstance().getDriver(driveRequest.getDriverID());
         assert driver != null;
 
         String stringName = driver.getName();
@@ -175,7 +175,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         // overriding confirm button
         confirm.setOnClickListener(v -> {
             driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
-            MyDataBase.updateRequest(driveRequest);
+            MyDataBase.getInstance().updateRequest(driveRequest);
         });
 
         // activate function to show driver profile
@@ -213,7 +213,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 driveRequest.setStatus(DriveRequest.Status.COMPLETED);
-                MyDataBase.updateRequest(driveRequest);
+                MyDataBase.getInstance().updateRequest(driveRequest);
             }
         });
 

@@ -64,9 +64,9 @@ public class UserProfileActivity extends AppCompatActivity {
         // get the current user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            currentUser = MyDataBase.getDriver(user.getEmail());
+            currentUser = MyDataBase.getInstance().getDriver(user.getEmail());
             if (currentUser == null) {
-                currentUser = MyDataBase.getRider(user.getEmail());
+                currentUser = MyDataBase.getInstance().getRider(user.getEmail());
             }
         }
         if (currentUser == null) {

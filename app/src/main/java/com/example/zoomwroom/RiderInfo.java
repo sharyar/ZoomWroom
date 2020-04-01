@@ -3,15 +3,23 @@ package com.example.zoomwroom;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Rider;
 import com.example.zoomwroom.database.MyDataBase;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 public class RiderInfo extends AppCompatActivity {
@@ -34,7 +42,9 @@ public class RiderInfo extends AppCompatActivity {
 
         Intent intent = getIntent();
         String userID = intent.getStringExtra("USER_ID");
-
+        if (userID != null) {
+            Log.d("ahd", userID);
+        }
         // get the current user
         getCurrentUser(userID);
         //set usernameTextView
@@ -72,7 +82,7 @@ public class RiderInfo extends AppCompatActivity {
     }
 
     protected void getCurrentUser(String userID) {
-        currentUser = MyDataBase.getRider(userID);
+        currentUser = MyDataBase.getInstance().getRider(userID);
     }
 
 

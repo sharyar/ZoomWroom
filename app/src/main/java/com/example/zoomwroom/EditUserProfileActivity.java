@@ -55,9 +55,9 @@ public class EditUserProfileActivity extends AppCompatActivity {
             return;
         }
 
-        user = MyDataBase.getDriver(firebaseUser.getEmail());
+        user = MyDataBase.getInstance().getDriver(firebaseUser.getEmail());
         if (user == null) {
-            user = MyDataBase.getRider(firebaseUser.getEmail());
+            user = MyDataBase.getInstance().getRider(firebaseUser.getEmail());
             if (user == null) {
                 Toast.makeText(EditUserProfileActivity.this,
                         "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -85,9 +85,9 @@ public class EditUserProfileActivity extends AppCompatActivity {
 
                     // update user profile
                     if (user instanceof Driver) {
-                        MyDataBase.updateDriver((Driver) user);
+                        MyDataBase.getInstance().updateDriver((Driver) user);
                     } else if (user instanceof Rider) {
-                        MyDataBase.updateRider((Rider) user);
+                        MyDataBase.getInstance().updateRider((Rider) user);
                     } else {
                         Toast.makeText(EditUserProfileActivity.this,
                                 "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -125,7 +125,7 @@ public class EditUserProfileActivity extends AppCompatActivity {
             return false;
 
         } else if (!(newUserName.equals(user.getUserName()))) {
-            if (MyDataBase.isUserNameUnique(newUserName)) {
+            if (MyDataBase.getInstance().isUserNameUnique(newUserName)) {
                 Toast.makeText(this, "Please use a unique username, this username is already taken.", Toast.LENGTH_SHORT).show();
             }
             return false;

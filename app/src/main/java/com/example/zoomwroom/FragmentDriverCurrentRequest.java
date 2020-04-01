@@ -11,23 +11,36 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.Entities.Rider;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
 
-    protected TextView rider_name;
-    private String riderId;
-    public FragmentDriverCurrentRequest(){};
+    private String requestID;
+    private String userID;
+    private DriveRequest request;
 
+    private TextView destination;
+    private TextView pickup;
+    private TextView status;
+    private TextView rider_name;
+
+    public FragmentDriverCurrentRequest(){};
 
     @Override
     public void onCreate(Bundle savedInstancesState) {
@@ -41,27 +54,23 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
 
         Bundle bundle = getArguments();
 
-        String userID = bundle.getString("userID");
+        userID = bundle.getString("userID");
 
 
-        TextView destination = view.findViewById(R.id.destination);
-        TextView pickup = view.findViewById(R.id.departure);
-        TextView status = view.findViewById(R.id.status);
-        TextView rider_name = view.findViewById(R.id.rider_name);
+        destination = view.findViewById(R.id.destination);
+        pickup = view.findViewById(R.id.departure);
+        status = view.findViewById(R.id.status);
+        rider_name = view.findViewById(R.id.rider_name);
         Button complete = view.findViewById(R.id.complete_button);
 
-        DriveRequest request = MyDataBase.getCurrentRequest(userID, "driverID");
+        request = MyDataBase.getInstance().getCurrentRequest(userID, "driverID");
         if (request == null) {
-            String message = "You currently have no request!";
-            rider_name.setText(message);
-            complete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
+            requestID = "null";
+            Log.d("requestID", requestID);
+            setNoneText();
         }
         else{
+            requestID = request.getRequestID();
             String message = "Lat: " + Double.toString(request.getDestinationLat()).substring(0, 8);
             message += "  Lon: " + Double.toString(request.getDestinationLng()).substring(0, 10);
             destination.setText(message);
@@ -78,20 +87,22 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
             else if (request.getStatus() == 3) {
                 message = "ONGOING";
             }
+            else if (request.getStatus() == 4) {
+                message = "COMPLETE";
+            }
             status.setText(message);
-            Rider rider = MyDataBase.getRider(request.getRiderID());
+            Rider rider = MyDataBase.getInstance().getRider(request.getRiderID());
             message = rider.getName();
             rider_name.setText(message);
 
+
+            String riderID = request.getRiderID();
             // SETUP CLICKABLE RIDER NAME
-            riderId = rider.getUserID();
-            Log.d("RIDERID", riderId);
             rider_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("RIDERID", FragmentDriverCurrentRequest.this.riderId);
                     Intent intent = new Intent(getActivity(), RiderInfo.class);
-                    intent.putExtra("RIDER_ID", FragmentDriverCurrentRequest.this.riderId);
+                    intent.putExtra("USER_ID", riderID);
                     startActivity(intent);
                 }
             });
@@ -105,13 +116,74 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
             });
         }
 
+        complete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (request == null) {
+                    dismiss();
+                }
+                else {
+                    if (request.getStatus() == 2) {
+                        request.setStatus(DriveRequest.Status.ONGOING);
+                        MyDataBase.getInstance().updateRequest(request);
+                    } else {
+                        Toast.makeText(getActivity(), "Cannot confirm right now", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
 
+        FirebaseFirestore.getInstance().collection("DriverRequest")
+                .whereEqualTo("requestID", requestID)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        ArrayList<DriveRequest> requests =  MyDataBase.getInstance().getDriverRequest(userID);
+                        for (DriveRequest request :requests) {
+                            if (requestID.equals(request.getRequestID())) {
+                                String message;
+                                if (request.getStatus() == 5) {
+                                    setNoneText();
+                                }
+                                else if (request.getStatus() == 2) {
+                                    message = "CONFIRMED";
+                                    status.setText(message);
+                                }
+                                else if (request.getStatus() == 3) {
+                                    message = "ONGOING";
+                                    status.setText(message);
+                                }
+                                else if (request.getStatus() == 4) {
+                                    message = "COMPLETE";
+                                    status.setText(message);
+                                }
+                            }
+                        }
 
-
-
-
-
+                    }
+                });
         return view;
     }
 
+//    private void showRiderProfile(DriveRequest driveRequest){
+//        String riderId = driveRequest.getRiderID();
+//        rider_name.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), RiderInfo.class);
+//                intent.putExtra("USER_ID",riderId);
+//                startActivity(intent);
+//            }
+//        });
+//    }
+
+    private void setNoneText() {
+        String message = "You currently have no request!";
+        status.setText(message);
+        String None_message = "None";
+        rider_name.setText(None_message);
+        pickup.setText(None_message);
+        destination.setText(None_message);
+    }
 }
+

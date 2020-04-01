@@ -36,10 +36,10 @@ public class DriveRequestDetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         driveRequestId = intent.getStringExtra("requestID");
-        currentRequest = MyDataBase.getDriveRequestByID(driveRequestId);
+        currentRequest = MyDataBase.getInstance().getDriveRequestByID(driveRequestId);
 
         if (currentRequest!= null) {
-            riderName.setText(MyDataBase.getRider(currentRequest.getRiderID()).getName());
+            riderName.setText(MyDataBase.getInstance().getRider(currentRequest.getRiderID()).getName());
             offeredFare.setText("$ " + Double.toString(currentRequest.getOfferedFare()));
             dateOfRequest.setText(currentRequest.getRequestDateTime().toString());
             status.setText(DriveRequest.giveStatus(currentRequest.getStatus()));

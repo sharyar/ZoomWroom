@@ -111,7 +111,7 @@ public class ScannerActivity extends AppCompatActivity {
                     toast.show();
 
                     QRBucks bucksData = new QRBucks(qrCodes.valueAt(0).displayValue);
-                    MyDataBase.addQRBucks(bucksData);
+                    MyDataBase.getInstance().addQRBucks(bucksData);
                     finish();
                 }
             }

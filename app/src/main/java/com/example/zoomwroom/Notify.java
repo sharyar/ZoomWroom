@@ -43,7 +43,7 @@ public class  Notify extends AsyncTask<Void,Void,Void>
             json.put("to", token);
 
             JSONObject info = new JSONObject();
-            info.put("title", "Request Accepted");   // Notification title
+            info.put("title", "Request Updated");   // Notification title
             info.put("body", message); // Notification body
 
             json.put("notification", info);

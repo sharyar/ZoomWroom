@@ -27,6 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".DriverInfo" />
+        <activity android:name=".RiderInfo" />
         <activity android:name=".DriveRequestDetailsActivity" />
         <activity
             android:name=".AcceptedDriveRequestsActivity"

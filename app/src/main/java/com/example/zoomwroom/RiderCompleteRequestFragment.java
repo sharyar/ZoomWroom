@@ -60,7 +60,7 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment
         completeButton.setOnClickListener(v -> {
             // update the request status
             driveRequest.setStatus(DriveRequest.Status.COMPLETED);
-            MyDataBase.updateRequest(driveRequest);
+            MyDataBase.getInstance().updateRequest(driveRequest);
 
             // close this fragment
             Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
@@ -77,13 +77,13 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment
             return;
         }
 
-        driver = MyDataBase.getDriver(driveRequest.getDriverID());
+        driver = MyDataBase.getInstance().getDriver(driveRequest.getDriverID());
         assert driver != null;
         if (rateValue == RateDriverFragment.POSITIVE_RATE) {
             driver.getRating().addRating(true);
         } else if (rateValue == RateDriverFragment.NEGATIVE_RATE) {
             driver.getRating().addRating(false);
         }
-        MyDataBase.updateDriver(driver);
+        MyDataBase.getInstance().updateDriver(driver);
     }
 }

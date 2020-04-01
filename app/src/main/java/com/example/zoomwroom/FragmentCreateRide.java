@@ -106,7 +106,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                         // grabbing the fare offered by the user
                         newRequest.setOfferedFare(Float.valueOf(fare.getText().toString()));
                         fare.setEnabled(false);
-                        MyDataBase.addRequest(newRequest);
+                        MyDataBase.getInstance().addRequest(newRequest);
                         Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
                     }
 
@@ -123,7 +123,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 if (newRequest != null){
                     newRequest.setStatus(DriveRequest.Status.CANCELLED);
-                    MyDataBase.updateRequest(newRequest);
+                    MyDataBase.getInstance().updateRequest(newRequest);
                 }
 
                 Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
@@ -163,10 +163,10 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         driverUserName.setVisibility(View.VISIBLE);
 
 
-        String stringName = MyDataBase.getDriver(driveRequest.getDriverID()).getName();
+        String stringName = MyDataBase.getInstance().getDriver(driveRequest.getDriverID()).getName();
         driverName.setText(stringName);
 
-        String stringUsername = MyDataBase.getDriver(driveRequest.getDriverID()).getUserName();
+        String stringUsername = MyDataBase.getInstance().getDriver(driveRequest.getDriverID()).getUserName();
         driverUserName.setText(stringUsername);
 
         // overriding confirm button
@@ -193,7 +193,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     public void confirmRidePhase(DriveRequest driveRequest){
         newRequest = driveRequest;
         driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
-        MyDataBase.updateRequest(driveRequest);
+        MyDataBase.getInstance().updateRequest(driveRequest);
         confirm.setVisibility(View.GONE);
     }
 
@@ -213,7 +213,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 driveRequest.setStatus(DriveRequest.Status.COMPLETED1);
-                MyDataBase.updateRequest(driveRequest);
+                MyDataBase.getInstance().updateRequest(driveRequest);
 
                 // show rider complete request fragment
                 RiderCompleteRequestFragment fragment = new RiderCompleteRequestFragment(driveRequest);

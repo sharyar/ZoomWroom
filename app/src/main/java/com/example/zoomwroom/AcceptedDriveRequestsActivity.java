@@ -30,7 +30,7 @@ public class AcceptedDriveRequestsActivity extends AppCompatActivity implements 
         setContentView(R.layout.activity_accepted_requests);
 
         driverID = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        currentRequests = MyDataBase.getDriverRequest(driverID);
+        currentRequests = MyDataBase.getInstance().getDriverRequest(driverID);
 
         recyclerView = (RecyclerView) findViewById(R.id.accepted_requests_recycler_view);
 

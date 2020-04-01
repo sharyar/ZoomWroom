@@ -158,7 +158,7 @@ public class DriveRequest implements Serializable {
      * @see DriveRequest.Status
      */
     public void setStatus(int status) throws IllegalArgumentException {
-        if (status < 0 || status > 7) {
+        if (status < 0 || status > 8) {
             throw new IllegalArgumentException("status value out of range!");
         }
         this.status = status;

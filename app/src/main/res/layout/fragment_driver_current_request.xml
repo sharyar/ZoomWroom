@@ -20,7 +20,7 @@
 
         <TextView
             android:id="@+id/status"
-            android:layout_width="191dp"
+            android:layout_width="348dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:textColor="@color/colorLightGray"
@@ -32,11 +32,12 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:text="Rider name"
+            android:id="@+id/name_text"
             android:textColor="@color/colorLightGray" />
 
         <TextView
             android:id="@+id/rider_name"
-            android:layout_width="191dp"
+            android:layout_width="348dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:textColor="@color/colorLightGray"
@@ -48,6 +49,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:text="pickup"
+            android:id="@+id/pickup_text"
             android:textColor="@color/colorLightGray" />
 
 
@@ -72,6 +74,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:text="destination"
+            android:id="@+id/destination_text"
             android:textColor="@color/colorLightGray" />
 
         <TextView

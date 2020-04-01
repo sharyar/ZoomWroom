@@ -93,7 +93,7 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        ArrayList<DriveRequest> requests =  MyDataBase.getRiderRequest(riderEmail);
+                        ArrayList<DriveRequest> requests =  MyDataBase.getInstance().getRiderRequest(riderEmail);
                         for (DriveRequest request :requests) {
 
                             // this code is required when the user has logged out and logs back in
@@ -115,7 +115,7 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
 
                             else if (request.getStatus() == 1) {
                                 Log.d("newToken", token);
-                                Driver driver = MyDataBase.getDriver(request.getDriverID());
+                                Driver driver = MyDataBase.getInstance().getDriver(request.getDriverID());
                                 if (driver != null) {
                                     String name = driver.getName();
                                     String message = name + " just accepted your request!";

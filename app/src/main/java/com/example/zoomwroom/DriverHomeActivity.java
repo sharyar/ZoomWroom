@@ -1,14 +1,15 @@
 package com.example.zoomwroom;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,6 +52,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
     FloatingActionButton profileBtn; // Used to open the user's profile
     FloatingActionButton driveRequestListBtn;
     FloatingActionButton currentRequest;
+    FloatingActionButton qrBucksBtn;
 
 
     private String driverID;
@@ -91,7 +93,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
         mapFragment.getMapAsync(this);
 
         // Profile button - Open's user's profile
-        profileBtn = findViewById(R.id.floatingActionButton);
+        profileBtn = findViewById(R.id.view_user_profile_btn_driver_home);
 
         /*
         * Sets the listener so it open's the  driver's profile.
@@ -109,6 +111,15 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(v.getContext(), AcceptedDriveRequestsActivity.class);
+                startActivityForResult(myIntent, 0);
+            }
+        });
+
+        qrBucksBtn = findViewById(R.id.view_qr_bucks);
+        qrBucksBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(v.getContext(), DriverQRBucksListActivity.class);
                 startActivityForResult(myIntent, 0);
             }
         });
@@ -151,7 +162,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
         updateMap();
 
         // Sets the markerclicklistener and allows the user to select a marker
-        mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
+        mMap.setOnMarkerClickListener(this);
     }
 
     @Override

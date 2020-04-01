@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DriverHomeActivity" >
-    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+
+    <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        class="com.google.android.gms.maps.SupportMapFragment"/>
+        class="com.google.android.gms.maps.SupportMapFragment" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
+            android:id="@+id/view_user_profile_btn_driver_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|top"
@@ -28,13 +28,22 @@
             android:src="@drawable/ic_person_outline_blue_green_24dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/view_qr_bucks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:src="@drawable/ic_monetization_on_cyan_24dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/drive_request_list_btn_driver_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|top"
             android:layout_margin="10dp"
             android:clickable="true"
-            android:src="@drawable/ic_list_black_24dp" />
+            android:src="@drawable/ic_list_cyan_24dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/current_request"

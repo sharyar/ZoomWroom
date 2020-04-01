@@ -70,6 +70,7 @@
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".RiderHomeActivity" />
         <activity android:name=".UserContactActivity" />
+        <activity android:name=".DriverQRBucksListActivity"/>
 
         <service
             android:name=".MyFirebaseMessagingService"

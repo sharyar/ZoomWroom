@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -162,20 +163,19 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         driverName.setVisibility(View.VISIBLE);
         driverUserName.setVisibility(View.VISIBLE);
 
+        Driver driver = MyDataBase.getDriver(driveRequest.getDriverID());
+        assert driver != null;
 
-        String stringName = MyDataBase.getDriver(driveRequest.getDriverID()).getName();
+        String stringName = driver.getName();
         driverName.setText(stringName);
 
-        String stringUsername = MyDataBase.getDriver(driveRequest.getDriverID()).getUserName();
+        String stringUsername = driver.getUserName();
         driverUserName.setText(stringUsername);
 
         // overriding confirm button
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
-                MyDataBase.updateRequest(driveRequest);
-            }
+        confirm.setOnClickListener(v -> {
+            driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
+            MyDataBase.updateRequest(driveRequest);
         });
 
         // activate function to show driver profile

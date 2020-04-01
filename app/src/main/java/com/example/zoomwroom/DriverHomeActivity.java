@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.Entities.Rider;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -261,7 +262,11 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
              */
             for (DriveRequest request : requests) {
                 LatLng requestLocationStart = request.getPickupLocation();
-                String riderName = MyDataBase.getRider(request.getRiderID()).getName();
+                Rider rider = MyDataBase.getRider(request.getRiderID());
+                if (rider == null) {
+                    continue;
+                }
+                String riderName = rider.getName();
                 Marker m = mMap.addMarker(new MarkerOptions()
                                                 .position(requestLocationStart)
                                                 .title(riderName)

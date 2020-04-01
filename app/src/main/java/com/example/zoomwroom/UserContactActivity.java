@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ public class UserContactActivity extends AppCompatActivity {
     private View ratingView;
     private TextView numThumbsUpTextView;
     private TextView numThumbsDownTextView;
+    private Button backButton;
 
 
     @Override
@@ -31,18 +33,6 @@ public class UserContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_contact);
 
         findViews();
-        phoneTextView.setOnClickListener( v -> {
-            makeCall();
-        });
-
-        emailTextView.setOnClickListener( v -> {
-            sendEmail();
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
         //retrieve userID from intent
         Intent intent = getIntent();
@@ -59,7 +49,11 @@ public class UserContactActivity extends AppCompatActivity {
                 return;
             }
         }
-        
+
+        phoneTextView.setOnClickListener( v -> makeCall());
+        emailTextView.setOnClickListener( v -> sendEmail());
+        backButton.setOnClickListener( v -> finish());
+
         nameTextView.setText(user.getName());
         usernameTextView.setText(user.getUserName());
         phoneTextView.setText(user.getContactDetails().getPhoneNumber());
@@ -68,13 +62,13 @@ public class UserContactActivity extends AppCompatActivity {
         if (user instanceof Rider) {
             // hide rating view group
             ratingView.setVisibility(View.INVISIBLE);
-            return;
+        } else {
+            // set num of thumbs up and down
+            numThumbsUpTextView.setText(String.valueOf(((Driver) user).getRating().getThumbsUp()));
+            numThumbsDownTextView.setText(String.valueOf(((Driver) user).getRating().getThumbsDown()));
         }
-
-        // set num of thumbs up and down
-        numThumbsUpTextView.setText(String.valueOf(((Driver) user).getRating().getThumbsUp()));
-        numThumbsDownTextView.setText(String.valueOf(((Driver) user).getRating().getThumbsDown()));
     }
+
 
     public void makeCall(){
         String phone = user.getContactDetails().getPhoneNumber();
@@ -104,6 +98,7 @@ public class UserContactActivity extends AppCompatActivity {
         ratingView = findViewById(R.id.user_contact_rating);
         numThumbsUpTextView = findViewById(R.id.user_contact_num_thumbs_up);
         numThumbsDownTextView = findViewById(R.id.user_contact_num_thumbs_down);
+        backButton = findViewById(R.id.user_contact_back_button);
     }
 
 }

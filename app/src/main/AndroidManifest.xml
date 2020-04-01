@@ -26,8 +26,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DriverInfo" />
-        <activity android:name=".RiderInfo" />
         <activity android:name=".DriveRequestDetailsActivity" />
         <activity
             android:name=".AcceptedDriveRequestsActivity"
@@ -54,7 +52,6 @@
         <activity android:name=".DriverSignUpActivity" />
         <activity android:name=".RiderLoginActivity" />
         <activity android:name=".ScannerActivity" />
-        <activity android:name=".RiderInfo"/>
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -70,13 +67,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".UserProfileActivity"
-            android:label="User Profile" />
-        <activity
-            android:name=".FragmentTestActivity"
-            android:label="Edit Profile" />
+        <activity android:name=".UserProfileActivity" />
         <activity android:name=".RiderHomeActivity" />
+        <activity android:name=".UserContactActivity" />
 
         <service
             android:name=".MyFirebaseMessagingService"

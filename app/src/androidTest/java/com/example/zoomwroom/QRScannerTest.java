@@ -1,17 +1,22 @@
 package com.example.zoomwroom;
+
 import android.app.Activity;
+import android.widget.EditText;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import com.robotium.solo.Solo​;
 
+import com.example.zoomwroom.ScannerActivity;
+import com.robotium.solo.Solo;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
-
 public class QRScannerTest {
-    private Solo solo;
 
-    @Rule
+    private Solo solo;
     public ActivityTestRule<ScannerActivity> rule =
             new ActivityTestRule<>(ScannerActivity.class, true, true);
 

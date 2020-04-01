@@ -151,7 +151,7 @@ public abstract class MapsActivity extends FragmentActivity implements OnMapRead
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             builder.include(depart).include(destination);
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(),10);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(),50);
             Log.d("CameraMove", "Updating to new markers");
             mMap.moveCamera(cameraUpdate);
         }

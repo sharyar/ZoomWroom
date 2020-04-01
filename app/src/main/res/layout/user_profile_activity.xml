@@ -19,7 +19,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
 
         <RelativeLayout
             android:layout_marginStart="20dp"
@@ -88,8 +89,8 @@
         android:layout_marginTop="16dp" >
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="30dp"
             android:src="@drawable/thumbs_up_sel" />
         <TextView
@@ -99,11 +100,11 @@
             android:layout_marginStart="10dp"
             style="@style/UserProfileText"
             android:textStyle="bold"
-            android:textSize="36sp" />
+            android:textSize="32sp" />
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="50dp"
             android:src="@drawable/thumbs_down_sel" />
         <TextView
@@ -113,14 +114,14 @@
             android:layout_marginStart="10dp"
             style="@style/UserProfileText"
             android:textStyle="bold"
-            android:textSize="36sp" />
+            android:textSize="32sp" />
     </LinearLayout>
 
     <Button
         android:id="@+id/profile_edit_button"
         android:layout_gravity="center_horizontal"
         style="@style/ProfileButton"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="160dp"
         android:text="@string/edit_profile" />
 
     <Button

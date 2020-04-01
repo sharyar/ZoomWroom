@@ -30,6 +30,18 @@ public class MainActivity extends AppCompatActivity {
                 OpenActivityRiderMode();
             }
         });
+        //TESTBT
+//        Button testbt = findViewById(R.id.TESTBT);
+//        testbt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Intent intent = new Intent(v.getContext(),DriverCompleteActivity.class);
+////                startActivity(intent);
+//                DriverCompleteRequestFragment completeRequestForDiverFragment = new DriverCompleteRequestFragment();
+//                completeRequestForDiverFragment.show(getSupportFragmentManager(),"hello");
+//            }
+//        });
+
 
 
     }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorGrayBlue">
+
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Ride Complete"
+            android:textColor="@color/colorWhite"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite" >
+
+        <ImageView
+            android:src="@drawable/zoom_wroom_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
+
+
+        <Button
+            android:id="@+id/complete_request_scan_button"
+            style="@style/RiderFragmentButton"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="300dp"
+            android:backgroundTint="@color/colorGrayBlue"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="SCAN QR BUCKS CODE" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

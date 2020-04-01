@@ -10,14 +10,18 @@ public class QRBucks {
     private int status; // stores status of the QRBuck (0 - Owing, 1- Paid)
     private String driveRequestID; // stores the driveRequestID so the driveRequest can be linked
     private float amountOfMoneyOwed; // amount paid by the rider.
+    private String riderName;
 
     public QRBucks() {
     }
 
-    public QRBucks(String driveRequestID, float amountOfMoneyOwed) {
+
+
+    public QRBucks(String driveRequestID, String riderName, float amountOfMoneyOwed) {
         this.status = StatusQRBucks.OWED;
         this.driveRequestID = driveRequestID;
         this.amountOfMoneyOwed = amountOfMoneyOwed;
+        this.riderName = riderName;
     }
 
     //<editor-fold desc="Getters & Setters">
@@ -51,10 +55,35 @@ public class QRBucks {
     public void collectMoney() {
         this.status = StatusQRBucks.PAID;
     }
+
+    public String getRiderName() {
+        return riderName;
+    }
+
+    public void setRiderName(String riderName) {
+        this.riderName = riderName;
+    }
     //</editor-fold>
 
     public static final class StatusQRBucks {
         public static final int OWED = 0;
         public static final int PAID = 1;
+    }
+
+    public static String giveStatus(int status) {
+        String strStatus;
+
+        switch (status) {
+            case 0:
+                strStatus = "Owing";
+                break;
+            case 1:
+                strStatus = "Paid";
+                break;
+            default:
+                strStatus = "Unknown";
+        }
+
+        return strStatus;
     }
 }

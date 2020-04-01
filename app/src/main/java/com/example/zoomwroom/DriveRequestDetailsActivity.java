@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;

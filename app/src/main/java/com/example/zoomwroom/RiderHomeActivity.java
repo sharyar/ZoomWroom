@@ -71,14 +71,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_home);
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                token = instanceIdResult.getToken();
-                Log.d("newToken-----", token);
-            }
-        });
-
         //get current user;
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
@@ -146,7 +138,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
 
                     }
                 });
-
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

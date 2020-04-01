@@ -29,6 +29,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.zoomwroom.Entities.Driver;
+import com.example.zoomwroom.database.MyDataBase;
 
 public class RateDriverFragment extends DialogFragment {
     public interface OnFragmentInteractionListener {
@@ -43,35 +44,29 @@ public class RateDriverFragment extends DialogFragment {
     public static final int NEGATIVE_RATE = 2;
 
     private int rateValue = NO_RATE;
-    private OnFragmentInteractionListener listener;
     private ImageView positiveButton;
     private ImageView negativeButton;
 
+    private String driverID;
     private Driver driver;
 
-    public RateDriverFragment(Driver driver) {
-        this.driver = driver;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            listener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    public RateDriverFragment(String driverID) {
+        this.driverID = driverID;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.rate_driver_fragment, null);
+
+        // find views
         TextView titleTextView = view.findViewById(R.id.rate_driver_title);
         positiveButton = view.findViewById(R.id.rate_driver_positive);
         negativeButton = view.findViewById(R.id.rate_driver_negative);
         Button completeButton = view.findViewById(R.id.rate_driver_complete_button);
+
+        driver = MyDataBase.getDriver(driverID);
+        assert driver != null;
 
         String driverName = driver.getUserName();
         titleTextView.setText(String.format("How did %s do?", driverName));
@@ -83,8 +78,8 @@ public class RateDriverFragment extends DialogFragment {
         final Dialog dialog = builder.create();
         dialog.show();
         completeButton.setOnClickListener(v -> {
+            rateDriver();
             dialog.dismiss();
-            listener.onConfirmPressed(rateValue);
         });
 
         return dialog;
@@ -114,5 +109,18 @@ public class RateDriverFragment extends DialogFragment {
                     getResources(), R.drawable.thumbs_down_sel, null));
         }
         rateValue = NEGATIVE_RATE;
+    }
+
+    private void rateDriver() {
+        if (rateValue == RateDriverFragment.NO_RATE) {
+            return;
+        }
+
+        if (rateValue == RateDriverFragment.POSITIVE_RATE) {
+            driver.getRating().addRating(true);
+        } else {
+            driver.getRating().addRating(false);
+        }
+        MyDataBase.updateDriver(driver);
     }
 }

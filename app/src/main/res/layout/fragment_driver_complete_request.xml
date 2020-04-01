@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccentPurple">
+        android:background="@color/colorGrayBlue">
 
         <TextView
             android:layout_gravity="center_horizontal"
@@ -16,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@string/complete_request_title"
+            android:text="Ride Complete"
             android:textColor="@color/colorWhite"
             android:textSize="32sp"
             android:textStyle="bold" />
@@ -25,7 +26,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorWhite" >
 
         <ImageView
@@ -35,34 +36,19 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp" />
-        
-        <Button
-            android:id="@+id/complete_request_generate_qr_button"
-            style="@style/RiderFragmentButton"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text="@string/generate_qr_bucks_code"
-            android:visibility="gone" />
+
 
         <Button
-            android:id="@+id/complete_request_rate_driver_button"
+            android:id="@+id/complete_request_scan_button"
             style="@style/RiderFragmentButton"
             android:layout_gravity="center_horizontal"
             android:layout_width="300dp"
+            android:backgroundTint="@color/colorGrayBlue"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:text="Rate driver name" />
+            android:text="SCAN QR BUCKS CODE" />
 
-        <Button
-            android:id="@+id/complete_request_complete_button"
-            style="@style/RiderFragmentButton"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/complete" />
+
     </LinearLayout>
 
 </LinearLayout>

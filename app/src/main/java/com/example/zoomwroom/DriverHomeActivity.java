@@ -1,15 +1,17 @@
 package com.example.zoomwroom;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.Entities.Rider;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -52,6 +54,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
     FloatingActionButton profileBtn; // Used to open the user's profile
     FloatingActionButton driveRequestListBtn;
     FloatingActionButton currentRequest;
+    FloatingActionButton qrBucksBtn;
 
 
     private String driverID;
@@ -80,6 +83,10 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
                                 Log.d("newToken", token);
                                 String message = "Your offer has been accepted!";
                                 new Notify(token, message).execute();
+                            }
+                            else if (request.getStatus() == DriveRequest.Status.COMPLETED){
+                                DriverCompleteRequestFragment completeRequestForDiverFragment = new DriverCompleteRequestFragment();
+                                completeRequestForDiverFragment.show(getSupportFragmentManager(),"hello");
                             }
                         }
 
@@ -141,7 +148,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
         mapFragment.getMapAsync(this);
 
         // Profile button - Open's user's profile
-        profileBtn = findViewById(R.id.floatingActionButton);
+        profileBtn = findViewById(R.id.view_user_profile_btn_driver_home);
 
         /*
         * Sets the listener so it open's the  driver's profile.
@@ -159,6 +166,15 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(v.getContext(), AcceptedDriveRequestsActivity.class);
+                startActivityForResult(myIntent, 0);
+            }
+        });
+
+        qrBucksBtn = findViewById(R.id.view_qr_bucks);
+        qrBucksBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(v.getContext(), DriverQRBucksListActivity.class);
                 startActivityForResult(myIntent, 0);
             }
         });
@@ -201,7 +217,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
         updateMap();
 
         // Sets the markerclicklistener and allows the user to select a marker
-        mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
+        mMap.setOnMarkerClickListener(this);
     }
 
     @Override
@@ -295,8 +311,12 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
              * the requests.
              */
             for (DriveRequest request : requests) {
-                LatLng requestLocationStart = request.getPickupLocation();
-                String riderName = MyDataBase.getInstance().getRider(request.getRiderID()).getName();
+                LatLng requestLocationStart = request.getPickupLocation();                
+                Rider rider = MyDataBase.getInstance().getRider(request.getRiderID());
+                if (rider == null) {
+                    continue;
+                }
+                String riderName = rider.getName();
                 Marker m = mMap.addMarker(new MarkerOptions()
                                                 .position(requestLocationStart)
                                                 .title(riderName)

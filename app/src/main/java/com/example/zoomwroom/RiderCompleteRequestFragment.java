@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
@@ -17,14 +18,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
  * last update: Mar 31, 2020
  */
 
-public class RiderCompleteRequestFragment extends BottomSheetDialogFragment
-        implements RateDriverFragment.OnFragmentInteractionListener {
+public class RiderCompleteRequestFragment extends BottomSheetDialogFragment {
 
     private Driver driver;
     private DriveRequest driveRequest;
+    private boolean isRated = false;
 
     public RiderCompleteRequestFragment(DriveRequest driveRequest) {
         this.driveRequest = driveRequest;
+        this.driver = MyDataBase.getDriver(driveRequest.getDriverID());
+        System.out.println("DRIVER: " + driveRequest.getDriverID());
     }
 
     @Override
@@ -38,28 +41,34 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment
         View view = inflater.inflate(R.layout.fragment_rider_complete_request, container, false);
 
         // findViews
-        Button generateQRButton;
+        //Button generateQRButton;
         Button rateDriverButton;
         Button completeButton;
 
-        generateQRButton = view.findViewById(R.id.complete_request_generate_qr_button);
+        //generateQRButton = view.findViewById(R.id.complete_request_generate_qr_button);
         rateDriverButton = view.findViewById(R.id.complete_request_rate_driver_button);
         completeButton = view.findViewById(R.id.complete_request_complete_button);
 
-        generateQRButton.setOnClickListener(v -> {
-            QRDisplayFragment qrDisplayFragment = new QRDisplayFragment(driveRequest.toQRBucksString());
-            qrDisplayFragment.show(getFragmentManager(), "QR_Display");
-        });
+//        generateQRButton.setOnClickListener(v -> {
+//            QRDisplayFragment qrDisplayFragment = new QRDisplayFragment(driveRequest.toQRBucksString());
+//            qrDisplayFragment.show(getFragmentManager(), "QR_Display");
+//        });
 
+        rateDriverButton.setText(String.format("Rate %s", driver.getName()));
         rateDriverButton.setOnClickListener(v -> {
-            RateDriverFragment rateDriverFragment = new RateDriverFragment(driver);
+            if (isRated) {
+                Toast.makeText(getContext(), "You have already rated this ride!",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            isRated = true;
+            RateDriverFragment rateDriverFragment = new RateDriverFragment(driver.getUserID());
             rateDriverFragment.show(getFragmentManager(), "Rate_Driver");
         });
 
-        completeButton.setText(String.format("Rate %s", driver.getName()));
         completeButton.setOnClickListener(v -> {
             // update the request status
-            driveRequest.setStatus(DriveRequest.Status.COMPLETED);
+            driveRequest.setStatus(DriveRequest.Status.FINALIZED);
             MyDataBase.getInstance().updateRequest(driveRequest);
 
             // close this fragment
@@ -69,21 +78,5 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment
         });
 
         return view;
-    }
-
-    @Override
-    public void onConfirmPressed(int rateValue) {
-        if (rateValue == RateDriverFragment.NO_RATE) {
-            return;
-        }
-
-        driver = MyDataBase.getInstance().getDriver(driveRequest.getDriverID());
-        assert driver != null;
-        if (rateValue == RateDriverFragment.POSITIVE_RATE) {
-            driver.getRating().addRating(true);
-        } else if (rateValue == RateDriverFragment.NEGATIVE_RATE) {
-            driver.getRating().addRating(false);
-        }
-        MyDataBase.getInstance().updateDriver(driver);
     }
 }

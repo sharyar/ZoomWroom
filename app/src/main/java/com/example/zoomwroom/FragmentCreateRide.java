@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.zoomwroom.Entities.DriveRequest;
+import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -162,19 +163,19 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         driverName.setVisibility(View.VISIBLE);
         driverUserName.setVisibility(View.VISIBLE);
 
+        Driver driver = MyDataBase.getInstance().getDriver(driveRequest.getDriverID());
+        assert driver != null;
 
-        String stringName = MyDataBase.getInstance().getDriver(driveRequest.getDriverID()).getName();
+        String stringName = driver.getName();
         driverName.setText(stringName);
 
-        String stringUsername = MyDataBase.getInstance().getDriver(driveRequest.getDriverID()).getUserName();
+        String stringUsername = driver.getUserName();
         driverUserName.setText(stringUsername);
 
         // overriding confirm button
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmRidePhase(driveRequest);
-            }
+        confirm.setOnClickListener(v -> {
+            driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
+            MyDataBase.updateRequest(driveRequest);
         });
 
         // activate function to show driver profile
@@ -192,8 +193,6 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      * */
     public void confirmRidePhase(DriveRequest driveRequest){
         newRequest = driveRequest;
-        driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
-        MyDataBase.getInstance().updateRequest(driveRequest);
         confirm.setVisibility(View.GONE);
     }
 
@@ -208,21 +207,13 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     public void ridingPhase(DriveRequest driveRequest){
         newRequest = driveRequest;
         cancel.setVisibility(View.GONE);
+        confirm.setVisibility(View.GONE);
         complete.setVisibility(View.VISIBLE);
         complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                driveRequest.setStatus(DriveRequest.Status.COMPLETED1);
+                driveRequest.setStatus(DriveRequest.Status.COMPLETED);
                 MyDataBase.getInstance().updateRequest(driveRequest);
-
-                // show rider complete request fragment
-                RiderCompleteRequestFragment fragment = new RiderCompleteRequestFragment(driveRequest);
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(fragment, "Complete_fragment")
-                        .addToBackStack(null)
-                        .commit();
-                fragmentManager.executePendingTransactions();
             }
         });
 

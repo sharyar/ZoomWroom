@@ -100,6 +100,7 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
                 @Override
                 public void onClick(View v) {
                     request.setStatus(DriveRequest.Status.ONGOING);
+                    MyDataBase.updateRequest(request);
                 }
             });
         }

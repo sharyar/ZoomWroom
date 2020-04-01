@@ -175,7 +175,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         // overriding confirm button
         confirm.setOnClickListener(v -> {
             driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
-            MyDataBase.updateRequest(driveRequest);
+            MyDataBase.getInstance().updateRequest(driveRequest);
         });
 
         // activate function to show driver profile

@@ -33,6 +33,7 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
 
     private String requestID;
     private String userID;
+    private DriveRequest request;
 
     private TextView destination;
     private TextView pickup;
@@ -62,17 +63,11 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
         rider_name = view.findViewById(R.id.rider_name);
         Button complete = view.findViewById(R.id.complete_button);
 
-        DriveRequest request = MyDataBase.getInstance().getCurrentRequest(userID, "driverID");
+        request = MyDataBase.getInstance().getCurrentRequest(userID, "driverID");
         if (request == null) {
             requestID = "null";
             Log.d("requestID", requestID);
             setNoneText();
-            complete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
         }
         else{
             requestID = request.getRequestID();
@@ -100,24 +95,36 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
             message = rider.getName();
             rider_name.setText(message);
 
-            complete.setOnClickListener(new View.OnClickListener() {
+
+            String riderID = request.getRiderID();
+            // SETUP CLICKABLE RIDER NAME
+            rider_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), RiderInfo.class);
+                    intent.putExtra("USER_ID", riderID);
+                    startActivity(intent);
+                }
+            });
+
+        }
+
+        complete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (request == null) {
+                    dismiss();
+                }
+                else {
                     if (request.getStatus() == 2) {
                         request.setStatus(DriveRequest.Status.ONGOING);
                         MyDataBase.getInstance().updateRequest(request);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getActivity(), "Cannot confirm right now", Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
-        }
-
-        // SETUP CLICKABLE RIDER NAME
-        if (request != null) {
-            showRiderProfile(request);
-        }
+            }
+        });
 
         FirebaseFirestore.getInstance().collection("DriverRequest")
                 .whereEqualTo("requestID", requestID)
@@ -151,17 +158,17 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
         return view;
     }
 
-    private void showRiderProfile(DriveRequest driveRequest){
-        String riderId = driveRequest.getRiderID();
-        rider_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RiderInfo.class);
-                intent.putExtra("USER_ID",riderId);
-                startActivity(intent);
-            }
-        });
-    }
+//    private void showRiderProfile(DriveRequest driveRequest){
+//        String riderId = driveRequest.getRiderID();
+//        rider_name.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), RiderInfo.class);
+//                intent.putExtra("USER_ID",riderId);
+//                startActivity(intent);
+//            }
+//        });
+//    }
 
     private void setNoneText() {
         String message = "You currently have no request!";

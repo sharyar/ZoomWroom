@@ -26,7 +26,7 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment {
 
     public RiderCompleteRequestFragment(DriveRequest driveRequest) {
         this.driveRequest = driveRequest;
-        this.driver = MyDataBase.getDriver(driveRequest.getDriverID());
+        this.driver = MyDataBase.getInstance().getDriver(driveRequest.getDriverID());
         System.out.println("DRIVER: " + driveRequest.getDriverID());
     }
 

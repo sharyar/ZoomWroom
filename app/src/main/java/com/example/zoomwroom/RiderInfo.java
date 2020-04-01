@@ -42,7 +42,9 @@ public class RiderInfo extends AppCompatActivity {
 
         Intent intent = getIntent();
         String userID = intent.getStringExtra("USER_ID");
-
+        if (userID != null) {
+            Log.d("ahd", userID);
+        }
         // get the current user
         getCurrentUser(userID);
         //set usernameTextView

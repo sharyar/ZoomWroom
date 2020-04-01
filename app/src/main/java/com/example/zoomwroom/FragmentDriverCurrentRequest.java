@@ -60,12 +60,19 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
         pickup = view.findViewById(R.id.departure);
         status = view.findViewById(R.id.status);
         rider_name = view.findViewById(R.id.rider_name);
+        Button complete = view.findViewById(R.id.complete_button);
 
         DriveRequest request = MyDataBase.getInstance().getCurrentRequest(userID, "driverID");
         if (request == null) {
             requestID = "null";
             Log.d("requestID", requestID);
             setNoneText();
+            complete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
         }
         else{
             requestID = request.getRequestID();
@@ -92,16 +99,20 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
             Rider rider = MyDataBase.getInstance().getRider(request.getRiderID());
             message = rider.getName();
             rider_name.setText(message);
+
+            complete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (request.getStatus() == 2) {
+                        request.setStatus(DriveRequest.Status.ONGOING);
+                        MyDataBase.getInstance().updateRequest(request);
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Cannot confirm right now", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
-
-        Button complete = view.findViewById(R.id.complete_button);
-
-        complete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
 
         // SETUP CLICKABLE RIDER NAME
         if (request != null) {

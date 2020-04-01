@@ -99,16 +99,19 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                             // this code is required when the user has logged out and logs back in
                             // recreates the fragment so the appropriate fragment will be shown
                             // the only time we won't create a ride fragment is if ride is complete or cancelled
-                            if (request.getStatus() != 5 && request.getStatus() != 4){
+                            if (request.getStatus() != 5 && request.getStatus() != 8){
                                 if (createRideFragment == null){
+                                    rideStatus.setVisibility(View.VISIBLE);
                                     createRideFragment = new FragmentCreateRide();
-                                    startCreateRide(createRideFragment);
+                                    startCreateRide(createRideFragment, request);
                                     rideButton.setVisibility(View.INVISIBLE);
+                                    setMarkers(request.getDestination(), request.getPickupLocation());
                                 }
                             }
-                            rideStatus.setVisibility(View.VISIBLE);
+
 
                             if (request.getStatus() == 0){
+                                rideStatus.setVisibility(View.VISIBLE);
                                 rideStatus.setText("PENDING");
                                 createRideFragment.pendingPhase(request);
                             }
@@ -121,7 +124,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                                     String message = name + " just accepted your request!";
                                     new Notify(token, message).execute();
                                 }
-
                                 rideStatus.setText("ACCEPTED BY DRIVER");
                                 createRideFragment.DriverAcceptedPhase(request);
                             }
@@ -129,6 +131,7 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
                             // fragment does not change here, only need to update rideStatus
                             else if (request.getStatus() == 2){
                                 rideStatus.setText("WAITING FOR DRIVER");
+                                createRideFragment.confirmRidePhase(request);
                             }
 
                             else if (request.getStatus() == 3) {
@@ -203,6 +206,12 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
         updateMarkers();
     }
 
+    public void setMarkers(LatLng destination, LatLng pickup){
+        mLocation.setDepart(pickup);
+        mLocation.setDestination(destination);
+        updateMarkers();
+    }
+
     /**
      * Function is called when the user wants to create a ride
      * @param fragment
@@ -210,13 +219,31 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
      * Note: this function is only called for FragmentCreateRide
      * */
     public void startCreateRide(FragmentCreateRide fragment){
-
         Bundle b = new Bundle();
         b.putDouble("desLat", mLocation.getDestination().latitude);
         b.putDouble("desLon", mLocation.getDestination().longitude);
         b.putDouble("depLat", mLocation.getDepart().latitude);
         b.putDouble("depLon", mLocation.getDepart().longitude);
         b.putDouble("price", FareCalculation.getPrice(5.00, 0.5, departureMarker, destinationMarker));
+        b.putString("userID", riderEmail);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment.setArguments(b);
+        fragmentTransaction.add(R.id.rider_fragment, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+
+    }
+
+    public void startCreateRide(FragmentCreateRide fragment, DriveRequest driveRequest){
+        Bundle b = new Bundle();
+        b.putDouble("desLat", driveRequest.getDestinationLat());
+        b.putDouble("desLon", driveRequest.getDestinationLng());
+        b.putDouble("depLat", driveRequest.getPickupLocationLat());
+        b.putDouble("depLon", driveRequest.getPickupLocationLng());
+        b.putDouble("price", driveRequest.getOfferedFare());
         b.putString("userID", riderEmail);
 
         FragmentManager fragmentManager = getSupportFragmentManager();

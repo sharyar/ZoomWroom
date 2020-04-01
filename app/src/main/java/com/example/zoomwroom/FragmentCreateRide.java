@@ -173,7 +173,8 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmRidePhase(driveRequest);
+                driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
+                MyDataBase.updateRequest(driveRequest);
             }
         });
 
@@ -192,9 +193,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      * */
     public void confirmRidePhase(DriveRequest driveRequest){
         newRequest = driveRequest;
-        driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
-        MyDataBase.updateRequest(driveRequest);
-        //confirm.setVisibility(View.GONE);
+        confirm.setVisibility(View.GONE);
     }
 
     /**

@@ -13,10 +13,13 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Rider;
 import com.example.zoomwroom.database.MyDataBase;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,6 +49,9 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
 
     //private GoogleMap mMap; // Stores the instance google maps used to display the markers
     private ArrayList<Marker> markers = new ArrayList<>(); // stores a list of markers on the map
+
+    private int status;
+    private DriveRequest ongoingRequest;
 
     ArrayList<DriveRequest> requests = new ArrayList<>();
 
@@ -81,6 +87,9 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
                                 Log.d("newToken", token);
                                 String message = "Your offer has been accepted!";
                                 new Notify(token, message).execute();
+                            }
+                            else if (request.getStatus() == DriveRequest.Status.ONGOING) {
+                                DriverHomeActivity.this.ongoingRequest = request;
                             }
                             else if (request.getStatus() == DriveRequest.Status.COMPLETED){
                                 DriverCompleteRequestFragment completeRequestForDiverFragment = new DriverCompleteRequestFragment();
@@ -168,10 +177,33 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
 
         // Sets the markerclicklistener and allows the user to select a marker
         mMap.setOnMarkerClickListener(this);
+        checkOngoing();
     }
 
     @Override
-    public void onMapClick(LatLng point) {updateMap();}
+    public void onMapClick(LatLng point) {checkOngoing();}
+
+    @Override
+    protected void getLastLocation() {
+        super.getLastLocation();
+        checkOngoing();
+    }
+
+    protected void checkOngoing() {
+        if(ongoingRequest != null) {
+            Log.d("Setting Markers", ongoingRequest.getDestination().toString());
+            destinationMarker.setPosition(ongoingRequest.getDestination());
+            departureMarker.setPosition(ongoingRequest.getPickupLocation());
+            destinationMarker.setVisible(true);
+            departureMarker.setVisible(true);
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(ongoingRequest.getDestination()).include(ongoingRequest.getPickupLocation());
+
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 10);
+            Log.d("CameraMove", "Update to ongoingRequest");
+            mMap.moveCamera(cameraUpdate);
+        }
+    }
 
     /**
      * Opens a fragment to show the details of the currently selected request and allows the driver
@@ -216,6 +248,8 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
         final FragmentDisplayDriveRequestInfo driveRequestFragment = new FragmentDisplayDriveRequestInfo();
         driveRequestFragment.setArguments(b);
         driveRequestFragment.show(getSupportFragmentManager(), driveRequestFragment.getTag());
+        departureMarker.setVisible(true);
+        destinationMarker.setVisible(true);
     }
 
     /**
@@ -252,6 +286,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
      * places throughout this activity
      */
     public void updateMap() {
+        checkOngoing();
         // stores a list of currently open requests locally
         requests = MyDataBase.getOpenRequests();
 

@@ -1,5 +1,6 @@
 package com.example.zoomwroom;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.view.View;
@@ -97,12 +98,12 @@ public class EditUserProfileActivity extends AppCompatActivity {
                     Toast.makeText(EditUserProfileActivity.this,
                             "Your info has been updated.", Toast.LENGTH_SHORT).show();
 
-                    // wait firebase to update
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    // pass back changes to the user profile activity
+                    Intent intent = new Intent();
+                    intent.putExtra("username", newUserName);
+                    intent.putExtra("name", fullName);
+                    intent.putExtra("phoneNumber", phoneNumber);
+                    setResult(RESULT_OK, intent);
 
                     finish();
 

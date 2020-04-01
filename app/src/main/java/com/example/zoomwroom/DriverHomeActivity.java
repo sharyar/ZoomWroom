@@ -89,13 +89,19 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
                                 Log.d("newToken", token);
                                 String message = "Your offer has been accepted!";
                                 new Notify(token, message).execute();
-                            }
-                            else if (request.getStatus() == DriveRequest.Status.ONGOING) {
                                 DriverHomeActivity.this.ongoingRequest = request;
+                                DriverHomeActivity.this.checkOngoing();
+                            }
+                            else if (request.getStatus() == DriveRequest.Status.ONGOING || request.getStatus() == DriveRequest.Status.ACCEPTED) {
+                                DriverHomeActivity.this.ongoingRequest = request;
+                                DriverHomeActivity.this.checkOngoing();
                             }
                             else if (request.getStatus() == DriveRequest.Status.COMPLETED){
                                 DriverCompleteRequestFragment completeRequestForDiverFragment = new DriverCompleteRequestFragment();
                                 completeRequestForDiverFragment.show(getSupportFragmentManager(),"hello");
+                            }
+                            else if (request.getStatus() == DriveRequest.Status.CANCELLED || request.getStatus() == DriveRequest.Status.FINALIZED) {
+                                DriverHomeActivity.this.ongoingRequest = null;
                             }
                         }
 
@@ -240,18 +246,21 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
     }
 
     protected void checkOngoing() {
-        if(ongoingRequest != null) {
-            Log.d("Setting Markers", ongoingRequest.getDestination().toString());
-            destinationMarker.setPosition(ongoingRequest.getDestination());
-            departureMarker.setPosition(ongoingRequest.getPickupLocation());
-            destinationMarker.setVisible(true);
-            departureMarker.setVisible(true);
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            builder.include(ongoingRequest.getDestination()).include(ongoingRequest.getPickupLocation());
+        if(destinationMarker != null) {
+            if (ongoingRequest != null) {
+                Log.d("Setting Markers", ongoingRequest.getDestination().toString());
+                destinationMarker.setPosition(ongoingRequest.getDestination());
+                departureMarker.setPosition(ongoingRequest.getPickupLocation());
+                destinationMarker.setVisible(true);
+                departureMarker.setVisible(true);
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                builder.include(ongoingRequest.getDestination())
+                        .include(ongoingRequest.getPickupLocation());
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 10);
-            Log.d("CameraMove", "Update to ongoingRequest");
-            mMap.moveCamera(cameraUpdate);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 20);
+                Log.d("CameraMove", "Update to ongoingRequest");
+                mMap.moveCamera(cameraUpdate);
+            }
         }
     }
 

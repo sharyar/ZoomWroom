@@ -18,7 +18,7 @@
             android:layout_marginTop="10dp"
             android:text="Where are you going?"
             android:textColor="@color/colorLightGray"
-            android:textSize="15dp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/destination_text"
@@ -27,7 +27,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:textColor="@color/colorLightGray"
-            android:textSize="15dp" />
+            android:textSize="16sp" />
 
         <View
             android:layout_width="350dp"
@@ -42,7 +42,7 @@
             android:layout_marginTop="10dp"
             android:text="From where?"
             android:textColor="@color/colorLightGray"
-            android:textSize="15dp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/pickup_text"
@@ -51,7 +51,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:textColor="@color/colorLightGray"
-            android:textSize="15sp" />
+            android:textSize="16sp" />
 
         <View
             android:layout_width="350dp"

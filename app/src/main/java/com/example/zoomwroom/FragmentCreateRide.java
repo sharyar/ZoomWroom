@@ -11,14 +11,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.database.MyDataBase;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Create a ride Fragment
@@ -27,7 +34,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
  * Fragment that changes dynamically depending on the status of the drive request
  * Functions are created to be called in RiderHomeActivity to hide or show certain buttons/text
  *
- * March 27, 2020
+ * last update Apr 1, 2020
  *
  * Under the Apache 2.0 license
  */
@@ -36,7 +43,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
     public FragmentCreateRide(){};
 
-    private DriveRequest newRequest;
+    private DriveRequest request;
     private TextView driverName;
     private TextView driverUserName;
     private Button confirm;
@@ -44,6 +51,13 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     private Button complete;
     private EditText fare;
     private double price;
+    private TextView destination;
+    private TextView pickup;
+
+
+    private static final int RESULT_OK = -1;
+    private static final int PICKUP_REQUEST = 1;
+    private static final int DESTINATION_REQUEST = 2;
 
 
     @Override
@@ -61,8 +75,8 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         // finding views in the XML file
         driverName = view.findViewById(R.id.driver_name);
         driverUserName = view.findViewById(R.id.driver_username);
-        TextView destination = view.findViewById(R.id.destination_text);
-        TextView pickup = view.findViewById(R.id.pickup_text);
+        destination = view.findViewById(R.id.destination_text);
+        pickup = view.findViewById(R.id.pickup_text);
         fare = view.findViewById(R.id.fare_text);
         cancel = view.findViewById(R.id.cancel_button);
         confirm = view.findViewById(R.id.confirm_button);
@@ -89,52 +103,48 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         // ****** Setting up information ********
 
 
+        request = new DriveRequest();
+        request.setRiderID(userID);
+        request.setSuggestedFare((float) price);
+        request.setPickupLocation(new LatLng(depLat, depLon));
+        request.setDestination(new LatLng(desLat, desLon));
         // Confirm button in order to send new DriveRequest to Firebase
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (newRequest == null){
-                    double offeredFare = Double.parseDouble(fare.getText().toString());
-                    price = FareCalculation.round(price, 2);
-                    // Do not accept ride requests where the offer is lower than the suggested price
-                    if (offeredFare < price){
-                        Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        LatLng departure = new LatLng(depLat, depLon);
-                        LatLng destination = new LatLng(desLat, desLon);
-                        newRequest = new DriveRequest(userID, departure, destination);
-
-                        // grabbing the fare offered by the user
-                        newRequest.setOfferedFare(Float.parseFloat(fare.getText().toString()));
-                        fare.setEnabled(false);
-                        MyDataBase.getInstance().addRequest(newRequest);
-                        Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
-                    }
-
+        confirm.setOnClickListener(v -> {
+            if (request == null){
+                double offeredFare = Double.parseDouble(fare.getText().toString());
+                // Do not accept ride requests where the offer is lower than the suggested price
+                if (offeredFare < price){
+                    Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();
+                    return;
                 }
-
+                // grabbing the fare offered by the user
+                request.setOfferedFare(Float.parseFloat(fare.getText().toString()));
+                fare.setEnabled(false);
+                MyDataBase.getInstance().addRequest(request);
+                Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Cancel button
         // if a ride request exists, set the status to null
         // restart the activity
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (newRequest != null){
-                    newRequest.setStatus(DriveRequest.Status.CANCELLED);
-                    MyDataBase.getInstance().updateRequest(newRequest);
-                }
-
-                Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-
+        cancel.setOnClickListener(v -> {
+            if (request != null){
+                request.setStatus(DriveRequest.Status.CANCELLED);
+                MyDataBase.getInstance().updateRequest(request);
             }
+
+            Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+
         });
 
+        if (!Places.isInitialized()) {
+            Places.initialize(getContext(), getResources().getString(R.string.places_api_key), Locale.CANADA);
+        }
+
+        enablePlaceSearch();
 
         return view;
     }
@@ -144,7 +154,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     * When the ride request is pending, the confirm button is hidden
     * */
     public void pendingPhase(DriveRequest driveRequest){
-        newRequest = driveRequest;
+        request = driveRequest;
         confirm.setVisibility(View.GONE);
     }
 
@@ -159,7 +169,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      *
      * */
     public void DriverAcceptedPhase(DriveRequest driveRequest){
-        newRequest = driveRequest;
+        request = driveRequest;
         confirm.setVisibility(View.VISIBLE);
         driverName.setVisibility(View.VISIBLE);
         driverUserName.setVisibility(View.VISIBLE);
@@ -193,7 +203,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      *
      * */
     public void confirmRidePhase(DriveRequest driveRequest){
-        newRequest = driveRequest;
+        request = driveRequest;
         confirm.setVisibility(View.GONE);
     }
 
@@ -206,16 +216,13 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      *     driveRequest to update
      * */
     public void ridingPhase(DriveRequest driveRequest){
-        newRequest = driveRequest;
+        request = driveRequest;
         cancel.setVisibility(View.GONE);
         confirm.setVisibility(View.GONE);
         complete.setVisibility(View.VISIBLE);
-        complete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                driveRequest.setStatus(DriveRequest.Status.COMPLETED);
-                MyDataBase.getInstance().updateRequest(driveRequest);
-            }
+        complete.setOnClickListener(v -> {
+            driveRequest.setStatus(DriveRequest.Status.COMPLETED);
+            MyDataBase.getInstance().updateRequest(driveRequest);
         });
 
     }
@@ -236,4 +243,85 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     }
 
 
+    private void enablePlaceSearch() {
+        destination.setClickable(true);
+        pickup.setClickable(true);
+
+        destination.setOnClickListener( v -> {
+            // Set the fields to specify which types of place data to
+            // return after the user has made a selection.
+            List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+            // Start the autocomplete intent.
+            Intent intent = new Autocomplete.IntentBuilder(
+                    AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(getActivity());
+            startActivityForResult(intent, DESTINATION_REQUEST);
+        });
+
+        pickup.setOnClickListener( v -> {
+            // Set the fields to specify which types of place data to
+            // return after the user has made a selection.
+            List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+            // Start the autocomplete intent.
+            Intent intent = new Autocomplete.IntentBuilder(
+                    AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(getActivity());
+            startActivityForResult(intent, PICKUP_REQUEST);
+        });
+    }
+
+    private void disablePlaceSearch() {
+        destination.setClickable(false);
+        pickup.setClickable(false);
+    }
+
+    private void displayPlaceName() {
+        if (request == null) {
+            return;
+        }
+
+        String pickupLocationName = request.getPickupLocationName();
+        String destinationName = request.getDestinationName();
+
+        if (pickupLocationName != null) {
+            pickup.setText(pickupLocationName);
+        }
+
+        if (destinationName != null) {
+            destination.setText(destinationName);
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Place place = Autocomplete.getPlaceFromIntent(data);
+
+            if (requestCode == DESTINATION_REQUEST) {
+                request.setDestinationName(place.getName());
+                request.setDestination(place.getLatLng());
+            } else if (requestCode == PICKUP_REQUEST) {
+                request.setPickupLocationName(place.getName());
+                request.setPickupLocation(place.getLatLng());
+            } else {
+                return;
+            }
+
+            displayPlaceName();
+
+            // update markers
+            LatLng destinationLatLng = request.getDestination();
+            LatLng pickupLatLng = request.getPickupLocation();
+
+            if (destinationLatLng != null && pickupLatLng != null) {
+                ((RiderHomeActivity) getActivity()).setMarkers(destinationLatLng, pickupLatLng);
+            }
+
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            // Handle the error.
+            Status status = Autocomplete.getStatusFromIntent(data);
+            Log.i("PLACES", status.getStatusMessage());
+        }
+    }
 }

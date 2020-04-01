@@ -30,4 +30,6 @@
 
     <string name="phone_title">Phone:</string>
     <string name="email_title">Email:</string>
+
+    <string name="places_api_key">AIzaSyArgWBF4boQ0d3WKEi82LFBU0G2qcyo-rw</string>
 </resources>

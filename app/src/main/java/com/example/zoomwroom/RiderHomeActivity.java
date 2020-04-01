@@ -8,8 +8,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -17,15 +15,10 @@ import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.Entities.Location;
 import com.example.zoomwroom.database.MyDataBase;
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,13 +26,10 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Rider Home Activity
@@ -248,7 +238,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
     }
 
     public void completeRideFragment(RiderCompleteRequestFragment fragment, DriveRequest request){
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.rider_fragment, fragment);
@@ -258,7 +247,6 @@ public class RiderHomeActivity extends MapsActivity implements Serializable {
 
         QRDisplayFragment qrDisplayFragment = new QRDisplayFragment(request.toQRBucksString());
         qrDisplayFragment.show(fragmentManager, "QR_Display");
-
     }
 
 

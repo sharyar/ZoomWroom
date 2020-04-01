@@ -51,6 +51,8 @@ public class DriveRequest implements Serializable {
     private String driverID;
     private LatLng pickupLocation;
     private LatLng destination;
+    private String pickupLocationName;
+    private String destinationName;
     private Date requestDateTime;
     private float suggestedFare;
     private float offeredFare;
@@ -201,6 +203,22 @@ public class DriveRequest implements Serializable {
      */
     public String toQRBucksString() {
         return String.format("%s-%s-%f", MyDataBase.getInstance().getRider(riderID).getName(), requestID, offeredFare);
+    }
+
+    public String getPickupLocationName() {
+        return pickupLocationName;
+    }
+
+    public void setPickupLocationName(String pickupLocationName) {
+        this.pickupLocationName = pickupLocationName;
+    }
+
+    public String getDestinationName() {
+        return destinationName;
+    }
+
+    public void setDestinationName(String destinationName) {
+        this.destinationName = destinationName;
     }
 
     /**

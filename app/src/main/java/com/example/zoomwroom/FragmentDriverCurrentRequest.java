@@ -71,13 +71,19 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
         }
         else{
             requestID = request.getRequestID();
-            String message = "Lat: " + Double.toString(request.getDestinationLat()).substring(0, 8);
+            String message;
+            message = "Lat: " + Double.toString(request.getDestinationLat()).substring(0, 8);
             message += "  Lon: " + Double.toString(request.getDestinationLng()).substring(0, 10);
+            if (request.getDestinationName() != null) {
+                message = request.getDestinationName();
+            }
             destination.setText(message);
             message = "Lat: " + Double.toString(request.getPickupLocationLat()).substring(0, 8);
             message += "  Lon: " + Double.toString(request.getPickupLocationLng()).substring(0, 10);
+            if (request.getPickupLocationName() != null) {
+                message = request.getPickupLocationName();
+            }
             pickup.setText(message);
-            message = "Lon: " + Double.toString(request.getPickupLocationLng());
             if (request.getStatus() == 1) {
                 message = "ACCEPTED";
             }
@@ -87,7 +93,7 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
             else if (request.getStatus() == 3) {
                 message = "ONGOING";
             }
-            else if (request.getStatus() == 4) {
+            else {
                 message = "COMPLETE";
             }
             status.setText(message);

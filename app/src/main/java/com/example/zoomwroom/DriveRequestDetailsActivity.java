@@ -9,22 +9,23 @@ import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Locale;
+
 public class DriveRequestDetailsActivity extends AppCompatActivity {
-
-    private DriveRequest currentRequest;
-    private String driveRequestId;
-
-
-    private TextInputEditText riderName;
-    private TextInputEditText offeredFare;
-    private TextInputEditText dateOfRequest;
-    private TextInputEditText status;
-    private TextInputEditText distance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drive_request_details);
+
+        DriveRequest currentRequest;
+        String driveRequestId;
+
+        TextInputEditText riderName;
+        TextInputEditText offeredFare;
+        TextInputEditText dateOfRequest;
+        TextInputEditText status;
+        TextInputEditText distance;
 
         riderName = findViewById(R.id.drive_request_details_riders_name);
         offeredFare = findViewById(R.id.drive_request_details_offered_fare);
@@ -38,11 +39,11 @@ public class DriveRequestDetailsActivity extends AppCompatActivity {
 
         if (currentRequest!= null) {
             riderName.setText(MyDataBase.getInstance().getRider(currentRequest.getRiderID()).getName());
-            offeredFare.setText("$ " + Double.toString(currentRequest.getOfferedFare()));
+            offeredFare.setText(String.format(Locale.CANADA, "$ %.2f", currentRequest.getOfferedFare()));
             dateOfRequest.setText(currentRequest.getRequestDateTime().toString());
             status.setText(DriveRequest.giveStatus(currentRequest.getStatus()));
+            distance.setText(String.valueOf(FareCalculation.getDistance(
+                    currentRequest.getPickupLocation(), currentRequest.getDestination())));
         }
-
-
     }
 }

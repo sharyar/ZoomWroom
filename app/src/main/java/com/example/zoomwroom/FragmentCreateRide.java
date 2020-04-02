@@ -11,190 +11,155 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.Driver;
 import com.example.zoomwroom.database.MyDataBase;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Create a ride Fragment
  *
- * Author : Amanda Nguyen
+ * @author Amanda Nguyen, Dulong Sang
  * Fragment that changes dynamically depending on the status of the drive request
  * Functions are created to be called in RiderHomeActivity to hide or show certain buttons/text
  *
- * March 27, 2020
+ * refactored by Dulong Sang, Apr 1, 2020
+ * last update Apr 1, 2020
  *
  * Under the Apache 2.0 license
  */
 
 public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
-    public FragmentCreateRide(){};
+    // searching places service code
+    private static final int RESULT_OK = -1;
+    private static final int PICKUP_REQUEST = 1;
+    private static final int DESTINATION_REQUEST = 2;
 
-    private DriveRequest newRequest;
-    private TextView driverName;
-    private TextView driverUserName;
-    private Button confirm;
-    private Button cancel;
-    private Button complete;
-    private EditText fare;
-    private double price;
+    private DriveRequest request;
 
+    private TextView driverNameTextView;
+    private TextView driverUsernameTextView;
+    private Button confirmButton;
+    private Button cancelButton;
+    private Button completeButton;
+    private EditText fareEditText;
+    private TextView destinationTextView;
+    private TextView pickupTextView;
 
-    @Override
-    public void onCreate(Bundle savedInstancesState) {
-        super.onCreate(savedInstancesState);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_ride, container, false);
-
-        // ****** Setting up information ********
-
-        // finding views in the XML file
-        driverName = view.findViewById(R.id.driver_name);
-        driverUserName = view.findViewById(R.id.driver_username);
-        TextView destination = view.findViewById(R.id.destination_text);
-        TextView pickup = view.findViewById(R.id.pickup_text);
-        fare = view.findViewById(R.id.fare_text);
-        cancel = view.findViewById(R.id.cancel_button);
-        confirm = view.findViewById(R.id.confirm_button);
-        complete = view.findViewById(R.id.complete_button);
-
-        // grabbing info needed from bundle passed into the fragment
-        Bundle bundle = getArguments();
-        double desLat = bundle.getDouble("desLat");
-        double desLon = bundle.getDouble("desLon");
-        double depLat = bundle.getDouble("depLat");
-        double depLon = bundle.getDouble("depLon");
-        String userID = bundle.getString("userID");
-        price = bundle.getDouble("price");
-        price = FareCalculation.round(price, 2);
-
-        // Setting the textviews
-        String des = "Lon: " + FareCalculation.round(desLon, 12) + " Lat: " + FareCalculation.round(desLat, 12);
-        String dep = "Lon: " + FareCalculation.round(depLon, 12) + " Lat: " + FareCalculation.round(depLat, 12);
-        String fa = Double.toString(price);
-        destination.setText(des);
-        pickup.setText(dep);
-        fare.setText(fa);
-
-        // ****** Setting up information ********
-
-
-        // Confirm button in order to send new DriveRequest to Firebase
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (newRequest == null){
-                    double offeredFare = Double.parseDouble(fare.getText().toString());
-                    price = FareCalculation.round(price, 2);
-                    // Do not accept ride requests where the offer is lower than the suggested price
-                    if (offeredFare < price){
-                        Toast.makeText(getContext(), "Fare must be a minimum of " + price, Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        LatLng departure = new LatLng(depLat, depLon);
-                        LatLng destination = new LatLng(desLat, desLon);
-                        newRequest = new DriveRequest(userID, departure, destination);
-
-                        // grabbing the fare offered by the user
-                        newRequest.setOfferedFare(Float.parseFloat(fare.getText().toString()));
-                        fare.setEnabled(false);
-                        MyDataBase.getInstance().addRequest(newRequest);
-                        Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-            }
-        });
-
-        // Cancel button
-        // if a ride request exists, set the status to null
-        // restart the activity
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (newRequest != null){
-                    newRequest.setStatus(DriveRequest.Status.CANCELLED);
-                    MyDataBase.getInstance().updateRequest(newRequest);
-                }
-
-                Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-
-            }
-        });
-
+        findViews(view);
+        setGeneralOnClickListeners();
 
         return view;
     }
 
+    /**
+     * @param request
+     *      userID must be set, other fields are nullable.
+     */
+    public void createRequest(DriveRequest request) {
+        this.request = request;
+        request.setStatus(DriveRequest.Status.CREATE);
 
-   /**
-    * When the ride request is pending, the confirm button is hidden
-    * */
-    public void pendingPhase(DriveRequest driveRequest){
-        newRequest = driveRequest;
-        confirm.setVisibility(View.GONE);
+        // calculate suggestedFare if both pickupLocation and destination are provided
+        if (request.getPickupLocation() != null && request.getDestination() != null) {
+            // update suggestedFare
+            double suggestFare = FareCalculation.getPrice(FareCalculation.basePrice,
+                    FareCalculation.multiplier, request.getPickupLocation(), request.getDestination());
+            suggestFare = FareCalculation.round(suggestFare, 2);
+            request.setSuggestedFare((float) suggestFare);
+            request.setOfferedFare((float) suggestFare);
+        }
+
+        updateViews();
+
+        enablePlaceSearch();
+
+        confirmButton.setOnClickListener( v -> {
+            float offeredFare = Float.parseFloat(fareEditText.getText().toString());
+            float suggestedFare = request.getSuggestedFare();
+
+            if (request.getPickupLocation() == null || request.getDestination() == null) {
+                Toast.makeText(getContext(), "Please select your pickup location and destination",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (offeredFare < suggestedFare) {
+                Toast.makeText(getContext(), "Fare must be a minimum of " + suggestedFare, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            request.setOfferedFare(offeredFare);
+            request.setStatus(DriveRequest.Status.PENDING);
+            MyDataBase.getInstance().addRequest(request);
+            Toast.makeText(getContext(), "Successfully create a ride!", Toast.LENGTH_SHORT).show();
+            disablePlaceSearch();
+        });
     }
 
     /**
-     *
+     * When the ride request is pending, the confirm button is hidden
+     */
+    public void pendingPhase(DriveRequest request) {
+        this.request = request;
+        confirmButton.setVisibility(View.GONE);
+        disablePlaceSearch();
+        updateViews();
+    }
+
+    /**
      * Have the driver's name, username and confirm button appear
      * Override confirm button to update the drive request
      * Driver's username is also now clickable to view
      *
-     * @param driveRequest
-     *  needed to access the driver's name and username
-     *
-     * */
-    public void DriverAcceptedPhase(DriveRequest driveRequest){
-        newRequest = driveRequest;
-        confirm.setVisibility(View.VISIBLE);
-        driverName.setVisibility(View.VISIBLE);
-        driverUserName.setVisibility(View.VISIBLE);
+     * @param _request
+     *      DriveRequest to update
+     */
+    public void acceptedPhase(DriveRequest _request) {
+        request = _request;
 
-        Driver driver = MyDataBase.getInstance().getDriver(driveRequest.getDriverID());
+        // show views
+        confirmButton.setVisibility(View.VISIBLE);
+        driverNameTextView.setVisibility(View.VISIBLE);
+        driverUsernameTextView.setVisibility(View.VISIBLE);
+
+        Driver driver = MyDataBase.getInstance().getDriver(request.getDriverID());
         assert driver != null;
 
-        String stringName = driver.getName();
-        driverName.setText(stringName);
+        driverNameTextView.setText(driver.getName());
+        driverUsernameTextView.setText(driver.getUserName());
+        updateViews();
 
-        String stringUsername = driver.getUserName();
-        driverUserName.setText(stringUsername);
-
-        // overriding confirm button
-        confirm.setOnClickListener(v -> {
-            driveRequest.setStatus(DriveRequest.Status.CONFIRMED);
-            MyDataBase.getInstance().updateRequest(driveRequest);
+        // rider side update request status from ACCEPTED to CONFIRMED
+        confirmButton.setOnClickListener( v -> {
+            request.setStatus(DriveRequest.Status.CONFIRMED);
+            MyDataBase.getInstance().updateRequest(request);
         });
-
-        // activate function to show driver profile
-        showDriverProfile(driveRequest);
-
     }
 
     /**
-     *
      * Called when user wants to accept the ride from driver
      * Confirm button is invisible again
-     * @param driveRequest
-     *  driveRequest to update
-     *
-     * */
-    public void confirmRidePhase(DriveRequest driveRequest){
-        newRequest = driveRequest;
-        confirm.setVisibility(View.GONE);
+     * @param request
+     *      DriveRequest to update
+     */
+    public void confirmRidePhase(DriveRequest request){
+        this.request = request;
+        confirmButton.setVisibility(View.GONE);
+        updateViews();
     }
 
     /**
@@ -202,38 +167,160 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
      * User is no longer able to cancel the ride
      * Complete the ride button is now active
      *
-     * @param driveRequest
-     *     driveRequest to update
+     * @param _request
+     *     DriveRequest to update
      * */
-    public void ridingPhase(DriveRequest driveRequest){
-        newRequest = driveRequest;
-        cancel.setVisibility(View.GONE);
-        confirm.setVisibility(View.GONE);
-        complete.setVisibility(View.VISIBLE);
-        complete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                driveRequest.setStatus(DriveRequest.Status.COMPLETED);
-                MyDataBase.getInstance().updateRequest(driveRequest);
-            }
-        });
+    public void ridingPhase(DriveRequest _request) {
+        request = _request;
 
+        // set buttons visibility
+        cancelButton.setVisibility(View.GONE);
+        confirmButton.setVisibility(View.GONE);
+        completeButton.setVisibility(View.VISIBLE);
+
+        updateViews();
+
+        // rider side set request status from ONGOING to COMPLETE
+        completeButton.setOnClickListener( v -> {
+            request.setStatus(DriveRequest.Status.COMPLETED);
+            MyDataBase.getInstance().updateRequest(request);
+        });
     }
 
-    /**
-     * Allows the user to click on the username and look at driver's profile
-     *
-     * @param driveRequest
-     *    needed to access the driver's name and username
-     * */
-    public void showDriverProfile(DriveRequest driveRequest){
-        final String driverId = driveRequest.getDriverID();
-        driverName.setOnClickListener(v -> {
+    private void enablePlaceSearch() {
+        destinationTextView.setClickable(true);
+        pickupTextView.setClickable(true);
+
+        destinationTextView.setOnClickListener( v -> {
+            // Set the fields to specify which types of place data to
+            // return after the user has made a selection.
+            List<Place.Field> fields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG);
+            // Start the autocomplete intent.
+            Intent intent = new Autocomplete.IntentBuilder(
+                    AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(getActivity());
+            startActivityForResult(intent, DESTINATION_REQUEST);
+        });
+
+        pickupTextView.setOnClickListener( v -> {
+            // Set the fields to specify which types of place data to
+            // return after the user has made a selection.
+            List<Place.Field> fields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG);
+            // Start the autocomplete intent.
+            Intent intent = new Autocomplete.IntentBuilder(
+                    AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(getActivity());
+            startActivityForResult(intent, PICKUP_REQUEST);
+        });
+    }
+
+    private void disablePlaceSearch() {
+        destinationTextView.setClickable(false);
+        pickupTextView.setClickable(false);
+    }
+
+    // receive the place search result from Autocomplete (google Places api)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Place place = Autocomplete.getPlaceFromIntent(data);
+
+            if (requestCode == DESTINATION_REQUEST) {
+                request.setDestinationName(place.getName());
+                request.setDestination(place.getLatLng());
+            } else if (requestCode == PICKUP_REQUEST) {
+                request.setPickupLocationName(place.getName());
+                request.setPickupLocation(place.getLatLng());
+            } else {    // unexpected cases
+                return;
+            }
+
+            LatLng destinationLatLng = request.getDestination();
+            LatLng pickupLatLng = request.getPickupLocation();
+
+            if (destinationLatLng != null && pickupLatLng != null) {
+                // update markers
+                ((RiderHomeActivity) getActivity()).setMarkers(destinationLatLng, pickupLatLng);
+
+                // update suggestedFare
+                double suggestFare = FareCalculation.getPrice(FareCalculation.basePrice,
+                        FareCalculation.multiplier, pickupLatLng, destinationLatLng);
+                suggestFare = FareCalculation.round(suggestFare, 2);
+                request.setSuggestedFare((float) suggestFare);
+                request.setOfferedFare((float) suggestFare);
+            }
+
+            updateViews();
+
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            // show the error info
+            Status status = Autocomplete.getStatusFromIntent(data);
+            Log.e("PLACES", status.getStatusMessage());
+        }
+    }
+
+    private void findViews(View view) {
+        driverNameTextView = view.findViewById(R.id.create_ride_driver_name);
+        driverUsernameTextView = view.findViewById(R.id.create_ride_driver_username);
+        confirmButton = view.findViewById(R.id.create_ride_confirm_button);
+        cancelButton = view.findViewById(R.id.create_ride_cancel_button);
+        completeButton = view.findViewById(R.id.create_ride_complete_button);
+        fareEditText = view.findViewById(R.id.create_ride_fare);
+        destinationTextView = view.findViewById(R.id.create_ride_destination);
+        pickupTextView = view.findViewById(R.id.create_ride_pickup);
+    }
+
+    private void updateViews() {
+        // if destination/pickupLocation name exists, show the place name
+        // show the LatLng otherwise
+        String destinationString = request.getDestinationName();
+        if (destinationString == null) {
+            if (request.getDestination() == null) {
+                destinationString = getResources().getString(R.string.select_a_place);
+            } else {
+                destinationString = "Lng: " + FareCalculation.round(request.getDestination().longitude, 8)
+                        + " Lat: " + FareCalculation.round(request.getDestination().latitude, 10);
+            }
+        }
+        destinationTextView.setText(destinationString);
+
+        String pickupString = request.getPickupLocationName();
+        if (pickupString == null) {
+            if (request.getPickupLocation() == null) {
+                pickupString = getResources().getString(R.string.select_a_place);
+            } else {
+                pickupString = "Lng: " + FareCalculation.round(request.getPickupLocation().longitude, 8)
+                        + " Lat: " + FareCalculation.round(request.getPickupLocation().latitude, 10);
+            }
+        }
+        pickupTextView.setText(pickupString);
+
+        fareEditText.setText(String.valueOf(request.getOfferedFare()));
+    }
+
+    private void setGeneralOnClickListeners() {
+        cancelButton.setOnClickListener( v -> {
+            if (request.getStatus() != DriveRequest.Status.CREATE) {
+                request.setStatus(DriveRequest.Status.CANCELLED);
+                MyDataBase.getInstance().updateRequest(request);
+            }
+
+            // dismiss this fragment
+            dismissFragment();
+        });
+
+        // show driver's contact info when clicking the driver name TextView
+        driverNameTextView.setOnClickListener( v -> {
             Intent intent = new Intent(getActivity(), UserContactActivity.class);
-            intent.putExtra("USER_ID", driverId);
+            intent.putExtra("USER_ID", request.getDriverID());
             startActivity(intent);
         });
     }
 
 
+    private void dismissFragment() {
+        Intent intent = new Intent(getActivity(), RiderHomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
 }

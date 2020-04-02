@@ -12,10 +12,7 @@ public class Location {
     private LatLng depart;
     private LatLng destination;
 
-    public Location() {
-        depart = new LatLng(53.5232, -113.5263);
-        destination = new LatLng(53.5232, -113.5263);
-    }
+    public Location() { }
 
     /**
      * Returns the LatLng of the departure

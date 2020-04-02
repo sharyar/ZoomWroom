@@ -41,18 +41,18 @@ public class RiderCompleteRequestFragment extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.fragment_rider_complete_request, container, false);
 
         // findViews
-        //Button generateQRButton;
+        Button generateQRButton;
         Button rateDriverButton;
         Button completeButton;
 
-        //generateQRButton = view.findViewById(R.id.complete_request_generate_qr_button);
+        generateQRButton = view.findViewById(R.id.complete_request_generate_qr_button);
         rateDriverButton = view.findViewById(R.id.complete_request_rate_driver_button);
         completeButton = view.findViewById(R.id.complete_request_complete_button);
 
-//        generateQRButton.setOnClickListener(v -> {
-//            QRDisplayFragment qrDisplayFragment = new QRDisplayFragment(driveRequest.toQRBucksString());
-//            qrDisplayFragment.show(getFragmentManager(), "QR_Display");
-//        });
+        generateQRButton.setOnClickListener(v -> {
+            QRDisplayFragment qrDisplayFragment = new QRDisplayFragment(driveRequest.toQRBucksString());
+            qrDisplayFragment.show(getFragmentManager(), "QR_Display");
+        });
 
         rateDriverButton.setText(String.format("Rate %s", driver.getName()));
         rateDriverButton.setOnClickListener(v -> {

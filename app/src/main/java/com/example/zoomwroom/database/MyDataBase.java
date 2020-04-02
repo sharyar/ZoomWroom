@@ -231,6 +231,7 @@ public class MyDataBase {
                 .get();
         while (!task.isSuccessful()) {}
         DriveRequest request = task.getResult().toObject(DriveRequest.class);
+        request.toLocalMode();
         return request;
 
     }

@@ -207,9 +207,6 @@ public class RiderHomeActivity extends MapsActivity {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         getSupportFragmentManager().executePendingTransactions();
-
-        QRDisplayFragment qrDisplayFragment = new QRDisplayFragment(request.toQRBucksString());
-        qrDisplayFragment.show(fragmentManager, "QR_Display");
     }
 
 

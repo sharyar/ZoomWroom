@@ -81,6 +81,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                     FareCalculation.multiplier, request.getPickupLocation(), request.getDestination());
             suggestFare = FareCalculation.round(suggestFare, 2);
             request.setSuggestedFare((float) suggestFare);
+            request.setOfferedFare((float) suggestFare);
         }
 
         updateViews();
@@ -246,6 +247,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
                         FareCalculation.multiplier, pickupLatLng, destinationLatLng);
                 suggestFare = FareCalculation.round(suggestFare, 2);
                 request.setSuggestedFare((float) suggestFare);
+                request.setOfferedFare((float) suggestFare);
             }
 
             updateViews();
@@ -293,7 +295,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         }
         pickupTextView.setText(pickupString);
 
-        fareEditText.setText(String.valueOf(request.getSuggestedFare()));
+        fareEditText.setText(String.valueOf(request.getOfferedFare()));
     }
 
     private void setGeneralOnClickListeners() {

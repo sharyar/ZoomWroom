@@ -267,6 +267,7 @@ public class DriveRequest implements Serializable {
      * Status 5 returns Cancelled
      * Status 6 returns Declined
      * Status 7 returns Aborted
+     * Status 8 returns FINALIZED
      *
      * @param status    int representing current status of the DriveRequest
      * @return          String representing the status in a readable format
@@ -298,6 +299,9 @@ public class DriveRequest implements Serializable {
                 break;
             case 7:
                 strStatus = "Aborted";
+                break;
+            case 8:
+                strStatus = "Finalized";
                 break;
             default:
                 strStatus = "Unknown";

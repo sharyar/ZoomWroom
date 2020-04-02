@@ -102,6 +102,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
                             }
                             else if (request.getStatus() == DriveRequest.Status.CANCELLED || request.getStatus() == DriveRequest.Status.FINALIZED) {
                                 DriverHomeActivity.this.ongoingRequest = null;
+
                             }
                         }
 
@@ -146,7 +147,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
                             request.toLocalMode();
                             if (requestID != null) {
                                 if (request.getStatus() == 5 && requestID.equals(request.getRequestID())) {
-                                    String message = "Sorry, Your offer was cancelled";
+                                    String message = "Your ride was cancelled";
                                     Log.d("send message", token);
                                     new Notify(token, message).execute();
                                 }
@@ -252,8 +253,11 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
     }
 
     protected void checkOngoing() {
-        if(destinationMarker != null) {
+        if(destinationMarker != null) {  // Check if the markers have been initialized
             if (ongoingRequest != null) {
+                for (Marker m: markers) {
+                    m.setVisible(false);
+                }
                 Log.d("Setting Markers", ongoingRequest.getDestination().toString());
                 destinationMarker.setPosition(ongoingRequest.getDestination());
                 departureMarker.setPosition(ongoingRequest.getPickupLocation());
@@ -266,8 +270,12 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 250);
                 Log.d("CameraMove", "Update to ongoingRequest");
                 mMap.moveCamera(cameraUpdate);
+            }else {
+                DriverHomeActivity.this.destinationMarker.setVisible(false);
+                DriverHomeActivity.this.departureMarker.setVisible(false);
             }
         }
+
     }
 
     /**
@@ -295,7 +303,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
         builder.include(mLocation.getDestination())
                 .include(mLocation.getDepart());
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 250);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 450);
         Log.d("CameraMove", "Update to view markers");
         mMap.moveCamera(cameraUpdate);
 

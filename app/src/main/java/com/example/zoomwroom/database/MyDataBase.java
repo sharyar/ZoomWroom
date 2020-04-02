@@ -384,22 +384,24 @@ public class MyDataBase {
     public void addQRBucks(QRBucks buck) {
         final CollectionReference collectionReference = db.collection("QRBucks");
 
-        collectionReference
-                .document()
-                .set(buck)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("QR Bucks", "QRBucks saved to database successfully");
-                    }
+        if(getQRBuckByDriveID(buck.getDriveRequestID()) != null) {
+            collectionReference
+                    .document()
+                    .set(buck)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("QR Bucks", "QRBucks saved to database successfully");
+                        }
 
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("QR Bucks", "data addition failed");
-                    }
-                });
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("QR Bucks", "data addition failed");
+                        }
+                    });
+        }
     }
 
     /**
@@ -423,11 +425,11 @@ public class MyDataBase {
         if (qrBucks.size() == 0) {
             Log.d("QRBucks", "no bucks found");
             return null;
-        }
+        }/*
         if (qrBucks.size() > 1) {
             Log.d("QRBucks", "DriveRequestID is not unique");
             return null;
-        }
+        }*/
         return qrBucks.get(0);
     }
 

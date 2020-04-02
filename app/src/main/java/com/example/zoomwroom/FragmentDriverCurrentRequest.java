@@ -143,7 +143,7 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
                                     setNoneText();
                                 }
                                 else if (request.getStatus() == 2) {
-                                    message = "CONFIRMED";
+                                    message = "PROCEED TO PICKUP LOCATION";
                                     status.setText(message);
                                 }
                                 else if (request.getStatus() == 3) {

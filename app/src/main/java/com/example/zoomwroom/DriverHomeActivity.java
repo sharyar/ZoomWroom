@@ -237,7 +237,13 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
     }
 
     @Override
-    public void onMapClick(LatLng point) {checkOngoing();}
+    public void onMapClick(LatLng point) {
+        if(ongoingRequest != null) {
+            checkOngoing();
+        }else{
+            updateMap();
+        }
+    }
 
     @Override
     protected void getLastLocation() {
@@ -257,7 +263,7 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
                 builder.include(ongoingRequest.getDestination())
                         .include(ongoingRequest.getPickupLocation());
 
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 20);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 250);
                 Log.d("CameraMove", "Update to ongoingRequest");
                 mMap.moveCamera(cameraUpdate);
             }
@@ -283,7 +289,17 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
         this.mLocation.setDepart(pickedRequest.getPickupLocation());
         this.mLocation.setDestination(pickedRequest.getDestination());
         updateMarkers();
-        return false;
+
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(mLocation.getDestination())
+                .include(mLocation.getDepart());
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 250);
+        Log.d("CameraMove", "Update to view markers");
+        mMap.moveCamera(cameraUpdate);
+
+        return true;
     }
 
     /**
@@ -301,6 +317,8 @@ public class DriverHomeActivity extends MapsActivity implements GoogleMap.OnMark
         b.putFloat("OfferedFare", request.getOfferedFare());
         b.putDouble("Distance", getDistance(request));
         b.putString("DriveRequestID", request.getRequestID());
+
+
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

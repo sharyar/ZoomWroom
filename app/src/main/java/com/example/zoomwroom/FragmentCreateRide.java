@@ -133,14 +133,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
 
         // show views
         confirmButton.setVisibility(View.VISIBLE);
-        driverNameTextView.setVisibility(View.VISIBLE);
-        driverUsernameTextView.setVisibility(View.VISIBLE);
-
-        Driver driver = MyDataBase.getInstance().getDriver(request.getDriverID());
-        assert driver != null;
-
-        driverNameTextView.setText(driver.getName());
-        driverUsernameTextView.setText(driver.getUserName());
+        showDriverInfo();
         updateViews();
 
         // rider side update request status from ACCEPTED to CONFIRMED
@@ -159,6 +152,8 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
     public void confirmRidePhase(DriveRequest request){
         this.request = request;
         confirmButton.setVisibility(View.GONE);
+        showDriverInfo();
+
         updateViews();
     }
 
@@ -178,6 +173,7 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         confirmButton.setVisibility(View.GONE);
         completeButton.setVisibility(View.VISIBLE);
 
+        showDriverInfo();
         updateViews();
 
         // rider side set request status from ONGOING to COMPLETE
@@ -294,8 +290,18 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
             }
         }
         pickupTextView.setText(pickupString);
-
         fareEditText.setText(String.valueOf(request.getOfferedFare()));
+    }
+
+    private void showDriverInfo(){
+        driverNameTextView.setVisibility(View.VISIBLE);
+        driverUsernameTextView.setVisibility(View.VISIBLE);
+
+        Driver driver = MyDataBase.getInstance().getDriver(request.getDriverID());
+        assert driver != null;
+
+        driverNameTextView.setText(driver.getName());
+        driverUsernameTextView.setText(driver.getUserName());
     }
 
     private void setGeneralOnClickListeners() {
@@ -310,6 +316,12 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         });
 
         // show driver's contact info when clicking the driver name TextView
+        driverUsernameTextView.setOnClickListener( v -> {
+            Intent intent = new Intent(getActivity(), UserContactActivity.class);
+            intent.putExtra("USER_ID", request.getDriverID());
+            startActivity(intent);
+        });
+
         driverNameTextView.setOnClickListener( v -> {
             Intent intent = new Intent(getActivity(), UserContactActivity.class);
             intent.putExtra("USER_ID", request.getDriverID());

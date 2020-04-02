@@ -384,24 +384,22 @@ public class MyDataBase {
     public void addQRBucks(QRBucks buck) {
         final CollectionReference collectionReference = db.collection("QRBucks");
 
-        if(getQRBuckByDriveID(buck.getDriveRequestID()) != null) {
-            collectionReference
-                    .document()
-                    .set(buck)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d("QR Bucks", "QRBucks saved to database successfully");
-                        }
+        collectionReference
+                .document()
+                .set(buck)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("QR Bucks", "QRBucks saved to database successfully");
+                    }
 
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("QR Bucks", "data addition failed");
-                        }
-                    });
-        }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("QR Bucks", "data addition failed");
+                    }
+                });
     }
 
     /**

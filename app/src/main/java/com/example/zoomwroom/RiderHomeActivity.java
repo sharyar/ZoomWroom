@@ -45,6 +45,7 @@ import java.util.Locale;
 public class RiderHomeActivity extends MapsActivity {
 
     private boolean f;
+    private boolean clickable = true;
 
     private FloatingActionButton profileButton;
     private Button rideButton;
@@ -167,15 +168,18 @@ public class RiderHomeActivity extends MapsActivity {
      */
     @Override
     public void onMapClick(LatLng point) {
-        Log.d("POINT", point.toString());
-        if (f) {
-            mLocation.setDepart(point);
-            f = false;
-        } else {
-            mLocation.setDestination(point);
-            f = true;
+        if(clickable) {
+            Log.d("POINT", point.toString());
+            if (f) {
+                mLocation.setDepart(point);
+                f = false;
+            } else {
+                mLocation.setDestination(point);
+                f = true;
+            }
+            updateMarkers();
         }
-        updateMarkers();
+
     }
 
     public void setMarkers(LatLng destination, LatLng pickup){
@@ -197,7 +201,7 @@ public class RiderHomeActivity extends MapsActivity {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         getSupportFragmentManager().executePendingTransactions();
-
+        clickable = false;
     }
 
     public void completeRideFragment(RiderCompleteRequestFragment fragment, DriveRequest request){
@@ -207,6 +211,12 @@ public class RiderHomeActivity extends MapsActivity {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         getSupportFragmentManager().executePendingTransactions();
+
+        QRDisplayFragment qrDisplayFragment = new QRDisplayFragment(request.toQRBucksString());
+        qrDisplayFragment.show(fragmentManager, "QR_Display");
+
+        clickable = true;
+
     }
 
 

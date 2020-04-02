@@ -30,4 +30,12 @@
 
     <string name="phone_title">Phone:</string>
     <string name="email_title">Email:</string>
+
+    <string name="where_are_you_going">Where are you going?</string>
+    <string name="from_where">From where?</string>
+    <string name="fare_offered">Fare offered:</string>
+    <string name="ride_complete">Ride complete</string>
+    <string name="select_a_place">Select a place</string>
+
+    <string name="places_api_key">AIzaSyArgWBF4boQ0d3WKEi82LFBU0G2qcyo-rw</string>
 </resources>

@@ -53,6 +53,10 @@ public class QRBucksAdapter extends RecyclerView.Adapter<QRBucksAdapter.QRBucksV
         }
     }
 
+    /**
+     * This method set the qr bucks object
+     * @param qrBucks
+     */
     public void setQrBucks(ArrayList<QRBucks> qrBucks) {
         this.qrBucks = qrBucks;
         notifyDataSetChanged();
@@ -65,6 +69,11 @@ public class QRBucksAdapter extends RecyclerView.Adapter<QRBucksAdapter.QRBucksV
         } else return 0;
     }
 
+    /**
+     * This method finds the qr bucks by index
+     * @param position
+     * @return qr buck object with the position specified
+     */
     public QRBucks getQRBuckAtPosition(int position) {
         return qrBucks.get(position);
     }

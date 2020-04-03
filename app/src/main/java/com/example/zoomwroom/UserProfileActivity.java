@@ -70,6 +70,9 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * This method sets the user info in corresponding TextView
+     */
     public void setViews() {
         usernameTextView.setText(currentUser.getUserName());
         nameTextView.setText(currentUser.getName());

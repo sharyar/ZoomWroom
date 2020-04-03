@@ -61,14 +61,16 @@ public class FragmentDisplayDriveRequestInfo extends BottomSheetDialogFragment {
         return view;
     }
 
-    // This resetMarkers method is called to reset the markers when the user closes the request fragment.
+    /**
+     * This resetMarkers method is called to reset the markers when the user closes the request fragment.
+     */
     @Override
     public void onDestroy() {
        ((DriverHomeActivity)getActivity()).resetMarkers();
        super.onDestroy();
     }
 
-    public void showRiderProfile(DriveRequest driveRequest){
+    private void showRiderProfile(DriveRequest driveRequest){
         String riderId = driveRequest.getRiderID();
         riderNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override

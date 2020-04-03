@@ -59,7 +59,9 @@ public abstract class LoginActivity extends AppCompatActivity {
 
     protected abstract void getViewContent();
 
-
+    /**
+     *  Log in check
+     */
     public void logIn() {
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
@@ -72,6 +74,11 @@ public abstract class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * check if the email and password match
+     * @param driverEmail
+     * @param driverPassword
+     */
     public void validate(String driverEmail, String driverPassword) {
         mAuth.signInWithEmailAndPassword(driverEmail, driverPassword)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

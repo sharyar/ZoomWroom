@@ -33,6 +33,10 @@ public class DriverSignUpActivity extends SignupActivity {
         BackBtn = findViewById(R.id.driverSignupBackBtn);
     }
 
+    /**
+     * add a new user to firebase
+     * @param user
+     */
     public void CreateUser(FirebaseUser user) {
         //First create a new driver and contact info instance. Then add them to the database.
         Driver newDriver = new Driver(firstNameText + " " + lastNameText, userName, email);
@@ -59,11 +63,17 @@ public class DriverSignUpActivity extends SignupActivity {
                 });
     }
 
+    /**
+     * go back to login activity
+     */
     public void ReturnToLogin(){
         Intent intent = new Intent(this, DriverLoginActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * go to driver home after signing up
+     */
     public void OpenHomeActivity() {
         Intent intent = new Intent(this, DriverHomeActivity.class);
         startActivity(intent);

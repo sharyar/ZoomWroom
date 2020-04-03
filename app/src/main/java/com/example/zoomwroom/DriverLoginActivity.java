@@ -45,6 +45,9 @@ public class DriverLoginActivity extends LoginActivity {
 
     }
 
+    /**
+     * go to driver home activity after logging in
+     */
     public void OpenHomeActivity(){
         Intent intent = new Intent(this, DriverHomeActivity.class);
         startActivity(intent);

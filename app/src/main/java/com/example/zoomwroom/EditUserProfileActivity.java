@@ -106,6 +106,10 @@ public class EditUserProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * check if all the info is valid
+     * @return true if the info is valid, false otherwise
+     */
     boolean isInfoValid() {
         if (!UserDataValidation.isFullNameValid(fullName)){
             Toast.makeText(this, "Please enter a valid name. A name can only contain alphabets & spaces.",

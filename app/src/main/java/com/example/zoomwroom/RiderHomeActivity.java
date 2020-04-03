@@ -204,6 +204,12 @@ public class RiderHomeActivity extends MapsActivity {
         clickable = false;
     }
 
+    /**
+     * This method is called when the status is set to COMPLETE
+     * Display the complete fragment on rider side
+     * @param fragment
+     * @param request
+     */
     public void completeRideFragment(RiderCompleteRequestFragment fragment, DriveRequest request){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

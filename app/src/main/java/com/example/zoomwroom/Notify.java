@@ -9,7 +9,10 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-// call new Notify().execute() to run
+/** call new Notify(String s, String message).execute() to run
+ * To send a system notification to a certain device
+ * @author Siyuan Liu
+ */
 public class  Notify extends AsyncTask<Void,Void,Void>
 {
     final private String serverKey = "key=" + "AIzaSyCzF5PRcdDADRymHeRF2piC4TOUDIflvZM";

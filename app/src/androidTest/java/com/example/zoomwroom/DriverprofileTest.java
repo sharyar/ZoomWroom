@@ -45,7 +45,7 @@ public class DriverprofileTest {
         TimeUnit.SECONDS.sleep(5);
         solo.assertCurrentActivity("Wrong Activity", DriverHomeActivity.class);
 
-        solo.clickOnView(solo.getView(R.id.floatingActionButton));
+        solo.clickOnView(solo.getView(R.id.view_user_profile_btn_driver_home));
 
         solo.clickOnButton("Back");
         solo.assertCurrentActivity("Wrong Activity", DriverHomeActivity.class);
@@ -64,7 +64,7 @@ public class DriverprofileTest {
         TimeUnit.SECONDS.sleep(5);
         solo.assertCurrentActivity("Wrong Activity", DriverHomeActivity.class);
 
-        solo.clickOnView(solo.getView(R.id.floatingActionButton));
+        solo.clickOnView(solo.getView(R.id.view_user_profile_btn_driver_home));
 
         solo.clickOnButton("Edit Profile");
 
@@ -94,9 +94,7 @@ public class DriverprofileTest {
         solo.clickOnButton("Log in");
         TimeUnit.SECONDS.sleep(5);
         solo.assertCurrentActivity("Wrong Activity", DriverHomeActivity.class);
-
-        solo.clickOnView(solo.getView(R.id.floatingActionButton));
-
+        solo.clickOnView(solo.getView(R.id.view_user_profile_btn_driver_home));
         solo.clickOnButton("Edit Profile");
 
         solo.clearEditText( (EditText) solo.getView(R.id.edit_user_full_name_editText));
@@ -110,7 +108,7 @@ public class DriverprofileTest {
 
         solo.clickOnButton("Confirm Changes");
         solo.clickOnButton("Back");
-        solo.clickOnView(solo.getView(R.id.floatingActionButton));
+        solo.clickOnView(solo.getView(R.id.view_user_profile_btn_driver_home));
 
         solo.assertCurrentActivity("Wrong Activity",EditUserProfileActivity.class);
 

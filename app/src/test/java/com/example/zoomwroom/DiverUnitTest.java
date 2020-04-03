@@ -21,67 +21,34 @@ public class DiverUnitTest {
         return new Driver("baijin","baijin007","1234567");
     }
 
-    @Test
-    void testsetrating(){
-        Driver mockDriver = MockDriver();
-        Rating rating1 = new Rating(true,new Driver("john","john001","1234"),
-                new Rider("Marry","Marry001","12345"));
-
-        Rating rating2 = new Rating(true,new Driver("john1","john002","12341234"),
-                new Rider("Marry1","Marry002","1234512345"));
-
-        ArrayList<Rating> ratings1 = new ArrayList<>();
-        ratings1.add(rating1);
-        ratings1.add(rating2);
-
-        mockDriver.setRatings(ratings1);
-
-        assertEquals(ratings1,mockDriver.getRatings());
-
-
-
-    }
+    /**
+     * test getrating
+     */
     @Test
     void testgetrating() {
         Driver mockDriver = MockDriver();
-        Rating rating1 = new Rating(true,new Driver("john","john001","1234"),
-                new Rider("Marry","Marry001","12345"));
+        Rating rating1 = new Rating();
 
-        Rating rating2 = new Rating(true,new Driver("john1","john002","12341234"),
-                new Rider("Marry1","Marry002","1234512345"));
+        mockDriver.setRating(rating1);
 
-        ArrayList<Rating> ratings1 = new ArrayList<>();
-        ratings1.add(rating1);
-        ratings1.add(rating2);
-
-        mockDriver.setRatings(ratings1);
-
-        assertEquals(ratings1,mockDriver.getRatings());
+        assertEquals(rating1,mockDriver.getRating());
 
 
     }
 
+    /**
+     * test setrating
+     */
     @Test
-    void testsetrequest(){
+    void testsetrating() {
         Driver mockDriver = MockDriver();
-        DriveRequest driveRequest = new DriveRequest();
+        Rating rating1 = new Rating();
 
-        mockDriver.setCurrentRequest(driveRequest);
-
-        assertEquals(driveRequest,mockDriver.getCurrentRequest());
-
+        mockDriver.setRating(rating1);
+        assertEquals(rating1,mockDriver.getRating());
     }
 
-    @Test
-    void testgetrequest(){
-        Driver mockDriver = MockDriver();
-        DriveRequest driveRequest = new DriveRequest();
 
-        mockDriver.setCurrentRequest(driveRequest);
-
-        assertEquals(driveRequest,mockDriver.getCurrentRequest());
-
-    }
 
 
 }

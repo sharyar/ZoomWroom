@@ -1,6 +1,7 @@
 package com.example.zoomwroom;
 
 import com.example.zoomwroom.Entities.ContactInformation;
+import com.example.zoomwroom.Entities.DriveRequest;
 import com.example.zoomwroom.Entities.User;
 
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,10 @@ public class UserUnitTest {
         return new User("baijin","baijin007","1234567");
     }
 
+
+    /**
+     * test getname
+     */
     @Test
     void testgetname(){
         User mockuser = MockUser();
@@ -20,6 +25,9 @@ public class UserUnitTest {
 
     }
 
+    /**
+     * test getuserName
+     */
     @Test
     void testgetuserName(){
         User mockuser = MockUser();
@@ -28,6 +36,9 @@ public class UserUnitTest {
 
     }
 
+    /**
+     * test getuserId
+     */
     @Test
     void testgetuserId(){
         User mockuser = MockUser();
@@ -36,6 +47,9 @@ public class UserUnitTest {
 
     }
 
+    /**
+     * test testusername
+     */
     @Test
     void testsetname(){
         User mockuser = MockUser();
@@ -45,6 +59,9 @@ public class UserUnitTest {
 
     }
 
+    /**
+     * test setusername
+     */
     @Test
     void testsetusername(){
         User mockuser = MockUser();
@@ -53,6 +70,10 @@ public class UserUnitTest {
         assertEquals("baijin008",mockuser.getUserName());
 
     }
+
+    /**
+     * test setuserid
+     */
     @Test
     void testsetuserid(){
         User mockuser = MockUser();
@@ -62,62 +83,9 @@ public class UserUnitTest {
 
     }
 
-    @Test
-    void testsetbalance(){
-        User mockuser = MockUser();
-
-        mockuser.setBalance(0);
-        assertEquals(0,mockuser.getBalance());
-
-        mockuser.setBalance(1);
-        assertEquals(1,mockuser.getBalance());
-
-        mockuser.setBalance(1.2f);
-        assertEquals(1.2f,mockuser.getBalance());
-
-        mockuser.setBalance(1000000000000.00000000f);
-        assertEquals(1000000000000.00000000f,mockuser.getBalance());
-
-    }
-
-    @Test
-    void testgetbalcance(){
-        User mockuser = MockUser();
-        mockuser.setBalance(0);
-        assertEquals(0,mockuser.getBalance());
-
-        mockuser.setBalance(1);
-        assertEquals(1,mockuser.getBalance());
-
-        mockuser.setBalance(1.2f);
-        assertEquals(1.2f,mockuser.getBalance());
-
-        mockuser.setBalance(1000000000000.00000000f);
-        assertEquals(1000000000000.00000000f,mockuser.getBalance());
-
-
-    }
-    @Test
-    void testaddbalance() {
-        User mockuser = MockUser();
-        mockuser.setBalance(0);
-        mockuser.addBalance(1.2f);
-
-        assertEquals(1.2f,mockuser.getBalance());
-
-        mockuser.setBalance(100.3f);
-        mockuser.addBalance(1.2f);
-
-        assertEquals(101.5f,mockuser.getBalance());
-
-        mockuser.setBalance(100000000000000000.3f);
-        mockuser.addBalance(1.2f);
-
-        assertEquals(100000000000000001.5f,mockuser.getBalance());
-
-
-
-    }
+    /**
+     * test getcontactInformation
+     */
     @Test
     void TestgetcontactInformation(){
         User mockuser = MockUser();
@@ -131,6 +99,9 @@ public class UserUnitTest {
 
     }
 
+    /**
+     * test setcontactInformation
+     */
     @Test
     void TestsetcontactInformation(){
         User mockuser = MockUser();
@@ -147,6 +118,29 @@ public class UserUnitTest {
         assertEquals(null,mockuser.getContactDetails().getEmail());
 
 
+
+    }
+
+    /**
+     * test getCurrentrequest
+     */
+    @Test
+    void TestgetCurrentrequest(){
+        User mockuser = MockUser();
+        DriveRequest currentrequest = new DriveRequest();
+        assertTrue((currentrequest instanceof DriveRequest));
+
+
+    }
+    /**
+     * test SetCurrentrequest
+     */
+    @Test
+    void TestSetCurrentrequest(){
+        User mockuser = MockUser();
+        DriveRequest currentrequest = new DriveRequest();
+        mockuser.setCurrentRequest(currentrequest);
+        assertTrue((currentrequest instanceof DriveRequest));
 
     }
 

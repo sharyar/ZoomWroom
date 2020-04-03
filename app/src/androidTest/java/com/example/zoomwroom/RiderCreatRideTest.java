@@ -66,18 +66,18 @@ public class RiderCreatRideTest {
         solo.clickOnScreen(57,180);
         solo.clickOnButton("create a ride");
 
-        solo.clearEditText( (EditText) solo.getView(R.id.fare_text));
-        solo.enterText((EditText) solo.getView(R.id.fare_text), "1.00");
+        solo.clearEditText( (EditText) solo.getView(R.id.create_ride_fare));
+        solo.enterText((EditText) solo.getView(R.id.create_ride_fare), "1.00");
         solo.clickOnButton("CONFIRM");
+        
 
-        //
-        solo.clearEditText( (EditText) solo.getView(R.id.fare_text));
-        solo.enterText((EditText) solo.getView(R.id.fare_text), "6.12");
+        // test
+        solo.clearEditText( (EditText) solo.getView(R.id.create_ride_fare));
+        solo.enterText((EditText) solo.getView(R.id.create_ride_fare), "6.12");
 
         solo.clickOnButton("CONFIRM");
         solo.clickOnButton("CANCEL");
         solo.assertCurrentActivity("Wrong Activity", RiderHomeActivity.class);
-
 
     }
 

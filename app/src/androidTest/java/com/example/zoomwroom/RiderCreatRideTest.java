@@ -69,14 +69,16 @@ public class RiderCreatRideTest {
         solo.clearEditText( (EditText) solo.getView(R.id.create_ride_fare));
         solo.enterText((EditText) solo.getView(R.id.create_ride_fare), "1.00");
         solo.clickOnButton("CONFIRM");
+        
 
-        //
+        // test
         solo.clearEditText( (EditText) solo.getView(R.id.create_ride_fare));
         solo.enterText((EditText) solo.getView(R.id.create_ride_fare), "6.12");
 
         solo.clickOnButton("CONFIRM");
         solo.clickOnButton("CANCEL");
         solo.assertCurrentActivity("Wrong Activity", RiderHomeActivity.class);
+
 
 
     }

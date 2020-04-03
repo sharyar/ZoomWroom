@@ -21,6 +21,12 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Random;
 
+/**
+ * This class is a service in firebase that receives notification from firebase and creates a system notification
+ * @author Siyuan Liu
+ *
+ * https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessagingService#onNewToken(java.lang.String)
+ */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private final String ADMIN_CHANNEL_ID ="admin_channel";
 

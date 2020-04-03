@@ -29,6 +29,13 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Driver current request fragment
+ *
+ * @author Siyuan Liu
+ * Fragment that displays the info of driver's current active request
+ * Functions are created to be called in DriverHomeActivity to hide or show certain buttons/text
+ */
 public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
 
     private String requestID;
@@ -180,6 +187,9 @@ public class FragmentDriverCurrentRequest extends BottomSheetDialogFragment {
 //        });
 //    }
 
+    /**
+     * This method sets the driver current request to none in the fragment
+     */
     private void setNoneText() {
         String message = "You currently have no request!";
         status.setText(message);

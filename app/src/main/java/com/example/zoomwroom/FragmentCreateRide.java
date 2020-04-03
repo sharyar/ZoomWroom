@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Create a ride Fragment
  *
- * @author Amanda Nguyen, Dulong Sang
+ * @author Amanda Nguyen, Dulong Sang, Siyuan Liu
  * Fragment that changes dynamically depending on the status of the drive request
  * Functions are created to be called in RiderHomeActivity to hide or show certain buttons/text
  *
@@ -215,7 +215,12 @@ public class FragmentCreateRide  extends BottomSheetDialogFragment {
         pickupTextView.setClickable(false);
     }
 
-    // receive the place search result from Autocomplete (google Places api)
+    /** receive the place search result from Autocomplete (google Places api)
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {

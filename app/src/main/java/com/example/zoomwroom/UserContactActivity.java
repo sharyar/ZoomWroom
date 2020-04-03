@@ -70,12 +70,18 @@ public class UserContactActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * link to phone call interface
+     */
     public void makeCall(){
         String phone = user.getContactDetails().getPhoneNumber();
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
         startActivity(intent);
     }
 
+    /**
+     * link to email interface
+     */
     public void sendEmail(){
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");

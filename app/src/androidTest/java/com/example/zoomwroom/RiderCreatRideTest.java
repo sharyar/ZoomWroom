@@ -79,8 +79,6 @@ public class RiderCreatRideTest {
         solo.clickOnButton("CANCEL");
         solo.assertCurrentActivity("Wrong Activity", RiderHomeActivity.class);
 
-
-
     }
 
 

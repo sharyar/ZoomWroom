@@ -52,6 +52,10 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
         }
     }
 
+    /**
+     * This method updates the request list
+     * @param driveRequests
+     */
     public void setRequests(ArrayList<DriveRequest> driveRequests) {
         requests = driveRequests;
         notifyDataSetChanged();
@@ -64,6 +68,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
         } else return 0;
     }
 
+    /**
+     * This methods finds the request by index
+     * @param position
+     * @return return the drive request in the position specified
+     */
     public DriveRequest getRequestAtPosition(int position) {
         return requests.get(position);
     }

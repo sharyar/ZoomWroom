@@ -21,6 +21,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * A singleton class that retrieves data from or update data to firebase
+ * @author Siyuan Liu
+ */
 public class MyDataBase {
     private static final MyDataBase instance = new MyDataBase();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();

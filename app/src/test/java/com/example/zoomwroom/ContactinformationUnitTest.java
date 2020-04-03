@@ -16,6 +16,9 @@ public class ContactinformationUnitTest {
         return new ContactInformation("7808852269","test@gmail.ca");
     }
 
+    /**
+     * test setphonenumber
+     */
     @Test
     void testsetphonenumber(){
         ContactInformation contactInformation = MockContactinformation();
@@ -30,6 +33,9 @@ public class ContactinformationUnitTest {
 
     }
 
+    /**
+     * test setemail
+     */
     @Test
     void testsetemail(){
         ContactInformation contactInformation = MockContactinformation();
@@ -42,6 +48,9 @@ public class ContactinformationUnitTest {
         assertNotEquals("test1@gmail1.ca",contactInformation.getEmail());
     }
 
+    /**
+     * test getphonenumber
+     */
     @Test
     void testgetphonenumber(){
         ContactInformation contactInformation = MockContactinformation();
@@ -55,6 +64,10 @@ public class ContactinformationUnitTest {
 
 
     }
+
+    /**
+     * test getemail
+     */
     @Test
     void testgetemail(){
         ContactInformation contactInformation = MockContactinformation();

@@ -9,10 +9,13 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.zoomwroom.Entities.QRBucks;
+import com.example.zoomwroom.database.MyDataBase;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -46,6 +49,9 @@ public class ScannerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
+
+        //test
+        Log.d("TAG","Scanner success!");
 
         // Initialize
         surfaceView = findViewById(R.id.cameraPreview);
@@ -85,6 +91,7 @@ public class ScannerActivity extends AppCompatActivity {
 
         // Detect barcode
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+            boolean flag = false;
             @Override
             public void release() {
 
@@ -93,13 +100,18 @@ public class ScannerActivity extends AppCompatActivity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 SparseArray<Barcode> qrCodes = detections.getDetectedItems();
-                if(qrCodes.size() != 0) {
-                    // TODO return scanned code value
+                if(qrCodes.size() != 0 && !flag) {
+                    flag = true;
                     Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                     vibrator.vibrate(500);
                     Log.d("QR", qrCodes.valueAt(0).displayValue);
+
+                    QRBucks bucksData = new QRBucks(qrCodes.valueAt(0).displayValue);
+                    MyDataBase.getInstance().addQRBucks(bucksData);
                     finish();
-                }
+                }else if(qrCodes.size() == 0) {
+                    flag = false;
+                }else{}
             }
         });
     }

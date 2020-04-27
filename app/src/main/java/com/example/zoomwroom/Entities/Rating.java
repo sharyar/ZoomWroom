@@ -1,109 +1,59 @@
 package com.example.zoomwroom.Entities;
 
-import android.widget.ArrayAdapter;
-
-import java.util.ArrayList;
-
+/**
+ * Rating
+ *
+ * A Rating object stores the number of thumbsUp and thumbsDown that a driver received.
+ * The Rating class was refactored on Mar 13.
+ *
+ * @version 1.2
+ *
+ * Mar 13, 2020
+ *
+ * @author Sharyar Memon, Dulong Sang
+ */
 public class Rating {
-    // Declare variables required for class
-    private boolean thumbStatus;
+    private int thumbsUp;
+    private int thumbsDown;
 
-    // These may not be required as the DriveRequest can HAVE the rating which in turn have the driver and rider.
-    private DriveRequest drive;
-    private Driver driver;
-    private Rider rider;
-
-    //Constructors
-
-    /**
-     * This constructor is the default constructor. We may want to use this in case the rider does
-     * not offer a rating.
-     */
     public Rating() {
-        this(true);
+        thumbsUp = 0;
+        thumbsDown = 0;
     }
 
     /**
-     * This constructor accepts one argument, a boolean indicating thumbs up or down.
-     * @param thumbStatus Boolean indicating rider's experience. True for thumbs up and
-     *                    false for thumbs down.
+     * @param isThumbsUp true if the rider gives a thumbs up, false if gives a thumbs down
      */
-    public Rating(Boolean thumbStatus) {
-        this.thumbStatus = thumbStatus;
-    }
-
-    /**
-     * This constructor may not get used if we rely on the drive request storing info
-     * about the rider and driver rather then linking it to the rating itself.
-     * @param thumbStatus
-     * @param driver
-     * @param rider
-     */
-    public Rating(boolean thumbStatus, Driver driver, Rider rider) {
-        this.thumbStatus = thumbStatus;
-        this.driver = driver;
-        this.rider = rider;
-    }
-
-    public void giveRating(Boolean thumbStatus, Driver driver, Rider rider) {
-        setThumbStatus(thumbStatus);
-        setDriver(driver);
-        setRider(rider);
-    }
-
-
-    /**
-     * Returns an array list of Strings showing ratings from a list of Ratings provided as an argument
-     * It is meant to be used to display the ratings of a driver on their profile.
-     * @param listOfRatings ArrayList of Ratings.
-     * @return ArrayList of strings with ratings given to driver.
-     */
-    public static ArrayList<String> showRatings(ArrayList<Rating> listOfRatings) {
-        ArrayList<String> allRatingsForDriver = new ArrayList<>();
-        for (Rating r: listOfRatings){
-            StringBuilder s = new StringBuilder();
-            s.append(r.getRider().getUserName());
-            s.append(": ");
-            if (r.thumbStatus)
-                s.append("Thumbs Up");
-            else
-                s.append("Thumbs Down");
-            allRatingsForDriver.add(s.toString());
+    public void addRating(boolean isThumbsUp) {
+        if (isThumbsUp) {
+            thumbsUp++;
+        } else {
+            thumbsDown++;
         }
-        return allRatingsForDriver;
     }
 
-    //<editor-fold desc="Getter & Setter Methods">
-    public boolean getThumbStatus() {
-        return thumbStatus;
+    //<editor-fold desc="getter & setter">
+
+    /**
+     * @return  the number of thumbsUp that a driver received
+     */
+    public int getThumbsUp() {
+        return thumbsUp;
     }
 
-    public void setThumbStatus(boolean thumbStatus) {
-        this.thumbStatus = thumbStatus;
+    public void setThumbsUp(int thumbsUp) {
+        this.thumbsUp = thumbsUp;
     }
 
-    public DriveRequest getDrive() {
-        return drive;
+    /**
+     * @return  the number of thumbsDown that a driver received.
+     */
+    public int getThumbsDown() {
+        return thumbsDown;
     }
 
-    public void setDrive(DriveRequest drive) {
-        this.drive = drive;
-    }
-
-    public Driver getDriver() {
-        return driver;
-    }
-
-    public void setDriver(Driver driver) {
-        this.driver = driver;
-    }
-
-    public Rider getRider() {
-        return rider;
-    }
-
-    public void setRider(Rider rider) {
-        this.rider = rider;
+    public void setThumbsDown(int thumbsDown) {
+        this.thumbsDown = thumbsDown;
     }
     //</editor-fold>
 }

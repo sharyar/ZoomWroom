@@ -27,71 +27,62 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:contentDescription="Logo"
-            app:srcCompat="@drawable/driverlogo1"
-            tools:layout_editor_absoluteX="16dp" />
+            app:srcCompat="@drawable/driverlogo1" />
 
-        <EditText
-            android:id="@+id/driverSignupFullName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/driversignup_text_shape"
-            android:hint="First and Last Name"
-            android:padding="10dp"
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/driverSignupFName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="First Name"
+                android:layout_weight="1" 
+                style="@style/EditTextDefaultDriverRegister"
+                android:layout_marginEnd="5dp"/>
+
+            <EditText
+                android:id="@+id/driverSignupLName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Last Name"
+                android:layout_weight="1"
+                style="@style/EditTextDefaultDriverRegister"/>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/driverSignupEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/driversignup_text_shape"
             android:hint="Email Address"
-            android:inputType="textEmailAddress"
-            android:padding="10dp"
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="18sp" />
+            android:inputType="textEmailAddress" 
+            style="@style/EditTextDefaultDriverRegister"/>
 
         <EditText
             android:id="@+id/driverSignupUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/driversignup_text_shape"
             android:hint="Unique username"
-            android:padding="10dp"
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="18sp" />
+            style="@style/EditTextDefaultDriverRegister"/>
 
         <EditText
             android:id="@+id/driverSignupPassWord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/driversignup_text_shape"
             android:hint="Password"
             android:inputType="textPassword"
-            android:padding="10dp"
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="18sp" />
+            style="@style/EditTextDefaultDriverRegister"/>
 
         <EditText
             android:id="@+id/driverSignupPhoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/driversignup_text_shape"
             android:hint="Phone Number"
             android:inputType="phone"
-            android:padding="10dp"
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="18sp" />
+            style="@style/EditTextDefaultDriverRegister"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,25 +96,31 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@null"
                 android:text="Back"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_marginEnd="2dp"
+                style="@style/PrimaryButtonRegisterDriver"
+                android:backgroundTint="@color/colorPrimaryDark"/>
 
             <Button
                 android:id="@+id/driverSignupSignupBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button"
                 android:text="Sign Up"
                 android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
+                android:layout_marginStart="2dp"
+                style="@style/PrimaryButtonRegisterDriver"/>
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/driver_signup_progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorWhite"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
